@@ -25,6 +25,9 @@
 #include "motor.h"
 #include "force_sensor.h"
 #include "quad.h"
+#include "imu.h"
+#include "potentiometer.h"
+#include <stdbool.h>
 
 /* USER CODE END Includes */
 
@@ -49,10 +52,28 @@ I2C_HandleTypeDef hi2c2;
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim14;
+TIM_HandleTypeDef htim16;
 
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+
+const int minimum_newtons_indicating_skater = 200;
+const int min_ms_for_absent_skater_to_stop = 2000;
+const float braking_arm_position_degrees = 90.0f;
+const float potentiometer_raw_data_per_degree_ratio = 4096.0f / 180.0f;
+const float desired_position_lax_per_side_degrees = 2.5f;
+const bool is_motor_same_direction_as_potentiometer = true;
+
+ForceSensor *force_sensor = NULL;
+IMU *imu = NULL;
+Motor *motor = NULL;
+Potentiometer *potentiometer = NULL;
+uint32_t ms_since_skater_detected = 0;
+float current_arm_position = 0.0f;
+float desired_arm_position = 0.0f;
+float potentiometer_value_at_rest_offset = 0.0f;
 
 /* USER CODE END PV */
 
@@ -64,12 +85,77 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM14_Init(void);
+static void MX_TIM16_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+bool skater_absent_for_long() {
+	return ms_since_skater_detected >= min_ms_for_absent_skater_to_stop;
+}
+
+void update_desired_arm_position(float desired_position) {
+	if (skater_absent_for_long()) {
+		desired_arm_position = braking_arm_position_degrees;
+	}
+	else {
+		desired_arm_position = desired_position;
+	}
+}
+
+float get_potentiometer_angle_in_degrees() {
+	uint32_t raw_data = get_potentiometer_input(potentiometer);
+	int32_t adjusted_data = raw_data - potentiometer_value_at_rest_offset;
+	return adjusted_data / potentiometer_raw_data_per_degree_ratio;
+}
+
+void updateMotorSpeeds() {
+	if (skater_absent_for_long()) {
+		set_motor_speed(motor, 0.0f);
+		return;
+	}
+
+	if (current_arm_position > (desired_arm_position + desired_position_lax_per_side_degrees)) {
+		set_motor_speed(motor, is_motor_same_direction_as_potentiometer ? -1.0f : 1.0f);
+	}
+	else if (current_arm_position < (desired_arm_position - desired_position_lax_per_side_degrees)) {
+		set_motor_speed(motor, is_motor_same_direction_as_potentiometer ? 1.0f : -1.0f);
+	}
+	else {
+		set_motor_speed(motor, 0.0f);
+	}
+
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if (GPIO_Pin == GPIO_PIN_14) {
+		potentiometer_value_at_rest_offset = get_potentiometer_input(potentiometer);
+	}
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim == &htim14) {
+		updateMotorSpeeds();
+	}
+	if (htim == &htim16) {
+		if (get_force_sensor_data(force_sensor) > minimum_newtons_indicating_skater) {
+			ms_since_skater_detected = 0;
+		}
+		else {
+			if (skater_absent_for_long()) {
+				update_desired_arm_position(braking_arm_position_degrees);
+			}
+			else {
+				ms_since_skater_detected += 200;
+			}
+		}
+		update_potentiometer_value(potentiometer);
+	}
+}
 
 /* USER CODE END 0 */
 
@@ -106,7 +192,12 @@ int main(void)
   MX_TIM3_Init();
   MX_USART1_UART_Init();
   MX_ADC1_Init();
+  MX_TIM14_Init();
+  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
+
+  HAL_TIM_Base_Start_IT(&htim14);
+  HAL_TIM_Base_Start_IT(&htim16);
 
   /* USER CODE END 2 */
 
@@ -367,6 +458,69 @@ static void MX_TIM3_Init(void)
 }
 
 /**
+  * @brief TIM14 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM14_Init(void)
+{
+
+  /* USER CODE BEGIN TIM14_Init 0 */
+
+  /* USER CODE END TIM14_Init 0 */
+
+  /* USER CODE BEGIN TIM14_Init 1 */
+
+  /* USER CODE END TIM14_Init 1 */
+  htim14.Instance = TIM14;
+  htim14.Init.Prescaler = 15;
+  htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim14.Init.Period = 65535;
+  htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM14_Init 2 */
+
+  /* USER CODE END TIM14_Init 2 */
+
+}
+
+/**
+  * @brief TIM16 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM16_Init(void)
+{
+
+  /* USER CODE BEGIN TIM16_Init 0 */
+
+  /* USER CODE END TIM16_Init 0 */
+
+  /* USER CODE BEGIN TIM16_Init 1 */
+
+  /* USER CODE END TIM16_Init 1 */
+  htim16.Instance = TIM16;
+  htim16.Init.Prescaler = 7;
+  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim16.Init.Period = 65535;
+  htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim16.Init.RepetitionCounter = 0;
+  htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM16_Init 2 */
+
+  /* USER CODE END TIM16_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -426,33 +580,38 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, BATTERY_LED_Pin|HX711_DATA_Pin|HX711_SCK_Pin|HBRIDGE_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(HBRIDGE_NDIR_GPIO_Port, HBRIDGE_NDIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, BATTERY_LED_Pin|HX711_DATA_Pin|HX711_SCK_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LIMIT_SWITCH_Pin */
   GPIO_InitStruct.Pin = LIMIT_SWITCH_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(LIMIT_SWITCH_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BATTERY_LED_Pin HX711_DATA_Pin HX711_SCK_Pin HBRIDGE_DIR_Pin */
-  GPIO_InitStruct.Pin = BATTERY_LED_Pin|HX711_DATA_Pin|HX711_SCK_Pin|HBRIDGE_DIR_Pin;
+  /*Configure GPIO pin : DEBUG_LED_Pin */
+  GPIO_InitStruct.Pin = DEBUG_LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : BATTERY_LED_Pin HX711_DATA_Pin HX711_SCK_Pin DRV8825_DIR_Pin */
+  GPIO_InitStruct.Pin = BATTERY_LED_Pin|HX711_DATA_Pin|HX711_SCK_Pin|DRV8825_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : HBRIDGE_NDIR_Pin */
-  GPIO_InitStruct.Pin = HBRIDGE_NDIR_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(HBRIDGE_NDIR_GPIO_Port, &GPIO_InitStruct);
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 }
 

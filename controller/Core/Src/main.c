@@ -23,7 +23,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "display.h"
-#include "trigger.h"
+#include "potentiometer.h"
 
 /* USER CODE END Includes */
 
@@ -267,7 +267,11 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, BUZZER_Pin|BATTERY_OUTPUT_Pin|DISPLAY_0_Pin|DISPLAY_1_Pin
@@ -275,6 +279,13 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DISPLAY_4_GPIO_Port, DISPLAY_4_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : DEBUG_LED_Pin */
+  GPIO_InitStruct.Pin = DEBUG_LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : BUZZER_Pin BATTERY_OUTPUT_Pin DISPLAY_0_Pin DISPLAY_1_Pin
                            DISPLAY_2_Pin DISPLAY_3_Pin DISPLAY_5_Pin DISPLAY_6_Pin */

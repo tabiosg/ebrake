@@ -63,6 +63,9 @@ void Error_Handler(void);
 #define BLUETOOTH_UART_RX_GPIO_Port GPIOB
 #define LIMIT_SWITCH_Pin GPIO_PIN_14
 #define LIMIT_SWITCH_GPIO_Port GPIOC
+#define LIMIT_SWITCH_EXTI_IRQn EXTI4_15_IRQn
+#define DEBUG_LED_Pin GPIO_PIN_2
+#define DEBUG_LED_GPIO_Port GPIOF
 #define QUAD_A_Pin GPIO_PIN_0
 #define QUAD_A_GPIO_Port GPIOA
 #define QUAD_B_Pin GPIO_PIN_1
@@ -75,12 +78,10 @@ void Error_Handler(void);
 #define HX711_DATA_GPIO_Port GPIOA
 #define HX711_SCK_Pin GPIO_PIN_5
 #define HX711_SCK_GPIO_Port GPIOA
-#define HBRIDGE_PWM_Pin GPIO_PIN_6
-#define HBRIDGE_PWM_GPIO_Port GPIOA
-#define HBRIDGE_DIR_Pin GPIO_PIN_7
-#define HBRIDGE_DIR_GPIO_Port GPIOA
-#define HBRIDGE_NDIR_Pin GPIO_PIN_0
-#define HBRIDGE_NDIR_GPIO_Port GPIOB
+#define DRV8825_STP_Pin GPIO_PIN_6
+#define DRV8825_STP_GPIO_Port GPIOA
+#define DRV8825_DIR_Pin GPIO_PIN_7
+#define DRV8825_DIR_GPIO_Port GPIOA
 #define IMU_SCL_Pin GPIO_PIN_11
 #define IMU_SCL_GPIO_Port GPIOA
 #define IMU_SDA_Pin GPIO_PIN_12
