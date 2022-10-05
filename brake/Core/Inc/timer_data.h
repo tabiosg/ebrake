@@ -1,5 +1,6 @@
 #pragma once
 
+#include "stm32g0xx_hal.h"
 #include <stdint.h>
 
 // Used to store the data of a PWM timer
@@ -24,7 +25,7 @@ typedef struct {
 PWMTimer *new_pwm_timer(
 	TIM_HandleTypeDef *_timer,
 	uint32_t _channel,
-	uint32_t *_ccr_channel,
+	uint32_t *_ccr_channel
 );
 
 // REQUIRES: _timer corresponds to timer,
@@ -35,7 +36,7 @@ PWMTimer *new_pwm_timer(
 QuadTimer *new_quad_timer(
 	TIM_HandleTypeDef *_timer,
 	uint32_t _channel,
-	uint32_t *_cnt_channel,
+	uint32_t *_cnt_channel
 );
 
 

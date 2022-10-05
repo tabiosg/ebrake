@@ -3,6 +3,7 @@
 #include "motor.h"
 #include "potentiometer.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define AUTOMATIC_BRAKING_ANGLE_DEGREES 90.0f
 #define RATIO_OF_RAW_POTENT_DATA_PER_JOINT_DEGREE 4096.0f / 180.0f;
