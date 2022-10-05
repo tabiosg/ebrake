@@ -7,22 +7,20 @@
 // The motor is a NEMA17 stepper motor
 // The motor driver being used is a DRV8825
 typedef struct {
-	PinData stp_pin;
-	PinData dir_pin;
-	PWMTimerData timer;
+	PinData *dir_pin;
+	PWMTimer *timer;
 } Motor;
 
 /** PUBLIC FUNCTIONS **/
 
-// REQUIRES: Ports and pins correspond to DRV8825 pins.
+// REQUIRES: _dir_pin correspond to DRV8825 dir pin.
 // Timer is associated with PWM connected to DRV8825 step pin.
 // position is an integer that is the assumed position
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Motor object
 Motor *new_motor(
-	PinData stp_pin,
-	PinData dir_pin,
-	PWMTimerData *timer
+	PinData *_dir_pin,
+	PWMTimer *_timer
 );
 
 // REQUIRES: motor is a Motor object

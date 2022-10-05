@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 typedef struct {
 	ADC_HandleTypeDef *adc;
 	uint32_t value;

@@ -22,11 +22,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "potentiometer.h"
 #include "motor.h"
+#include "joint.h"
 #include "force_sensor.h"
 #include "quad.h"
 #include "imu.h"
-#include "potentiometer.h"
 #include <stdbool.h>
 
 /* USER CODE END Includes */
@@ -61,19 +62,13 @@ UART_HandleTypeDef huart1;
 
 const int minimum_newtons_indicating_skater = 200;
 const int min_ms_for_absent_skater_to_stop = 2000;
-const float braking_arm_position_degrees = 90.0f;
-const float potentiometer_raw_data_per_degree_ratio = 4096.0f / 180.0f;
-const float desired_position_lax_per_side_degrees = 2.5f;
-const bool is_motor_same_direction_as_potentiometer = true;
 
 ForceSensor *force_sensor = NULL;
 IMU *imu = NULL;
 Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
+Joint *joint = NULL;
 uint32_t ms_since_skater_detected = 0;
-float current_arm_position = 0.0f;
-float desired_arm_position = 0.0f;
-float potentiometer_value_at_rest_offset = 0.0f;
 
 /* USER CODE END PV */
 
@@ -98,48 +93,16 @@ bool skater_absent_for_long() {
 	return ms_since_skater_detected >= min_ms_for_absent_skater_to_stop;
 }
 
-void update_desired_arm_position(float desired_position) {
-	if (skater_absent_for_long()) {
-		desired_arm_position = braking_arm_position_degrees;
-	}
-	else {
-		desired_arm_position = desired_position;
-	}
-}
-
-float get_potentiometer_angle_in_degrees() {
-	uint32_t raw_data = get_potentiometer_input(potentiometer);
-	int32_t adjusted_data = raw_data - potentiometer_value_at_rest_offset;
-	return adjusted_data / potentiometer_raw_data_per_degree_ratio;
-}
-
-void updateMotorSpeeds() {
-	if (skater_absent_for_long()) {
-		set_motor_speed(motor, 0.0f);
-		return;
-	}
-
-	if (current_arm_position > (desired_arm_position + desired_position_lax_per_side_degrees)) {
-		set_motor_speed(motor, is_motor_same_direction_as_potentiometer ? -1.0f : 1.0f);
-	}
-	else if (current_arm_position < (desired_arm_position - desired_position_lax_per_side_degrees)) {
-		set_motor_speed(motor, is_motor_same_direction_as_potentiometer ? 1.0f : -1.0f);
-	}
-	else {
-		set_motor_speed(motor, 0.0f);
-	}
-
-}
-
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == GPIO_PIN_14) {
-		potentiometer_value_at_rest_offset = get_potentiometer_input(potentiometer);
+    zero_joint(joint);
 	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  // TODO - Clean up this logic
 	if (htim == &htim14) {
-		updateMotorSpeeds();
+		move_joint_to_target(joint);
 	}
 	if (htim == &htim16) {
 		if (get_force_sensor_data(force_sensor) > minimum_newtons_indicating_skater) {
@@ -147,13 +110,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 		else {
 			if (skater_absent_for_long()) {
-				update_desired_arm_position(braking_arm_position_degrees);
+				set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
 			}
 			else {
 				ms_since_skater_detected += 200;
 			}
 		}
-		update_potentiometer_value(potentiometer);
+		refresh_joint_angle(joint);
 	}
 }
 

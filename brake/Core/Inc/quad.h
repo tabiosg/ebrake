@@ -4,8 +4,8 @@
 
 // A quadrature encoder is being used
 typedef struct {
-	QuadTimerData a;
-	QuadTimerData b;
+	QuadTimer a;
+	QuadTimer b;
 	int32_t current_value;
 	uint16_t value_prev;
 	uint16_t value_now;
@@ -17,7 +17,7 @@ typedef struct {
 // REQUIRES: timer_a and timer_b have the timer data of the quadrature lines
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Quadrature object
-Quadrature *new_quadrature_encoder(QuadTimerData timer_a, QuadTimerData timer_b);
+Quadrature *new_quadrature_encoder(QuadTimer timer_a, QuadTimer timer_b);
 
 // REQUIRES: Quadrature is an object
 // MODIFIES: nothing
