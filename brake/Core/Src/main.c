@@ -28,6 +28,7 @@
 #include "force_sensor.h"
 #include "quad.h"
 #include "imu.h"
+#include "skater.h"
 #include <stdbool.h>
 
 /* USER CODE END Includes */
@@ -60,15 +61,12 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
-const int minimum_newtons_indicating_skater = 200;
-const int min_ms_for_absent_skater_to_stop = 2000;
-
 ForceSensor *force_sensor = NULL;
 IMU *imu = NULL;
 Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
 Joint *joint = NULL;
-uint32_t ms_since_skater_detected = 0;
+Skater *skater = NULL;
 
 /* USER CODE END PV */
 
@@ -89,34 +87,24 @@ static void MX_TIM16_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-bool skater_absent_for_long() {
-	return ms_since_skater_detected >= min_ms_for_absent_skater_to_stop;
-}
-
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	// This is the limit switch callback function.
+	// If the limit switch is hit, then the joint should be zeroed.
 	if (GPIO_Pin == GPIO_PIN_14) {
-    zero_joint(joint);
+		zero_joint(joint);
 	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  // TODO - Clean up this logic
 	if (htim == &htim14) {
 		move_joint_to_target(joint);
 	}
 	if (htim == &htim16) {
-		if (get_force_sensor_data(force_sensor) > minimum_newtons_indicating_skater) {
-			ms_since_skater_detected = 0;
-		}
-		else {
-			if (skater_absent_for_long()) {
-				set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
-			}
-			else {
-				ms_since_skater_detected += 200;
-			}
-		}
+		refresh_skater_status(skater);
 		refresh_joint_angle(joint);
+		if (is_skater_gone(skater)) {
+			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
+		}
 	}
 }
 

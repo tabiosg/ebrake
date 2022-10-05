@@ -10,7 +10,7 @@
 #define DESIRED_ANGLE_LAX_PER_SIDE_DEGREES 2.5f
 #define IS_MOTOR_SAME_DIRECTION_AS_POTENTIOMETER true
 
-// A joint composes of a motor, a device to measure angle,
+// A Joint composes of a motor, a device to measure angle,
 // an angle, and a desired angle.
 typedef struct {
 	Motor *motor;

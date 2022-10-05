@@ -19,6 +19,6 @@ ForceSensor *new_force_sensor(PinData sck, PinData data);
 // REQUIRES: ForceSensor is an object
 // MODIFIES: nothing
 // EFFECTS: Returns a force detected in Newtons
-double get_force_sensor_data(ForceSensor *force_sensor);
+float get_force_sensor_data(ForceSensor *force_sensor);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

@@ -18,8 +18,8 @@ typedef struct {
 } QuadTimer;
 
 // REQUIRES: _timer corresponds to timer,
-// channel corresponds to timer channel,
-// and ccr_channel is a pointer to the ccr channel
+// _channel corresponds to timer channel,
+// and _ccr_channel is a pointer to the ccr channel
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created PWMTimer object
 PWMTimer *new_pwm_timer(
@@ -29,8 +29,8 @@ PWMTimer *new_pwm_timer(
 );
 
 // REQUIRES: _timer corresponds to timer,
-// channel corresponds to timer channel,
-// and cnt_channel is a pointer to the cnt channel
+// _channel corresponds to timer channel,
+// and _cnt_channel is a pointer to the cnt channel
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created QuadTimer object
 QuadTimer *new_quad_timer(
