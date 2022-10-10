@@ -21,5 +21,12 @@ Wireless *new_wireless(UART_HandleTypeDef *huart);
 // EFFECTS: Sends speed data over wireless
 void send_wireless_speed(Wireless *wireless, float speed);
 
+// REQUIRES: wireless is a Wireless object
+// and desired_angle is the desired angle
+// of the arm in degrees
+// MODIFIES: Nothing
+// EFFECTS: Sends desired angle degrees command over wireless
+void send_wireless_desired_angle(Wireless *wireless, float desired_angle);
+
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
