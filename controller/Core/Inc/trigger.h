@@ -26,10 +26,4 @@ Trigger *new_trigger(Potentiometer *_potentiometer);
 // by user based on trigger
 float get_trigger_input(Trigger *trigger);
 
-// REQUIRES: trigger is a Trigger object
-// MODIFIES: value
-// EFFECTS: Updates the desired angle being commanded
-// by user based on trigger
-void update_trigger_value(Trigger *trigger);
-
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

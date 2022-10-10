@@ -131,6 +131,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		send_wireless_speed(wireless, current_speed);
 	}
 	if (htim == &htim16) {
+		update_adc_sensor_values(adc_sensor);
 		refresh_skater_status(skater);
 		refresh_joint_angle(joint);
 		if (is_skater_gone(skater)) {

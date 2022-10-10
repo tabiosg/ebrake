@@ -22,12 +22,4 @@ float get_trigger_input(Trigger *trigger) {
 	return degrees_corrected;
 }
 
-// REQUIRES: trigger is a Trigger object
-// MODIFIES: value
-// EFFECTS: Updates the desired angle being commanded
-// by user based on trigger
-void update_trigger_value(Trigger *trigger) {
-	update_potentiometer_value(trigger->potentiometer);
-}
-
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
