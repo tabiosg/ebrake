@@ -29,6 +29,7 @@
 #include "quad.h"
 #include "imu.h"
 #include "skater.h"
+#include "wireless.h"
 #include <stdbool.h>
 
 /* USER CODE END Includes */
@@ -67,6 +68,7 @@ Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
 Joint *joint = NULL;
 Skater *skater = NULL;
+Wireless *wireless = NULL;
 
 /* USER CODE END PV */
 
@@ -98,6 +100,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim14) {
 		move_joint_to_target(joint);
+		float current_speed = 0.0f; // TODO - get actual speed
+		send_wireless_speed(wireless, current_speed);
 	}
 	if (htim == &htim16) {
 		refresh_skater_status(skater);

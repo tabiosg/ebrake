@@ -1,5 +1,3 @@
-#pragma once
-
 #include "trigger.h"
 
 /** PUBLIC FUNCTIONS **/

@@ -25,6 +25,7 @@
 #include "display.h"
 #include "potentiometer.h"
 #include "trigger.h"
+#include "wireless.h"
 
 /* USER CODE END Includes */
 
@@ -55,6 +56,7 @@ UART_HandleTypeDef huart1;
 Display *display = NULL;
 Potentiometer *potentiometer = NULL;
 Trigger *trigger = NULL;
+Wireless *wireless = NULL;
 
 /* USER CODE END PV */
 
@@ -74,7 +76,8 @@ static void MX_TIM16_Init(void);
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim14) {
-		// TODO - Wirelessly send get_trigger_input(trigger)
+		float desired_angle = get_trigger_input(trigger);
+		send_wireless_desired_angle(wireless, desired_angle);
 	}
 	if (htim == &htim16) {
 		update_trigger_value(trigger);
