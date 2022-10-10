@@ -108,12 +108,13 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**ADC1 GPIO Configuration
+    PA0     ------> ADC1_IN0
     PA2     ------> ADC1_IN2
     */
-    GPIO_InitStruct.Pin = POTENTIOMETER_Pin;
+    GPIO_InitStruct.Pin = FORCE_SENSOR_Pin|POTENTIOMETER_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(POTENTIOMETER_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ADC1_MspInit 1 */
 
@@ -139,9 +140,10 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     __HAL_RCC_ADC_CLK_DISABLE();
 
     /**ADC1 GPIO Configuration
+    PA0     ------> ADC1_IN0
     PA2     ------> ADC1_IN2
     */
-    HAL_GPIO_DeInit(POTENTIOMETER_GPIO_Port, POTENTIOMETER_Pin);
+    HAL_GPIO_DeInit(GPIOA, FORCE_SENSOR_Pin|POTENTIOMETER_Pin);
 
   /* USER CODE BEGIN ADC1_MspDeInit 1 */
 
@@ -236,10 +238,10 @@ void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef* htim_encoder)
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**TIM2 GPIO Configuration
-    PA0     ------> TIM2_CH1
     PA1     ------> TIM2_CH2
+    PA5     ------> TIM2_CH1
     */
-    GPIO_InitStruct.Pin = QUAD_A_Pin|QUAD_B_Pin;
+    GPIO_InitStruct.Pin = QUAD_B_Pin|QUAD_A_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -351,10 +353,10 @@ void HAL_TIM_Encoder_MspDeInit(TIM_HandleTypeDef* htim_encoder)
     __HAL_RCC_TIM2_CLK_DISABLE();
 
     /**TIM2 GPIO Configuration
-    PA0     ------> TIM2_CH1
     PA1     ------> TIM2_CH2
+    PA5     ------> TIM2_CH1
     */
-    HAL_GPIO_DeInit(GPIOA, QUAD_A_Pin|QUAD_B_Pin);
+    HAL_GPIO_DeInit(GPIOA, QUAD_B_Pin|QUAD_A_Pin);
 
   /* USER CODE BEGIN TIM2_MspDeInit 1 */
 

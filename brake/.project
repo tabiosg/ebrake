@@ -29,4 +29,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>libraries</name>
+			<type>2</type>
+			<location>C:/Users/gutst/Documents/ebrake/libraries</location>
+		</link>
+	</linkedResources>
 </projectDescription>

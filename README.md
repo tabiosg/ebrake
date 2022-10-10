@@ -20,10 +20,6 @@ When setting up the IDE, make sure to enable printf for floats.
 To do this, click Project -> Properties -> C/C++ Build -> Settings -> MCU Settings.
 Then check the box that says "Use float with printf from newlib-nano (-u_printf_float).
 
-Also, make sure to add the libraries folder in the path directory for both STM32 projects.
-To do this, click Project -> Properties -> C/C++ General -> Paths and Symbols -> Includes -> Add.
-Then select the libraries directory and click apply. Make sure to do the same for the other STM32 project.
-
 ---
 
 ## Attaching the System

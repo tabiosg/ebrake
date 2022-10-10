@@ -22,13 +22,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-#include "potentiometer.h"
-#include "motor.h"
-#include "joint.h"
 #include "force_sensor.h"
-#include "quad.h"
 #include "imu.h"
+#include "joint.h"
+#include "motor.h"
+#include "potentiometer.h"
 #include "skater.h"
+#include "timer_data.h"
 #include "wireless.h"
 #include <stdbool.h>
 #include <string.h>
@@ -63,11 +63,11 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
-ForceSensor *force_sensor = NULL;
 IMU *imu = NULL;
 Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
 Joint *joint = NULL;
+ForceSensor *force_sensor = NULL;
 Skater *skater = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
@@ -144,6 +144,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	imu = new_imu_sensor(&hi2c2);
+	PinData* motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin);
+	PWMTimer* motor_pwm_timer = new_pwm_timer(&htim3, TIM_CHANNEL_1, &(TIM3->CCR1));
+	motor = new_motor(motor_direction_pin, motor_pwm_timer);
+	potentiometer = new_potentiometer(&hadc1);
+	joint = new_joint(motor, potentiometer);
+	force_sensor = new_force_sensor(&hadc1);
+	skater = new_skater(force_sensor);
+	wireless = new_wireless(&huart1);
 
   /* USER CODE END 1 */
 
@@ -562,10 +571,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_2, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, BATTERY_LED_Pin|HX711_DATA_Pin|HX711_SCK_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, BATTERY_LED_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LIMIT_SWITCH_Pin */
   GPIO_InitStruct.Pin = LIMIT_SWITCH_Pin;
@@ -573,15 +582,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(LIMIT_SWITCH_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : DEBUG_LED_Pin */
-  GPIO_InitStruct.Pin = DEBUG_LED_Pin;
+  /*Configure GPIO pin : PF2 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BATTERY_LED_Pin HX711_DATA_Pin HX711_SCK_Pin DRV8825_DIR_Pin */
-  GPIO_InitStruct.Pin = BATTERY_LED_Pin|HX711_DATA_Pin|HX711_SCK_Pin|DRV8825_DIR_Pin;
+  /*Configure GPIO pins : BATTERY_LED_Pin DRV8825_DIR_Pin */
+  GPIO_InitStruct.Pin = BATTERY_LED_Pin|DRV8825_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

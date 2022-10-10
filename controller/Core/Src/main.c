@@ -118,6 +118,10 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+	potentiometer = new_potentiometer(&hadc1);
+	trigger = new_trigger(potentiometer);
+	wireless = new_wireless(&huart1);
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
