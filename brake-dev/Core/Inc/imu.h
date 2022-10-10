@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stm32g0xx_hal.h"
+#include <stdlib.h>
 
 typedef struct {
 	I2C_HandleTypeDef *i2c;
