@@ -2,31 +2,22 @@
 
 /** PUBLIC FUNCTIONS **/
 
-// REQUIRES: hadc is the adc channel
+// REQUIRES: _adc_sensor is an ADCSensor object and _rank is the adc rank
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created ForceSensor object
-ForceSensor *new_force_sensor(ADC_HandleTypeDef *hadc) {
+ForceSensor *new_force_sensor(ADCSensor *_adc_sensor, uint8_t _rank) {
     ForceSensor *force_sensor = (ForceSensor*) malloc(sizeof(ForceSensor));
-	force_sensor->adc = hadc;
+	force_sensor->adc_sensor = _adc_sensor;
+    force_sensor->rank = _rank;
 	return force_sensor;
 }
 
 // REQUIRES: ForceSensor is a force_sensor object
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored value of the force sensor in Newtons.
-float get_force_sensor_input(ForceSensor *force_sensor) {
-    return force_sensor->value * FORCE_SENSOR_NEWTONS_PER_COUNT_RATIO;
-}
-
-// REQUIRES: ForceSensor is a force_sensor object
-// MODIFIES: value
-// EFFECTS: Updates the stored value of value
-float update_force_sensor_value(ForceSensor *force_sensor) {
-    // TODO - read this https://community.st.com/s/article/using-timers-to-trigger-adc-conversions-periodically
-    // This will use interrupts instead of polling for conversion. MUCH BETTER.
-    HAL_ADC_Start(force_sensor->adc);
-    HAL_ADC_PollForConversion(force_sensor->adc, HAL_MAX_DELAY);
-    force_sensor->value = HAL_ADC_GetValue(force_sensor->adc);
+float get_force_sensor_data(ForceSensor *force_sensor) {
+    uint32_t raw_value = get_adc_sensor_value(force_sensor->adc_sensor, force_sensor->rank);
+    return raw_value * FORCE_SENSOR_NEWTONS_PER_COUNT_RATIO;
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

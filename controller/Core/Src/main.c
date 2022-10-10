@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "adc_sensor.h"
 #include "display.h"
 #include "potentiometer.h"
 #include "trigger.h"
@@ -54,6 +55,7 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
+ADCSensor *adc_sensor = NULL;
 Display *display = NULL;
 Potentiometer *potentiometer = NULL;
 Trigger *trigger = NULL;
@@ -117,8 +119,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
-	potentiometer = new_potentiometer(&hadc1);
+	adc_sensor = new_adc_sensor(&hadc1, 1);
+	potentiometer = new_potentiometer(adc_sensor, 0);
 	trigger = new_trigger(potentiometer);
 	wireless = new_wireless(&huart1);
 
@@ -229,9 +231,8 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.LowPowerAutoPowerOff = DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.DMAContinuousRequests = DISABLE;
