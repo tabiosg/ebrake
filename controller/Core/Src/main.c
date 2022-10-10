@@ -59,7 +59,7 @@ Potentiometer *potentiometer = NULL;
 Trigger *trigger = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
-uint8_t last_message[30];
+char last_message[30];
 
 /* USER CODE END PV */
 

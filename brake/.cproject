@@ -23,7 +23,7 @@
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board.1976453087" name="Board" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board" useByScannerDiscovery="false" value="genericBoard" valueType="string"/>
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults.674536557" name="Defaults" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults" useByScannerDiscovery="false" value="com.st.stm32cube.ide.common.services.build.inputs.revA.1.0.5 || Debug || true || Executable || com.st.stm32cube.ide.mcu.gnu.managedbuild.option.toolchain.value.workspace || STM32G031F8Px || 0 || 0 || arm-none-eabi- || ${gnu_tools_for_stm32_compiler_path} || ../Drivers/CMSIS/Include | ../Core/Inc | ../Drivers/STM32G0xx_HAL_Driver/Inc | ../Drivers/CMSIS/Device/ST/STM32G0xx/Include | ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy ||  ||  || USE_HAL_DRIVER | STM32G031xx ||  || Drivers | Core/Startup | Core ||  ||  || ${workspace_loc:/${ProjName}/STM32G031F8PX_FLASH.ld} || true || NonSecure ||  || secure_nsclib.o ||  || None || " valueType="string"/>
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.nanoscanffloat.679060430" name="Use float with scanf from newlib-nano (-u _scanf_float)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.nanoscanffloat" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.nanoprintffloat.2108411417" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.nanoprintffloat" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.nanoprintffloat.2108411417" name="Use float with printf from newlib-nano (-u _printf_float)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.nanoprintffloat" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform.35645782" isAbstract="false" osList="all" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform"/>
 							<builder buildPath="${workspace_loc:/brake}/Debug" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.builder.348692245" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.builder"/>
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.986669008" name="MCU GCC Assembler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler">
@@ -47,6 +47,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32G0xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\gutst\Documents\ebrake\libraries&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.549086976" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
