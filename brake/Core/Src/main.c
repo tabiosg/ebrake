@@ -31,6 +31,7 @@
 #include "skater.h"
 #include "wireless.h"
 #include <stdbool.h>
+#include <string.h>
 
 /* USER CODE END Includes */
 
@@ -69,6 +70,8 @@ Potentiometer *potentiometer = NULL;
 Joint *joint = NULL;
 Skater *skater = NULL;
 Wireless *wireless = NULL;
+uint8_t uart_buffer[30];
+uint8_t last_message[30];
 
 /* USER CODE END PV */
 
@@ -88,6 +91,26 @@ static void MX_TIM16_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	// TODO - Test if this entire function actually works.
+	HAL_NVIC_DisableIRQ(USART1_IRQn);
+	memcpy(last_message, uart_buffer, sizeof(last_message));
+	HAL_NVIC_EnableIRQ(USART1_IRQn);
+	HAL_UART_Receive_IT(huart, uart_buffer, 30);
+	__HAL_UART_CLEAR_OREFLAG(huart);
+	__HAL_UART_CLEAR_NEFLAG(huart);
+	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
+	if (last_message[1] == 'D') {
+		//Expected $DESIRED_ANGLE_CMD,<target>
+		char delim[] = ",";
+		char *identifier = strtok(last_message, delim);
+		if (!strcmp(identifier,"$DESIRED_ANGLE_CMD")){
+			float target = atof(strtok(NULL,delim));
+			set_joint_target(joint, target);
+		}
+	}
+}
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	// This is the limit switch callback function.
