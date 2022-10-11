@@ -108,7 +108,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		send_message_flag = true;
 	}
 	if (htim == &htim16) {
-		update_adc_sensor_values(adc_sensor);
+//		update_adc_sensor_values(adc_sensor);
 	}
 }
 
@@ -162,6 +162,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  update_adc_sensor_values(adc_sensor);
 	  if (send_message_flag) {
 		  float desired_angle = get_trigger_input(trigger);
 		  send_wireless_desired_angle(wireless, desired_angle);
@@ -239,8 +240,9 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.LowPowerAutoPowerOff = DISABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DiscontinuousConvMode = ENABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.DMAContinuousRequests = DISABLE;
