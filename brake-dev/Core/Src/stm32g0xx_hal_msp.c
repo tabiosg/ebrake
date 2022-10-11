@@ -435,16 +435,24 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     __HAL_RCC_USART1_CLK_ENABLE();
 
     __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
     /**USART1 GPIO Configuration
-    PC4     ------> USART1_TX
     PC5     ------> USART1_RX
+    PA9     ------> USART1_TX
     */
-    GPIO_InitStruct.Pin = BLUETOOTH_USART_TX_Pin|BLUETOOTH_USART_RX_Pin;
+    GPIO_InitStruct.Pin = BLUETOOTH_USART_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF1_USART1;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLUETOOTH_USART_RX_GPIO_Port, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = BLUETOOTH_USART_TX_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF1_USART1;
+    HAL_GPIO_Init(BLUETOOTH_USART_TX_GPIO_Port, &GPIO_InitStruct);
 
     /* USART1 interrupt Init */
     HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
@@ -473,10 +481,12 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     __HAL_RCC_USART1_CLK_DISABLE();
 
     /**USART1 GPIO Configuration
-    PC4     ------> USART1_TX
     PC5     ------> USART1_RX
+    PA9     ------> USART1_TX
     */
-    HAL_GPIO_DeInit(GPIOC, BLUETOOTH_USART_TX_Pin|BLUETOOTH_USART_RX_Pin);
+    HAL_GPIO_DeInit(BLUETOOTH_USART_RX_GPIO_Port, BLUETOOTH_USART_RX_Pin);
+
+    HAL_GPIO_DeInit(BLUETOOTH_USART_TX_GPIO_Port, BLUETOOTH_USART_TX_Pin);
 
     /* USART1 interrupt DeInit */
     HAL_NVIC_DisableIRQ(USART1_IRQn);
