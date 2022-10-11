@@ -74,6 +74,7 @@ Skater *skater = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
 char last_message[30];
+bool send_message_flag = false;
 
 /* USER CODE END PV */
 
@@ -125,8 +126,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim14) {
 		move_joint_to_target(joint);
-		float current_speed = 0.0f; // TODO - get actual speed
-		send_wireless_speed(wireless, current_speed);
+		send_message_flag = true;
 	}
 	if (htim == &htim16) {
 		update_adc_sensor_values(adc_sensor);
@@ -200,6 +200,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if (send_message_flag) {
+		  float current_speed = 0.0f; // TODO - get actual speed
+		  send_wireless_speed(wireless, current_speed);
+		  send_message_flag = false;
+	  }
   }
   /* USER CODE END 3 */
 }
@@ -426,7 +431,7 @@ static void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 15;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 65535;
+  htim14.Init.Period = SLOW_PERIOD;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
@@ -455,9 +460,9 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 7;
+  htim16.Init.Prescaler = 15;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 65535;
+  htim16.Init.Period = SLOW_PERIOD;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

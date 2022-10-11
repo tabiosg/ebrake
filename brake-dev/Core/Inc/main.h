@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define FAST_PERIOD 1000
+#define SLOW_PERIOD 2000
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOF
 #define FORCE_SENSOR_Pin GPIO_PIN_0

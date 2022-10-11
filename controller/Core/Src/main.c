@@ -63,6 +63,7 @@ Trigger *trigger = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
 char last_message[30];
+send_message_flag = false;
 
 /* USER CODE END PV */
 
@@ -104,8 +105,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim14) {
-		float desired_angle = get_trigger_input(trigger);
-		send_wireless_desired_angle(wireless, desired_angle);
+		send_message_flag = true;
 	}
 	if (htim == &htim16) {
 		update_adc_sensor_values(adc_sensor);
@@ -162,6 +162,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if (send_message_flag) {
+		  float desired_angle = get_trigger_input(trigger);
+		  send_wireless_desired_angle(wireless, desired_angle);
+		  send_message_flag = false;
+	  }
   }
   /* USER CODE END 3 */
 }

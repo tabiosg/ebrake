@@ -75,6 +75,7 @@ Skater *skater = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
 char last_message[30];
+send_message_flag = false;
 
 /* USER CODE END PV */
 
@@ -127,8 +128,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim14) {
 		move_joint_to_target(joint);
-		float current_speed = 0.0f; // TODO - get actual speed
-		send_wireless_speed(wireless, current_speed);
+		send_message_flag = true;
 	}
 	if (htim == &htim16) {
 		update_adc_sensor_values(adc_sensor);
@@ -202,6 +202,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if (send_message_flag) {
+		  float current_speed = 0.0f; // TODO - get actual speed
+		  send_wireless_speed(wireless, current_speed);
+		  send_message_flag = false;
+	  }
   }
   /* USER CODE END 3 */
 }
