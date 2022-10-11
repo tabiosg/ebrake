@@ -192,6 +192,7 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim14);
   HAL_TIM_Base_Start_IT(&htim16);
+  HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
 

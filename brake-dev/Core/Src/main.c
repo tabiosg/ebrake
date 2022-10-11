@@ -97,6 +97,7 @@ static void MX_I2C2_Init(void);
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	// TODO - Test if this entire function actually works.
+	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 	HAL_NVIC_DisableIRQ(USART1_IRQn);
 	memcpy(last_message, uart_buffer, sizeof(last_message));
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
@@ -113,6 +114,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 			set_joint_target(joint, target);
 		}
 	}
+	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
@@ -190,6 +192,7 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim14);
   HAL_TIM_Base_Start_IT(&htim16);
+  HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
 

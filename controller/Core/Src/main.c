@@ -153,6 +153,10 @@ int main(void)
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_TIM_Base_Start_IT(&htim14);
+  HAL_TIM_Base_Start_IT(&htim16);
+  HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
