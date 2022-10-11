@@ -28,6 +28,7 @@
 #include "trigger.h"
 #include "wireless.h"
 #include <string.h>
+#include <stdbool.h>
 
 /* USER CODE END Includes */
 
@@ -63,7 +64,7 @@ Trigger *trigger = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
 char last_message[30];
-send_message_flag = false;
+bool send_message_flag = false;
 
 /* USER CODE END PV */
 

@@ -18,4 +18,9 @@ typedef struct {
 // EFFECTS: Returns a pointer to a created PinData object
 PinData *new_pin_data(GPIO_TypeDef *_port, uint16_t _pin);
 
+// REQUIRES: pin_data is PinData and value is 0 or 1
+// MODIFIES: nothing
+// EFFECTS: Sets pin to value
+void set_pin_value(PinData *pin_data, uint8_t value);
+
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

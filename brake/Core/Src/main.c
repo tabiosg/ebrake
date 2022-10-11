@@ -75,7 +75,7 @@ Skater *skater = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
 char last_message[30];
-send_message_flag = false;
+bool send_message_flag = false;
 
 /* USER CODE END PV */
 

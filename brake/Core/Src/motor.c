@@ -32,7 +32,7 @@ void set_motor_speed(Motor *motor, float speed_1) {
     int32_t pwm = speed_1 * 100.0f;
     pwm = pwm > 100 ? 100 : (pwm < -100 ? -100 : pwm);
     *(motor->timer->ccr_channel) = 0;
-    HAL_GPIO_WritePin(motor->dir_pin->port, motor->dir_pin->pin, speed_1 >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    set_pin_value(motor->dir_pin, speed_1 >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
     *(motor->timer->ccr_channel) = 50;
 }
 
