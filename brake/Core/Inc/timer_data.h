@@ -2,6 +2,7 @@
 
 #include "stm32g0xx_hal.h"
 #include <stdint.h>
+#include <stdlib.h>
 
 // Used to store the data of a PWM timer
 typedef struct {

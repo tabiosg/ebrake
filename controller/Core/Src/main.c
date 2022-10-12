@@ -25,6 +25,7 @@
 #include "adc_sensor.h"
 #include "display.h"
 #include "potentiometer.h"
+#include "shift_register.h"
 #include "trigger.h"
 #include "wireless.h"
 #include <string.h>
@@ -60,6 +61,7 @@ UART_HandleTypeDef huart1;
 ADCSensor *adc_sensor = NULL;
 Display *display = NULL;
 Potentiometer *potentiometer = NULL;
+ShiftRegister *shift_register = NULL;
 Trigger *trigger = NULL;
 Wireless *wireless = NULL;
 uint8_t uart_buffer[30];
@@ -82,7 +84,6 @@ static void MX_TIM16_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	// TODO - Test if this entire function actually works.
@@ -109,7 +110,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		send_message_flag = true;
 	}
 	if (htim == &htim16) {
-//		update_adc_sensor_values(adc_sensor);
+		update_adc_sensor_values(adc_sensor);
 	}
 }
 
@@ -122,8 +123,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	PinData* shift_ser = new_pin_data(SHIFT_SER_GPIO_Port, SHIFT_SER_Pin);
+	PinData* shift_srclk = new_pin_data(SHIFT_SRCLK_GPIO_Port, SHIFT_SRCLK_Pin);
+	PinData* shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin);
+	PinData* shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
+	PinData* shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
 	adc_sensor = new_adc_sensor(&hadc1, 1);
 	potentiometer = new_potentiometer(adc_sensor, 0);
+	shift_register = new_shift_register(
+			shift_ser,
+			shift_srclk,
+			shift_not_srclk,
+			shift_rclk,
+			shift_not_oe);
+	display = new_display(shift_register);
 	trigger = new_trigger(potentiometer);
 	wireless = new_wireless(&huart1);
 
@@ -167,7 +180,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  update_adc_sensor_values(adc_sensor);
 	  if (send_message_flag) {
 		  float desired_angle = get_trigger_input(trigger);
 		  send_wireless_desired_angle(wireless, desired_angle);
@@ -421,11 +433,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, BUZZER_Pin|BATTERY_OUTPUT_Pin|DISPLAY_0_Pin|DISPLAY_1_Pin
-                          |DISPLAY_2_Pin|DISPLAY_3_Pin|DISPLAY_5_Pin|DISPLAY_6_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, BUZZER_Pin|BATTERY_OUTPUT_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
+                          |SHIFT_NOT_SRCLK_Pin|SHIFT_RCLK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DISPLAY_4_GPIO_Port, DISPLAY_4_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : DEBUG_LED_Pin */
   GPIO_InitStruct.Pin = DEBUG_LED_Pin;
@@ -434,10 +446,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BUZZER_Pin BATTERY_OUTPUT_Pin DISPLAY_0_Pin DISPLAY_1_Pin
-                           DISPLAY_2_Pin DISPLAY_3_Pin DISPLAY_5_Pin DISPLAY_6_Pin */
-  GPIO_InitStruct.Pin = BUZZER_Pin|BATTERY_OUTPUT_Pin|DISPLAY_0_Pin|DISPLAY_1_Pin
-                          |DISPLAY_2_Pin|DISPLAY_3_Pin|DISPLAY_5_Pin|DISPLAY_6_Pin;
+  /*Configure GPIO pins : BUZZER_Pin BATTERY_OUTPUT_Pin SHIFT_SER_Pin SHIFT_SRCLK_Pin
+                           SHIFT_NOT_SRCLK_Pin SHIFT_RCLK_Pin */
+  GPIO_InitStruct.Pin = BUZZER_Pin|BATTERY_OUTPUT_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
+                          |SHIFT_NOT_SRCLK_Pin|SHIFT_RCLK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -449,12 +461,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BATTERY_STATUS_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : DISPLAY_4_Pin */
-  GPIO_InitStruct.Pin = DISPLAY_4_Pin;
+  /*Configure GPIO pin : SHIFT_NOT_OE_Pin */
+  GPIO_InitStruct.Pin = SHIFT_NOT_OE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DISPLAY_4_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(SHIFT_NOT_OE_GPIO_Port, &GPIO_InitStruct);
 
 }
 
