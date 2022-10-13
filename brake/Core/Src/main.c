@@ -29,7 +29,6 @@
 #include "joint.h"
 #include "motor.h"
 #include "potentiometer.h"
-#include "pwm_timer_data.h"
 #include "skater.h"
 #include "wireless.h"
 #include <stdbool.h>
@@ -75,7 +74,7 @@ ForceSensor *force_sensor = NULL;
 Skater *skater = NULL;
 Wireless *wireless = NULL;
 PinData* motor_direction_pin = NULL;
-PWMTimer* motor_pwm_timer = NULL;
+PinData* motor_step_pin = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 uint8_t uart_buffer[30];
@@ -157,11 +156,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
 	adc_sensor = new_adc_sensor(&hadc1, 2);
 	imu = new_imu_sensor(&hi2c2);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin);
-	motor_pwm_timer = new_pwm_timer(&htim3, TIM_CHANNEL_1, &(TIM3->CCR1));
-	motor = new_motor(motor_direction_pin, motor_pwm_timer);
+	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin);
+	motor = new_motor(motor_direction_pin, motor_step_pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	potentiometer = new_potentiometer(adc_sensor, 1);
@@ -200,7 +200,6 @@ int main(void)
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
-  start_pwm_timer(motor_pwm_timer);
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
   HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
