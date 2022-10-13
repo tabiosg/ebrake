@@ -43,6 +43,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define USE_POTENTIOMETER_FEEDBACK false
+#define USE_FORCE_SENSOR false
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -134,8 +138,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == slow_interrupt_timer->timer) {
 		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 		update_adc_sensor_values(adc_sensor);
-		refresh_skater_status(skater);
-		refresh_joint_angle(joint);
+		if (USE_FORCE_SENSOR) {
+			refresh_skater_status(skater);
+		}
+		if (USE_POTENTIOMETER_FEEDBACK) {
+			refresh_joint_angle(joint);
+		}
 		if (is_skater_gone(skater)) {
 			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
 		}
@@ -202,6 +210,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
     /* USER CODE END WHILE */

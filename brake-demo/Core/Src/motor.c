@@ -17,16 +17,17 @@ Motor *new_motor(
 }
 
 // REQUIRES: motor is a Motor object
-// and shifted_degrees is the amount to turn
+// and steps is the amount of steps to turn
 // MODIFIES: nothing
-// EFFECTS: Moves the motor a certain angle away in degrees
-void change_motor_angle(Motor *motor, float angle) {
-    set_pin_value(motor->dir_pin, angle >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    angle = angle > 0 ? angle : -angle;
-    for (int i = 0; i < angle / MOTOR_DEGREES_PER_STEP; ++i) {
+// EFFECTS: Moves the motor a certain by a certain amount of steps
+void change_motor_steps(Motor *motor, int steps) {
+    set_pin_value(motor->dir_pin, steps >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    steps = abs(steps);
+    for (int i = 0; i < steps; ++i) {
     	set_pin_value(motor->stp_pin, GPIO_PIN_SET);
 		for (int j = 0; j < 1000; ++j);
 		set_pin_value(motor->stp_pin, GPIO_PIN_RESET);
+		for (int j = 0; j < 1000; ++j);
     }
 }
 

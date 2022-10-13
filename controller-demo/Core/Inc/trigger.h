@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TRIGGER_DEGREES_PER_POTENTIOMETER_COUNTS 120.0f / 4096.0f
+#define TRIGGER_DEGREES_PER_POTENTIOMETER_COUNTS 90.0f / 4096.0f
 #define TRIGGER_OFFSET_DEGREES 0.0f
 
 // A Skater keeps track of the state of

@@ -26,9 +26,9 @@ Motor *new_motor(
 );
 
 // REQUIRES: motor is a Motor object
-// and shifted_degrees is the amount to turn
+// and steps is the amount of steps to turn
 // MODIFIES: nothing
-// EFFECTS: Moves the motor a certain angle away in degrees
-void change_motor_angle(Motor *motor, float angle);
+// EFFECTS: Moves the motor a certain by a certain amount of steps
+void change_motor_steps(Motor *motor, int steps);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

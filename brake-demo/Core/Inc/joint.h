@@ -7,7 +7,8 @@
 
 #define AUTOMATIC_BRAKING_ANGLE_DEGREES 90.0f
 #define RATIO_OF_RAW_POTENT_DATA_PER_JOINT_DEGREE 4096.0f / 180.0f;
-#define DESIRED_ANGLE_LAX_DEGREES 5.0f
+#define MOTOR_STEPS_PER_JOINT_DEGREE 3000 / 90.0f
+#define DESIRED_ANGLE_LAX_DEGREES 1.0f
 #define IS_MOTOR_SAME_DIRECTION_AS_POTENTIOMETER true
 
 // A Joint composes of a motor, a device to measure angle,
@@ -20,6 +21,7 @@ typedef struct {
     float desired_angle_degrees;
     float desired_angle_lax_per_side_degrees;
     bool is_calibrated;
+    bool use_closed_loop;
 } Joint;
 
 /** PUBLIC FUNCTIONS **/

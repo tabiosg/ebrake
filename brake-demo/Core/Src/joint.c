@@ -24,7 +24,9 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer) {
 void move_joint_to_target(Joint *joint) {
 	float difference_degrees = joint->desired_angle_degrees - joint->current_angle_degrees;
 	if (abs(difference_degrees) < DESIRED_ANGLE_LAX_DEGREES) {
-		change_motor_angle(joint->motor, difference_degrees);
+		int motor_steps = difference_degrees * MOTOR_STEPS_PER_JOINT_DEGREE;
+		change_motor_steps(joint->motor, difference_degrees);
+		joint->current_angle_degrees += motor_steps / MOTOR_STEPS_PER_JOINT_DEGREE;
 	}
 }
 
@@ -33,7 +35,7 @@ void move_joint_to_target(Joint *joint) {
 // EFFECTS: Updates current_angle_degrees based on potentiometer
 // reading and potentiometer offset
 void refresh_joint_angle(Joint *joint) {
-    uint32_t raw_data = get_potentiometer_input(joint->potentiometer);
+	uint32_t raw_data = get_potentiometer_input(joint->potentiometer);
 	int32_t adjusted_data = raw_data - joint->potentiometer_value_at_rest_offset;
 	joint->current_angle_degrees = adjusted_data / RATIO_OF_RAW_POTENT_DATA_PER_JOINT_DEGREE;
 }
