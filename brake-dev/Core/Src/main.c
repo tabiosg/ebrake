@@ -25,11 +25,12 @@
 #include "adc_sensor.h"
 #include "force_sensor.h"
 #include "imu.h"
+#include "interrupt_timer.h"
 #include "joint.h"
 #include "motor.h"
 #include "potentiometer.h"
 #include "skater.h"
-#include "timer_data.h"
+#include "pwm_timer_data.h"
 #include "wireless.h"
 #include <stdbool.h>
 #include <string.h>
@@ -72,6 +73,10 @@ Joint *joint = NULL;
 ForceSensor *force_sensor = NULL;
 Skater *skater = NULL;
 Wireless *wireless = NULL;
+PinData* motor_direction_pin = NULL;
+PWMTimer* motor_pwm_timer = NULL;
+InterruptTimer* slow_interrupt_timer = NULL;
+InterruptTimer* fast_interrupt_timer = NULL;
 uint8_t uart_buffer[30];
 char last_message[30];
 bool send_message_flag = false;
@@ -96,8 +101,6 @@ static void MX_I2C2_Init(void);
 /* USER CODE BEGIN 0 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	// TODO - Test if this entire function actually works.
-	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 	HAL_NVIC_DisableIRQ(USART1_IRQn);
 	memcpy(last_message, uart_buffer, sizeof(last_message));
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
@@ -110,33 +113,36 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		char delim[] = ",";
 		char *identifier = strtok(last_message, delim);
 		if (!strcmp(identifier,"$DESIRED_ANGLE_CMD")){
-			float target = atof(strtok(NULL,delim));
-			set_joint_target(joint, target);
+			if (!is_skater_gone(skater)) {
+				float target = atof(strtok(NULL,delim));
+				set_joint_target(joint, target);
+			}
 		}
 	}
-	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	// This is the limit switch callback function.
 	// If the limit switch is hit, then the joint should be zeroed.
-	if (GPIO_Pin == GPIO_PIN_14) {
+	if (GPIO_Pin == LIMIT_SWITCH_Pin) {
 		zero_joint(joint);
 	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim == &htim14) {
+	if (htim == fast_interrupt_timer->timer) {
 		move_joint_to_target(joint);
 		send_message_flag = true;
 	}
-	if (htim == &htim16) {
+	if (htim == slow_interrupt_timer->timer) {
+		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 		update_adc_sensor_values(adc_sensor);
 		refresh_skater_status(skater);
 		refresh_joint_angle(joint);
 		if (is_skater_gone(skater)) {
 			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
 		}
+		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 	}
 }
 
@@ -152,9 +158,11 @@ int main(void)
 
 	adc_sensor = new_adc_sensor(&hadc1, 2);
 	imu = new_imu_sensor(&hi2c2);
-	PinData* motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin);
-	PWMTimer* motor_pwm_timer = new_pwm_timer(&htim3, TIM_CHANNEL_1, &(TIM3->CCR1));
+	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin);
+	motor_pwm_timer = new_pwm_timer(&htim3, TIM_CHANNEL_1, &(TIM3->CCR1));
 	motor = new_motor(motor_direction_pin, motor_pwm_timer);
+	slow_interrupt_timer = new_interrupt_timer(&htim14);
+	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	potentiometer = new_potentiometer(adc_sensor, 1);
 	joint = new_joint(motor, potentiometer);
 	force_sensor = new_force_sensor(adc_sensor, 0);
@@ -190,8 +198,9 @@ int main(void)
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_Base_Start_IT(&htim14);
-  HAL_TIM_Base_Start_IT(&htim16);
+  start_pwm_timer(motor_pwm_timer);
+  start_interrupt_timer(fast_interrupt_timer);
+  start_interrupt_timer(slow_interrupt_timer);
   HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
@@ -389,7 +398,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 15;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
+  htim3.Init.Period = 200;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
@@ -466,7 +475,7 @@ static void MX_TIM16_Init(void)
   htim16.Instance = TIM16;
   htim16.Init.Prescaler = 15;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = SLOW_PERIOD;
+  htim16.Init.Period = FAST_PERIOD;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

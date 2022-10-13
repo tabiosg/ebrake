@@ -2,11 +2,12 @@
 
 #include "stm32g0xx_hal.h"
 #include "pin_data.h"
-#include "timer_data.h"
+#include "pwm_timer_data.h"
 #include <stdint.h>
 #include <stdlib.h>
 
-// The motor is a NEMA17 stepper motor
+// The motor is a NEMA17 stepper motor.
+// The stepper motor has 200 steps per revolution.
 // The motor driver being used is a DRV8825
 typedef struct {
 	PinData *dir_pin;

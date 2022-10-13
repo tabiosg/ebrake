@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SLOW_PERIOD 2000
+#define FAST_PERIOD 1000
 #define BLUETOOTH_UART_RX_Pin GPIO_PIN_7
 #define BLUETOOTH_UART_RX_GPIO_Port GPIOB
 #define DEBUG_LED_Pin GPIO_PIN_2

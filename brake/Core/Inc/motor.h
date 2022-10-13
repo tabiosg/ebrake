@@ -1,8 +1,8 @@
 #pragma once
 
+#include "pwm_timer_data.h"
 #include "stm32g0xx_hal.h"
 #include "pin_data.h"
-#include "timer_data.h"
 #include <stdint.h>
 #include <stdlib.h>
 

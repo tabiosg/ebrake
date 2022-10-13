@@ -24,6 +24,7 @@
 
 #include "adc_sensor.h"
 #include "display.h"
+#include "interrupt_timer.h"
 #include "potentiometer.h"
 #include "shift_register.h"
 #include "trigger.h"
@@ -64,6 +65,13 @@ Potentiometer *potentiometer = NULL;
 ShiftRegister *shift_register = NULL;
 Trigger *trigger = NULL;
 Wireless *wireless = NULL;
+PinData* shift_ser = NULL;
+PinData* shift_srclk = NULL;
+PinData* shift_not_srclk = NULL;
+PinData* shift_rclk = NULL;
+PinData* shift_not_oe = NULL;
+InterruptTimer* slow_interrupt_timer = NULL;
+InterruptTimer* fast_interrupt_timer = NULL;
 uint8_t uart_buffer[30];
 char last_message[30];
 bool send_message_flag = false;
@@ -86,7 +94,6 @@ static void MX_TIM16_Init(void);
 /* USER CODE BEGIN 0 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	// TODO - Test if this entire function actually works.
 	HAL_NVIC_DisableIRQ(USART1_IRQn);
 	memcpy(last_message, uart_buffer, sizeof(last_message));
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
@@ -106,10 +113,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim == &htim14) {
+	if (htim == fast_interrupt_timer->timer) {
 		send_message_flag = true;
 	}
-	if (htim == &htim16) {
+	if (htim == slow_interrupt_timer->timer) {
 		update_adc_sensor_values(adc_sensor);
 	}
 }
@@ -123,11 +130,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	PinData* shift_ser = new_pin_data(SHIFT_SER_GPIO_Port, SHIFT_SER_Pin);
-	PinData* shift_srclk = new_pin_data(SHIFT_SRCLK_GPIO_Port, SHIFT_SRCLK_Pin);
-	PinData* shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin);
-	PinData* shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
-	PinData* shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
+	shift_ser = new_pin_data(SHIFT_SER_GPIO_Port, SHIFT_SER_Pin);
+	shift_srclk = new_pin_data(SHIFT_SRCLK_GPIO_Port, SHIFT_SRCLK_Pin);
+	shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin);
+	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
+	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
+	slow_interrupt_timer = new_interrupt_timer(&htim14);
+	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	adc_sensor = new_adc_sensor(&hadc1, 1);
 	potentiometer = new_potentiometer(adc_sensor, 0);
 	shift_register = new_shift_register(
@@ -167,8 +176,8 @@ int main(void)
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_Base_Start_IT(&htim14);
-  HAL_TIM_Base_Start_IT(&htim16);
+  start_interrupt_timer(fast_interrupt_timer);
+  start_interrupt_timer(slow_interrupt_timer);
   HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
@@ -306,7 +315,7 @@ static void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 15;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 65535;
+  htim14.Init.Period = SLOW_PERIOD;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
@@ -335,9 +344,9 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 7;
+  htim16.Init.Prescaler = 15;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 65535;
+  htim16.Init.Period = FAST_PERIOD;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

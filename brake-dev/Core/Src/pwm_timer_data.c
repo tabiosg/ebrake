@@ -1,4 +1,4 @@
-#include "timer_data.h"
+#include "pwm_timer_data.h"
 
 /** PUBLIC FUNCTIONS **/
 
@@ -10,7 +10,7 @@
 PWMTimer *new_pwm_timer(
 	TIM_HandleTypeDef *_timer,
 	uint32_t _channel,
-	uint32_t *_ccr_channel
+	volatile uint32_t *_ccr_channel
 ) {
     PWMTimer *pwm_timer = (PWMTimer*) malloc(sizeof(PWMTimer));
 	pwm_timer->timer = _timer;
@@ -19,8 +19,11 @@ PWMTimer *new_pwm_timer(
 	return pwm_timer;
 }
 
+// REQUIRES: pwm_timer is a PWMTimer object
+// MODIFIES: nothing
+// EFFECTS: Enables PWM for the timer
 void start_pwm_timer(PWMTimer *pwm_timer) {
-    return;
+	HAL_TIM_PWM_Start(pwm_timer->timer, pwm_timer ->channel);
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

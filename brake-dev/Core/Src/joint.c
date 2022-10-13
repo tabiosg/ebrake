@@ -11,8 +11,8 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer) {
 	joint->motor = _motor;
     joint->potentiometer = _potentiometer;
     joint->potentiometer_value_at_rest_offset = 0;
-    joint->current_angle_degrees = 0;
-    joint->desired_angle_degrees = 0;
+    joint->current_angle_degrees = 0.0f;
+    joint->desired_angle_degrees = 0.0f;
 	joint->is_calibrated = false;
 	return joint;
 }

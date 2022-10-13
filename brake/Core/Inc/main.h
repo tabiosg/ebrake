@@ -59,11 +59,15 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SLOW_PERIOD 2000
+#define FAST_PERIOD 1000
 #define BLUETOOTH_UART_RX_Pin GPIO_PIN_7
 #define BLUETOOTH_UART_RX_GPIO_Port GPIOB
 #define LIMIT_SWITCH_Pin GPIO_PIN_14
 #define LIMIT_SWITCH_GPIO_Port GPIOC
 #define LIMIT_SWITCH_EXTI_IRQn EXTI4_15_IRQn
+#define DEBUG_LED_Pin GPIO_PIN_2
+#define DEBUG_LED_GPIO_Port GPIOF
 #define FORCE_SENSOR_Pin GPIO_PIN_0
 #define FORCE_SENSOR_GPIO_Port GPIOA
 #define QUAD_B_Pin GPIO_PIN_1

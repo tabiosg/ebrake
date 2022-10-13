@@ -8,7 +8,7 @@
 typedef struct {
 	TIM_HandleTypeDef *timer;
 	uint32_t channel;
-	uint32_t *ccr_channel;
+	volatile uint32_t *ccr_channel;
 } PWMTimer;
 
 /** PUBLIC FUNCTIONS **/
@@ -21,9 +21,12 @@ typedef struct {
 PWMTimer *new_pwm_timer(
 	TIM_HandleTypeDef *_timer,
 	uint32_t _channel,
-	uint32_t *_ccr_channel
+	volatile uint32_t *_ccr_channel
 );
 
+// REQUIRES: pwm_timer is a PWMTimer object
+// MODIFIES: nothing
+// EFFECTS: Enables PWM for the timer
 void start_pwm_timer(PWMTimer *pwm_timer);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
