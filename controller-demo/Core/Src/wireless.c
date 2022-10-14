@@ -17,7 +17,7 @@ Wireless *new_wireless(UART_HandleTypeDef *huart) {
 // EFFECTS: Sends speed data over wireless
 void send_wireless_speed(Wireless *wireless, float speed) {
 	char string[30];
-	sprintf((char *)string, "$SPEED_DATA,%f,\n", speed);
+	sprintf((char *)string, "$SPEED_DATA,%f,", speed);
 	send_wireless_string_30(wireless, string);
 }
 
@@ -28,7 +28,7 @@ void send_wireless_speed(Wireless *wireless, float speed) {
 // EFFECTS: Sends desired angle degrees command over wireless
 void send_wireless_desired_angle(Wireless *wireless, float desired_angle) {
 	char string[30];
-	sprintf((char *)string, "$DESIRED_ANGLE_CMD,%f,\n", desired_angle);
+	sprintf((char *)string, "$TARGET,%f,", desired_angle);
 	send_wireless_string_30(wireless, string);
 }
 

@@ -118,11 +118,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	}
 	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
 	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
-	if (last_message[1] == 'D') {
-		//Expected $DESIRED_ANGLE_CMD,<target>
+	if (last_message[1] == 'T') {
+		//Expected $TARGET,<target>
 		char delim[] = ",";
 		char *identifier = strtok(last_message, delim);
-		if (!strcmp(identifier,"$DESIRED_ANGLE_CMD")){
+		if (!strcmp(identifier,"$TARGET")){
 			bool is_skater_here = !is_skater_gone(skater);
 			if (is_skater_here) {
 				float target = atof(strtok(NULL,delim));
@@ -147,7 +147,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
-		move_joint_to_target(joint);
 		send_message_flag = true;
 	}
 	if (htim == slow_interrupt_timer->timer) {
@@ -229,6 +228,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  move_joint_to_target(joint);
 	  if (send_message_flag) {
 		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
