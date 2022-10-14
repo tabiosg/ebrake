@@ -54,6 +54,7 @@ void set_joint_target(Joint *joint, float target) {
 // current potentiometer readings are mapped to zero
 void zero_joint(Joint *joint) {
 	joint->potentiometer_value_at_rest_offset = get_potentiometer_input(joint->potentiometer);
+	joint->current_angle_degrees = 0;
 }
 
 
