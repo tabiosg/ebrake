@@ -102,24 +102,39 @@ static void MX_I2C2_Init(void);
 /* USER CODE BEGIN 0 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+
 	HAL_NVIC_DisableIRQ(USART1_IRQn);
-	memcpy(last_message, uart_buffer, sizeof(last_message));
+	memcpy(last_message, uart_buffer, 30);
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_UART_Receive_IT(huart, uart_buffer, 30);
+	HAL_StatusTypeDef ret = HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 	__HAL_UART_CLEAR_OREFLAG(huart);
 	__HAL_UART_CLEAR_NEFLAG(huart);
+	if (ret != HAL_OK) {
+		Error_Handler();
+		HAL_UART_Abort_IT(&huart1);
+		SET_BIT(huart1.Instance->CR3, USART_CR3_EIE);
+		//SET_BIT(huart1.Instance->CR1, USART_CR1_PEIE | USART_CR1_RXNEIE);
+		ret = HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
+	}
 	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
+	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 	if (last_message[1] == 'D') {
 		//Expected $DESIRED_ANGLE_CMD,<target>
 		char delim[] = ",";
 		char *identifier = strtok(last_message, delim);
 		if (!strcmp(identifier,"$DESIRED_ANGLE_CMD")){
-			if (!is_skater_gone(skater)) {
+			bool is_skater_here = !is_skater_gone(skater);
+			if (is_skater_here) {
 				float target = atof(strtok(NULL,delim));
 				set_joint_target(joint, target);
 			}
 		}
 	}
+	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
@@ -136,7 +151,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		send_message_flag = true;
 	}
 	if (htim == slow_interrupt_timer->timer) {
-		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 		update_adc_sensor_values(adc_sensor);
 		if (USE_FORCE_SENSOR) {
 			refresh_skater_status(skater);
@@ -147,7 +161,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		if (is_skater_gone(skater)) {
 			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
 		}
-		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 	}
 }
 
@@ -217,7 +230,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  if (send_message_flag) {
-		  float current_speed = 0.0f; // TODO - get actual speed
+		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
 		  send_message_flag = false;
 	  }

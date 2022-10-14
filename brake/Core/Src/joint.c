@@ -23,10 +23,11 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer) {
 // EFFECTS: Moves the motor based on current angle and desired angle
 void move_joint_to_target(Joint *joint) {
 	float difference_degrees = joint->desired_angle_degrees - joint->current_angle_degrees;
-	if (abs(difference_degrees) < DESIRED_ANGLE_LAX_DEGREES) {
+	if (abs(difference_degrees) > DESIRED_ANGLE_LAX_DEGREES) {
 		int motor_steps = difference_degrees * MOTOR_STEPS_PER_JOINT_DEGREE;
-		change_motor_steps(joint->motor, difference_degrees);
-		joint->current_angle_degrees += motor_steps / MOTOR_STEPS_PER_JOINT_DEGREE;
+		change_motor_steps(joint->motor, motor_steps);
+		float changed_degrees = motor_steps / MOTOR_STEPS_PER_JOINT_DEGREE;
+		joint->current_angle_degrees += changed_degrees;
 	}
 }
 
