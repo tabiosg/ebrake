@@ -117,7 +117,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		ret = HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 	}
 	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
-	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 	if (last_message[1] == 'T') {
 		//Expected $TARGET,<target>
 		char delim[] = ",";
@@ -130,7 +129,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 			}
 		}
 	}
-	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
@@ -228,7 +226,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 	  move_joint_to_target(joint);
+	  HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 	  if (send_message_flag) {
 		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);

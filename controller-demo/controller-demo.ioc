@@ -2,10 +2,11 @@
 ADC1.Channel-2\#ChannelRegularConversion=ADC_CHANNEL_0
 ADC1.ContinuousConvMode=DISABLE
 ADC1.DiscontinuousConvMode=ENABLE
-ADC1.IPParameters=Rank-2\#ChannelRegularConversion,master,Channel-2\#ChannelRegularConversion,SamplingTime-2\#ChannelRegularConversion,NbrOfConversionFlag,ScanConvMode,DiscontinuousConvMode,NbrOfConversion,ContinuousConvMode
+ADC1.IPParameters=Rank-2\#ChannelRegularConversion,master,Channel-2\#ChannelRegularConversion,SamplingTime-2\#ChannelRegularConversion,NbrOfConversionFlag,ScanConvMode,DiscontinuousConvMode,NbrOfConversion,ContinuousConvMode,Resolution
 ADC1.NbrOfConversion=1
 ADC1.NbrOfConversionFlag=1
 ADC1.Rank-2\#ChannelRegularConversion=1
+ADC1.Resolution=ADC_RESOLUTION_6B
 ADC1.SamplingTime-2\#ChannelRegularConversion=ADC_SAMPLETIME_3CYCLES
 ADC1.ScanConvMode=ENABLE
 ADC1.master=1

@@ -107,17 +107,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		char *identifier = strtok(last_message, delim);
 		if (!strcmp(identifier,"SPEED_DATA")){
 			float speed = atof(strtok(NULL,delim));
-			update_display_number(display, speed);
+//			update_display_number(display, speed);
 		}
 	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
-		send_message_flag = true;
+//		send_message_flag = true;
 	}
 	if (htim == slow_interrupt_timer->timer) {
-		update_adc_sensor_values(adc_sensor);
+//		update_adc_sensor_values(adc_sensor);
 	}
 }
 
@@ -186,16 +186,20 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if (send_message_flag) {
+	  update_adc_sensor_values(adc_sensor);
+//	  if (send_message_flag) {
 		  float desired_angle = get_trigger_input(trigger);
 		  send_wireless_desired_angle(wireless, desired_angle);
 		  send_message_flag = false;
-	  }
+
+		  update_display_number(display, desired_angle / 10);
+//	  }
   }
   /* USER CODE END 3 */
 }
@@ -263,7 +267,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_6B;
   hadc1.Init.ScanConvMode = ENABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = ENABLE;

@@ -10,16 +10,16 @@
 Display *new_display(ShiftRegister *_shift_register) {
 	Display *display = (Display*) malloc(sizeof(Display));
 	display->shift_register = _shift_register;
-	display->display_numbers[0] = 0x3F;
-	display->display_numbers[1] = 0x06;
-	display->display_numbers[2] = 0x5B;
-	display->display_numbers[3] = 0x4F;
-	display->display_numbers[4] = 0x66;
-	display->display_numbers[5] = 0x6D;
-	display->display_numbers[6] = 0x7D;
-	display->display_numbers[7] = 0x07;
-	display->display_numbers[8] = 0x7F;
-	display->display_numbers[9] = 0x4F;
+	display->display_numbers[0] = 0xC0;
+	display->display_numbers[1] = 0xF9;
+	display->display_numbers[2] = 0xA4;
+	display->display_numbers[3] = 0xB0;
+	display->display_numbers[4] = 0x99;
+	display->display_numbers[5] = 0x92;
+	display->display_numbers[6] = 0x82;
+	display->display_numbers[7] = 0xF8;
+	display->display_numbers[8] = 0x80;
+	display->display_numbers[9] = 0x90;
 	return display;
 }
 
