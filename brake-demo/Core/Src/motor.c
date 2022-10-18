@@ -23,7 +23,7 @@ Motor *new_motor(
 void change_motor_steps(Motor *motor, int steps) {
     set_pin_value(motor->dir_pin, steps >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
     steps = abs(steps);
-    float delay = 1000;
+    float delay = 700;
     for (int i = 0; i < steps; ++i) {
     	if (delay > 250) {
     		delay -= 0.5;

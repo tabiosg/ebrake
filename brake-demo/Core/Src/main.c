@@ -226,14 +226,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 	  move_joint_to_target(joint);
-	  HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
-	  if (send_message_flag) {
-		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
-		  send_wireless_speed(wireless, current_speed);
-		  send_message_flag = false;
-	  }
+//	  if (send_message_flag) {
+//		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
+//		  send_wireless_speed(wireless, current_speed);
+//		  send_message_flag = false;
+//	  }
   }
   /* USER CODE END 3 */
 }

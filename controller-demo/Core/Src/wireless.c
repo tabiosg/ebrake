@@ -40,7 +40,7 @@ void send_wireless_desired_angle(Wireless *wireless, float desired_angle) {
 // MODIFIES: Nothing
 // EFFECTS: Sends the character array over wireless
 void send_wireless_string_30(Wireless *wireless, char string[30]) {
-	HAL_Delay(300);
+	HAL_Delay(50);
 	HAL_UART_Transmit_IT(wireless->uart, (uint8_t *)string, 30);
-	HAL_Delay(100);
+	HAL_Delay(50);
 }
