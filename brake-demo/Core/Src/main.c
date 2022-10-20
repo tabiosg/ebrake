@@ -227,11 +227,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  move_joint_to_target(joint);
-//	  if (send_message_flag) {
-//		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
-//		  send_wireless_speed(wireless, current_speed);
-//		  send_message_flag = false;
-//	  }
+	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
+		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
+		  send_wireless_speed(wireless, current_speed);
+		  send_message_flag = false;
+	  }
   }
   /* USER CODE END 3 */
 }

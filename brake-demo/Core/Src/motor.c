@@ -20,10 +20,16 @@ Motor *new_motor(
 // and steps is the amount of steps to turn
 // MODIFIES: nothing
 // EFFECTS: Moves the motor a certain by a certain amount of steps
+static int last_positive = 0;
+static float delay = 700;
 void change_motor_steps(Motor *motor, int steps) {
     set_pin_value(motor->dir_pin, steps >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    if (last_positive != (steps > 0)) {
+    	// if direction changed;
+    	delay = 700;
+    }
+    last_positive = steps > 0;
     steps = abs(steps);
-    float delay = 700;
     for (int i = 0; i < steps; ++i) {
     	if (delay > 250) {
     		delay -= 0.5;
