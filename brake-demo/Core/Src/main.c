@@ -145,9 +145,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
-		send_message_flag = true;
+		// 1 ms ->
+//		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
+		move_joint_to_target(joint);
+//		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 	}
 	if (htim == slow_interrupt_timer->timer) {
+		// 2 ms
 		update_adc_sensor_values(adc_sensor);
 		if (USE_FORCE_SENSOR) {
 			refresh_skater_status(skater);
@@ -226,11 +230,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  move_joint_to_target(joint);
 	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
 		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
-		  send_message_flag = false;
 	  }
   }
   /* USER CODE END 3 */

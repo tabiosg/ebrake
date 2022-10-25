@@ -4,6 +4,7 @@
 #include "pin_data.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define MOTOR_DEGREES_PER_STEP 1.8f
 
@@ -29,6 +30,12 @@ Motor *new_motor(
 // and steps is the amount of steps to turn
 // MODIFIES: nothing
 // EFFECTS: Moves the motor a certain by a certain amount of steps
-void change_motor_steps(Motor *motor, int steps);
+//void change_motor_steps(Motor *motor, int steps);
+
+// REQUIRES: motor is a Motor object
+// and direction is a bool that dictates direction
+// MODIFIES: nothing
+// EFFECTS: Moves the motor a certain by a certain amount of steps
+void step_motor_direction(Motor *motor, bool dir);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
