@@ -74,8 +74,8 @@ void Error_Handler(void);
 #define QUAD_B_GPIO_Port GPIOA
 #define POTENTIOMETER_Pin GPIO_PIN_2
 #define POTENTIOMETER_GPIO_Port GPIOA
-#define BATTERY_LED_Pin GPIO_PIN_3
-#define BATTERY_LED_GPIO_Port GPIOA
+#define BATTERYDATA_Pin GPIO_PIN_3
+#define BATTERYDATA_GPIO_Port GPIOA
 #define QUAD_A_Pin GPIO_PIN_5
 #define QUAD_A_GPIO_Port GPIOA
 #define DRV8825_STP_Pin GPIO_PIN_6
