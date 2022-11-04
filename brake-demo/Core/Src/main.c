@@ -79,8 +79,6 @@ PinData* motor_direction_pin = NULL;
 PinData* motor_step_pin = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
-uint8_t uart_buffer[30];
-char last_message[30];
 bool send_message_flag = false;
 
 /* USER CODE END PV */
@@ -100,36 +98,6 @@ static void MX_I2C2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-
-	HAL_NVIC_DisableIRQ(USART1_IRQn);
-	memcpy(last_message, uart_buffer, 30);
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_StatusTypeDef ret = HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
-	__HAL_UART_CLEAR_OREFLAG(huart);
-	__HAL_UART_CLEAR_NEFLAG(huart);
-	if (ret != HAL_OK) {
-		Error_Handler();
-		HAL_UART_Abort_IT(&huart1);
-		SET_BIT(huart1.Instance->CR3, USART_CR3_EIE);
-		//SET_BIT(huart1.Instance->CR1, USART_CR1_PEIE | USART_CR1_RXNEIE);
-		ret = HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
-	}
-	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
-	if (last_message[1] == 'T') {
-		//Expected $TARGET,<target>
-		char delim[] = ",";
-		char *identifier = strtok(last_message, delim);
-		if (!strcmp(identifier,"$TARGET")){
-			bool is_skater_here = !is_skater_gone(skater);
-			if (is_skater_here) {
-				float target = atof(strtok(NULL,delim));
-				set_joint_target(joint, target);
-			}
-		}
-	}
-}
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
@@ -218,7 +186,6 @@ int main(void)
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
-  HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
 
@@ -230,6 +197,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	  receive_wireless_angle(wireless, skater, joint);
+
 	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
 		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);

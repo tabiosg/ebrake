@@ -72,8 +72,6 @@ PinData* shift_rclk = NULL;
 PinData* shift_not_oe = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
-uint8_t uart_buffer[30];
-char last_message[30];
 bool send_message_flag = false;
 
 /* USER CODE END PV */
@@ -92,25 +90,6 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	HAL_NVIC_DisableIRQ(USART1_IRQn);
-	memcpy(last_message, uart_buffer, sizeof(last_message));
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_UART_Receive_IT(huart, uart_buffer, 30);
-	__HAL_UART_CLEAR_OREFLAG(huart);
-	__HAL_UART_CLEAR_NEFLAG(huart);
-	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
-	if (last_message[1] == 'S') {
-		//Expected $SPEED_DATA,<target>
-		char delim[] = ",";
-		char *identifier = strtok(last_message, delim);
-		if (!strcmp(identifier,"SPEED_DATA")){
-			float speed = atof(strtok(NULL,delim));
-//			update_display_number(display, speed);
-		}
-	}
-}
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
@@ -180,7 +159,6 @@ int main(void)
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
-  HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
 
@@ -192,6 +170,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  // TODO - COMMENT OUT FOR NOW - IT IS A BLOCKING FUNCTION, and it is not as important
+//	  receive_wireless_speed(wireless, display);
+
 	  update_adc_sensor_values(adc_sensor);
 //	  if (send_message_flag) {
 		  float desired_angle = get_trigger_input(trigger);

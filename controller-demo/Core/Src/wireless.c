@@ -17,7 +17,7 @@ Wireless *new_wireless(UART_HandleTypeDef *huart) {
 // EFFECTS: Sends speed data over wireless
 void send_wireless_speed(Wireless *wireless, float speed) {
 	char string[30];
-	sprintf((char *)string, "$SPEED_DATA,%f,", speed);
+	sprintf((char *)string, "$SPEED_DATA,%f,\n", speed);
 	send_wireless_string_30(wireless, string);
 }
 
@@ -28,10 +28,24 @@ void send_wireless_speed(Wireless *wireless, float speed) {
 // EFFECTS: Sends desired angle degrees command over wireless
 void send_wireless_desired_angle(Wireless *wireless, float desired_angle) {
 	char string[30];
-	sprintf((char *)string, "$TARGET,%f,", desired_angle);
+	sprintf((char *)string, "$DESIRED_ANGLE_CMD,%f,\n", desired_angle);
 	send_wireless_string_30(wireless, string);
 }
 
+// REQUIRES: wireless, skater, and joint are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the wireless speed and changes the display based on it
+void receive_wireless_speed(Wireless *wireless, Display* display) {
+	if (wireless->uart_buffer[1] == 'S') {
+		//Expected $SPEED_DATA,<target>
+		char delim[] = ",";
+		char *identifier = strtok(wireless->uart_buffer, delim);
+		if (!strcmp(identifier,"SPEED_DATA")){
+			float speed = atof(strtok(NULL,delim));
+//			update_display_number(display, speed);
+		}
+	}
+}
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
 
@@ -41,6 +55,6 @@ void send_wireless_desired_angle(Wireless *wireless, float desired_angle) {
 // EFFECTS: Sends the character array over wireless
 void send_wireless_string_30(Wireless *wireless, char string[30]) {
 	HAL_Delay(50);
-	HAL_UART_Transmit_IT(wireless->uart, (uint8_t *)string, 30);
+	HAL_UART_Transmit(wireless->uart, (uint8_t *)string, 30, 200);
 	HAL_Delay(50);
 }

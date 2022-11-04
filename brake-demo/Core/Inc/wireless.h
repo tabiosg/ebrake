@@ -4,11 +4,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "skater.h"
+#include "joint.h"
 
 // UART is used for wireless
 // communication with other devices.
 typedef struct {
 	UART_HandleTypeDef *uart;
+	uint8_t uart_buffer[30];
 } Wireless;
 
 /** PUBLIC FUNCTIONS **/
@@ -31,6 +34,10 @@ void send_wireless_speed(Wireless *wireless, float speed);
 // EFFECTS: Sends desired angle degrees command over wireless
 void send_wireless_desired_angle(Wireless *wireless, float desired_angle);
 
+// REQUIRES: wireless, skater, and joint are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the wireless angle and changes the joint angle if skater is on the board
+void receive_wireless_angle(Wireless *wireless, Skater* skater, Joint* joint);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
 
