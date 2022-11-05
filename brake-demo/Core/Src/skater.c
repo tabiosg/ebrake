@@ -22,6 +22,7 @@ bool is_skater_gone(Skater *skater) {
 // REQUIRES: skater is a Skater object
 // MODIFIES: ms_since_skater_detected
 // EFFECTS: Updates the value of ms_since_skater_detected
+// This function is expected to be called every 2 ms.
 void refresh_skater_status(Skater *skater) {
 	float measured_newtons = get_force_sensor_data(skater->force_sensor);
 	bool is_skater_detected = measured_newtons > FORCE_INDICATING_SKATER_PRESENCE_NEWTONS;
@@ -29,9 +30,10 @@ void refresh_skater_status(Skater *skater) {
 	// If skater is detected, reset value to 0.
 	// If skater is not detected, then keep incrementing ms_since_skater_detected
 	// until it surpasses the expected maximum.
+	// TODO - verify if 2 is the correct number to be adding.
 	skater->ms_since_skater_detected = is_skater_detected ?
 			0 : skater->ms_since_skater_detected > TIME_INDICATING_SKATER_ABSENCE_MS ?
-					skater->ms_since_skater_detected : skater->ms_since_skater_detected + 200;
+					skater->ms_since_skater_detected : skater->ms_since_skater_detected + 2;
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

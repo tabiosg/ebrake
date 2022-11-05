@@ -17,22 +17,6 @@ Motor *new_motor(
 }
 
 // REQUIRES: motor is a Motor object
-// and steps is the amount of steps to turn
-// MODIFIES: nothing
-// EFFECTS: Moves the motor a certain by a certain amount of steps
-//void change_motor_steps(Motor *motor, int steps) {
-//    set_pin_value(motor->dir_pin, steps >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
-//    float delay = 1200;
-//    steps = abs(steps);
-//    for (int i = 0; i < steps; ++i) {
-//    	set_pin_value(motor->stp_pin, GPIO_PIN_SET);
-//		for (int j = 0; j < delay; ++j);
-//		set_pin_value(motor->stp_pin, GPIO_PIN_RESET);
-//		for (int j = 0; j < delay; ++j);
-//    }
-//}
-
-// REQUIRES: motor is a Motor object
 // and direction is a bool that dictates direction
 // MODIFIES: nothing
 // EFFECTS: Moves the motor a certain by a certain amount of steps

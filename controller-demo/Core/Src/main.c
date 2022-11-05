@@ -28,6 +28,7 @@
 #include "interrupt_timer.h"
 #include "potentiometer.h"
 #include "shift_register.h"
+#include "battery_buzzer.h"
 #include "trigger.h"
 #include <string.h>
 #include <stdbool.h>
@@ -60,6 +61,7 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 
 ADCSensor *adc_sensor = NULL;
+BatteryBuzzer *battery_buzzer = NULL;
 Display *display = NULL;
 Potentiometer *potentiometer = NULL;
 ShiftRegister *shift_register = NULL;
@@ -70,6 +72,7 @@ PinData* shift_srclk = NULL;
 PinData* shift_not_srclk = NULL;
 PinData* shift_rclk = NULL;
 PinData* shift_not_oe = NULL;
+PinData* buzzer = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 
@@ -92,10 +95,11 @@ static void MX_USART1_UART_Init(void);
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
-//		send_message_flag = true;
+		// called every 1 ms
 	}
 	if (htim == slow_interrupt_timer->timer) {
-//		update_adc_sensor_values(adc_sensor);
+		// called every 2 ms
+		update_battery_buzzer_logic(battery_buzzer);
 	}
 }
 
@@ -115,6 +119,7 @@ int main(void)
 	shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin);
 	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
 	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
+	buzzer = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim10);
 	fast_interrupt_timer = new_interrupt_timer(&htim11);
 	adc_sensor = new_adc_sensor(&hadc1, 1);
