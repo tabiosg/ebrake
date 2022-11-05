@@ -23,12 +23,12 @@
 /* USER CODE BEGIN Includes */
 
 #include "adc_sensor.h"
+#include "controller_wireless.h"
 #include "display.h"
 #include "interrupt_timer.h"
 #include "potentiometer.h"
 #include "shift_register.h"
 #include "trigger.h"
-#include "wireless.h"
 #include <string.h>
 #include <stdbool.h>
 
@@ -72,7 +72,6 @@ PinData* shift_rclk = NULL;
 PinData* shift_not_oe = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
-bool send_message_flag = false;
 
 /* USER CODE END PV */
 
@@ -171,16 +170,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  // TODO - COMMENT OUT FOR NOW - IT IS A BLOCKING FUNCTION, and it is not as important
-//	  receive_wireless_speed(wireless, display);
+//	  receive_wireless(wireless, display);
 
 	  update_adc_sensor_values(adc_sensor);
-//	  if (send_message_flag) {
-		  float desired_angle = get_trigger_input(trigger);
-		  send_wireless_desired_angle(wireless, desired_angle);
-		  send_message_flag = false;
+	  int desired_angle = (int)get_trigger_input(trigger);
+	  send_wireless_desired_angle(wireless, desired_angle);
 
-		  update_display_number(display, desired_angle / 10);
-//	  }
+	  update_display_number(display, desired_angle / 10);
   }
   /* USER CODE END 3 */
 }

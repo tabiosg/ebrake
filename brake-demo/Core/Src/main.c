@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "adc_sensor.h"
+#include "brake_wireless.h"
 #include "force_sensor.h"
 #include "imu.h"
 #include "interrupt_timer.h"
@@ -30,7 +31,6 @@
 #include "motor.h"
 #include "potentiometer.h"
 #include "skater.h"
-#include "wireless.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -98,10 +98,6 @@ static void MX_I2C2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
-
-}
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	// This is the limit switch callback function.
@@ -198,11 +194,18 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  receive_wireless_angle(wireless, skater, joint);
+	  receive_wireless(wireless, skater, joint);
 
+	  // TODO - this statement is in an if statement since we are afraid that it takes too much time
+	  // and will decrease responsiveness. However, this may not actually be true
+	  // It is worth testing to see if this is actually the case.
 	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
-		  float current_speed = joint->current_angle_degrees; // TODO - get actual speed
+		  int current_speed = (int)joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
+
+		  int battery_data = 0;
+		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
+
 	  }
   }
   /* USER CODE END 3 */

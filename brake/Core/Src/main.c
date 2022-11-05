@@ -125,7 +125,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	// This is the limit switch callback function.
 	// If the limit switch is hit, then the joint should be zeroed.
-	if (GPIO_Pin == LIMIT_SWITCH_Pin) {
+	if (GPIO_Pin == LIMIT_SWITCH_0_Pin) {
 		zero_joint(joint);
 	}
 }

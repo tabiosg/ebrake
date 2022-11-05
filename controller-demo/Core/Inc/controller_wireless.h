@@ -4,13 +4,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
 #include "display.h"
 
 // UART is used for wireless
 // communication with other devices.
 typedef struct {
 	UART_HandleTypeDef *uart;
-	uint8_t uart_buffer[30];
+	uint8_t uart_buffer[10];
+	int message_contents;
 } Wireless;
 
 /** PUBLIC FUNCTIONS **/
@@ -21,27 +25,26 @@ typedef struct {
 Wireless *new_wireless(UART_HandleTypeDef *huart);
 
 // REQUIRES: wireless is a Wireless object
-// and speed is the speed data
-// MODIFIES: Nothing
-// EFFECTS: Sends speed data over wireless
-void send_wireless_speed(Wireless *wireless, float speed);
-
-// REQUIRES: wireless is a Wireless object
 // and desired_angle is the desired angle
 // of the arm in degrees
 // MODIFIES: Nothing
 // EFFECTS: Sends desired angle degrees command over wireless
-void send_wireless_desired_angle(Wireless *wireless, float desired_angle);
+void send_wireless_desired_angle(Wireless *wireless, int desired_angle);
 
-// REQUIRES: wireless, skater, and joint are objects
+// REQUIRES: wireless and display are objects
+// MODIFIES: Nothing
+// EFFECTS: Attempts to parse data based on wireless buffer and returns true if success
+bool parse_wireless_message(Wireless *wireless, Display* display, char start_char);
+
+// REQUIRES: wireless and display are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the wireless speed and changes the display based on it
-void receive_wireless_speed(Wireless *wireless, Display* display);
+void receive_wireless(Wireless *wireless, Display* display);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
 
 // REQUIRES: wireless is a Wireless object
-// and string is an array of 30 characters.
+// and string is an array of 10 characters.
 // MODIFIES: Nothing
 // EFFECTS: Sends the character array over wireless
-void send_wireless_string_30(Wireless *wireless, char string[30]);
+void send_wireless_string_10(Wireless *wireless, char string[10]);
