@@ -58,11 +58,13 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define SLOW_PERIOD 2000
-#define FAST_PERIOD 1000
+#define FAST_PERIOD 20
 #define FORCE_SENSOR_Pin GPIO_PIN_0
 #define FORCE_SENSOR_GPIO_Port GPIOA
 #define POTENTIOMETER_Pin GPIO_PIN_2
 #define POTENTIOMETER_GPIO_Port GPIOA
+#define BATTERY_DATA_Pin GPIO_PIN_3
+#define BATTERY_DATA_GPIO_Port GPIOA
 #define LIMIT_SWITCH_Pin GPIO_PIN_5
 #define LIMIT_SWITCH_GPIO_Port GPIOA
 #define LIMIT_SWITCH_EXTI_IRQn EXTI9_5_IRQn

@@ -98,8 +98,9 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     /**ADC1 GPIO Configuration
     PA0-WKUP     ------> ADC1_IN0
     PA2     ------> ADC1_IN2
+    PA3     ------> ADC1_IN3
     */
-    GPIO_InitStruct.Pin = FORCE_SENSOR_Pin|POTENTIOMETER_Pin;
+    GPIO_InitStruct.Pin = FORCE_SENSOR_Pin|POTENTIOMETER_Pin|BATTERY_DATA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -149,8 +150,9 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /**ADC1 GPIO Configuration
     PA0-WKUP     ------> ADC1_IN0
     PA2     ------> ADC1_IN2
+    PA3     ------> ADC1_IN3
     */
-    HAL_GPIO_DeInit(GPIOA, FORCE_SENSOR_Pin|POTENTIOMETER_Pin);
+    HAL_GPIO_DeInit(GPIOA, FORCE_SENSOR_Pin|POTENTIOMETER_Pin|BATTERY_DATA_Pin);
 
     /* ADC1 DMA DeInit */
     HAL_DMA_DeInit(hadc->DMA_Handle);
