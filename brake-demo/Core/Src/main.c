@@ -24,6 +24,7 @@
 
 #include "adc_sensor.h"
 #include "brake_wireless.h"
+#include "battery_sensor.h"
 #include "force_sensor.h"
 #include "imu.h"
 #include "interrupt_timer.h"
@@ -68,6 +69,7 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 
 ADCSensor *adc_sensor = NULL;
+BatterySensor *battery_sensor = NULL;
 IMU *imu = NULL;
 Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
@@ -149,6 +151,7 @@ int main(void)
 	potentiometer = new_potentiometer(adc_sensor, 1);
 	joint = new_joint(motor, potentiometer);
 	force_sensor = new_force_sensor(adc_sensor, 0);
+	battery_sensor = new_battery_sensor(adc_sensor, 2);
 	skater = new_skater(force_sensor);
 	wireless = new_wireless(&huart1);
 
@@ -203,7 +206,7 @@ int main(void)
 		  int current_speed = (int)joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
 
-		  int battery_data = 0;
+		  int battery_data = get_battery_sensor_data(battery_sensor);
 		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
 
 	  }
