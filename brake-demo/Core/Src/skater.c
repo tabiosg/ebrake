@@ -24,8 +24,8 @@ bool is_skater_gone(Skater *skater) {
 // EFFECTS: Updates the value of ms_since_skater_detected
 // This function is expected to be called every 2 ms.
 void refresh_skater_status(Skater *skater) {
-	float measured_newtons = get_force_sensor_data(skater->force_sensor);
-	bool is_skater_detected = measured_newtons > FORCE_INDICATING_SKATER_PRESENCE_NEWTONS;
+	float force_sensor_voltage = get_force_sensor_data(skater->force_sensor);
+	bool is_skater_detected = force_sensor_voltage > VOLTAGE_INDICATING_SKATER_PRESENCE;
 
 	// If skater is detected, reset value to 0.
 	// If skater is not detected, then keep incrementing ms_since_skater_detected

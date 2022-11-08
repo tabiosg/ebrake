@@ -45,7 +45,7 @@
 /* USER CODE BEGIN PD */
 
 #define USE_POTENTIOMETER_FEEDBACK false
-#define USE_FORCE_SENSOR false
+#define USE_FORCE_SENSOR true
 
 /* USER CODE END PD */
 
@@ -302,6 +302,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
+  sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = 2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
