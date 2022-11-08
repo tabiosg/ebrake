@@ -7,7 +7,7 @@
 // EFFECTS: Returns a pointer to a created BatterySensor object
 BatterySensor *new_battery_sensor(ADCSensor *_adc_sensor, uint8_t _rank) {
 	BatterySensor *battery_sensor = (BatterySensor*) malloc(sizeof(BatterySensor));
-	battery_sensor->adc_sensor = battery_sensor;
+	battery_sensor->adc_sensor = _adc_sensor;
 	battery_sensor->rank = _rank;
 	return battery_sensor;
 }
