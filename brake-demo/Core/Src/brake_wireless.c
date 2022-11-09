@@ -12,6 +12,22 @@ Wireless *new_wireless(UART_HandleTypeDef *huart) {
 }
 
 // REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Increases ms_since_comms.
+// Assumes function is called every 2 ms
+void refresh_wireless_status(Wireless *wireless) {
+	wireless->ms_since_comms = wireless->ms_since_comms > TIME_INDICATING_WIRELESS_COMMS_LOST_MS ?
+			TIME_INDICATING_WIRELESS_COMMS_LOST_MS : wireless->ms_since_comms + 2;
+}
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Returns whether or not wireless comms were lost
+bool is_wireless_comms_lost(Wireless *wireless) {
+	return wireless->ms_since_comms >= TIME_INDICATING_WIRELESS_COMMS_LOST_MS;
+}
+
+// REQUIRES: wireless is a Wireless object
 // and speed is the speed data
 // MODIFIES: Nothing
 // EFFECTS: Sends speed data over wireless
@@ -71,6 +87,7 @@ bool parse_wireless_message(Wireless *wireless, Skater* skater, Joint* joint, ch
 // EFFECTS: Receives the wireless angle and changes the joint angle if skater is on the board
 void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 	HAL_UART_Receive(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer), 500);
+	wireless->ms_since_comms = 0;
 
 	bool target_success =  parse_wireless_message(wireless, skater, joint, 'T');
 	if (target_success) {

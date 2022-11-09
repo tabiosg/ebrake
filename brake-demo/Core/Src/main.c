@@ -128,6 +128,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		if (is_skater_gone(skater)) {
 			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
 		}
+		else if (is_wireless_comms_lost(wireless)) {
+			set_joint_target(joint, AUTOMATIC_RELAX_ANGLE_DEGREES);
+		}
+
+		refresh_wireless_status(wireless);
 	}
 }
 

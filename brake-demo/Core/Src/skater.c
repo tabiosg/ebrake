@@ -16,7 +16,7 @@ Skater *new_skater(ForceSensor *_force_sensor) {
 // MODIFIES: nothing
 // EFFECTS: Returns whether skater is gone or not
 bool is_skater_gone(Skater *skater) {
-	return skater->ms_since_skater_detected > TIME_INDICATING_SKATER_ABSENCE_MS;
+	return skater->ms_since_skater_detected >= TIME_INDICATING_SKATER_ABSENCE_MS;
 }
 
 // REQUIRES: skater is a Skater object
@@ -33,7 +33,7 @@ void refresh_skater_status(Skater *skater) {
 	// TODO - verify if 2 is the correct number to be adding.
 	skater->ms_since_skater_detected = is_skater_detected ?
 			0 : skater->ms_since_skater_detected > TIME_INDICATING_SKATER_ABSENCE_MS ?
-					skater->ms_since_skater_detected : skater->ms_since_skater_detected + 2;
+					TIME_INDICATING_SKATER_ABSENCE_MS : skater->ms_since_skater_detected + 2;
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

@@ -6,8 +6,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include "skater.h"
 #include "joint.h"
+
+#define TIME_INDICATING_WIRELESS_COMMS_LOST_MS 2000
 
 // UART is used for wireless
 // communication with other devices.
@@ -15,6 +18,7 @@ typedef struct {
 	UART_HandleTypeDef *uart;
 	uint8_t uart_buffer[10];
 	int message_contents;
+	uint32_t ms_since_comms;
 } Wireless;
 
 /** PUBLIC FUNCTIONS **/
@@ -29,6 +33,17 @@ Wireless *new_wireless(UART_HandleTypeDef *huart);
 // MODIFIES: Nothing
 // EFFECTS: Sends speed data over wireless
 void send_wireless_speed(Wireless *wireless, int speed);
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Increases ms_since_comms.
+// Assumes function is called every 2 ms
+void refresh_wireless_status(Wireless *wireless);
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Returns whether or not wireless comms were lost
+bool is_wireless_comms_lost(Wireless *wireless);
 
 // REQUIRES: wireless is a Wireless object
 // and battery_data is the battery data
