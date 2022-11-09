@@ -61,17 +61,20 @@ bool parse_wireless_message(Wireless *wireless, Display* display, char start_cha
 // MODIFIES: Nothing
 // EFFECTS: Receives the wireless speed and changes the display based on it
 void receive_wireless(Wireless *wireless, Display* display) {
-	HAL_UART_Receive(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer), 500);
+	HAL_UART_Receive(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer), 100);
 
 	bool speed_success =  parse_wireless_message(wireless, display, 'S');
 	if (speed_success) {
-		update_display_number(display, wireless->message_contents);
+		//
+//		update_display_number(display, wireless->message_contents);
 		return;
 	}
 
 	bool battery_data_success = parse_wireless_message(wireless, display, 'B');
 	if (battery_data_success) {
-		// TODO - SOMETHING WILL HAVE TO HAPPEN
+		// TODO - Eventually it will have to be speed instead and this will have to be the buzzer.
+		int battery_data = wireless->message_contents;
+		update_display_number(display, battery_data);
 		return;
 	}
 

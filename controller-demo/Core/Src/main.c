@@ -175,13 +175,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  // TODO - COMMENT OUT FOR NOW - IT IS A BLOCKING FUNCTION, and it is not as important
-//	  receive_wireless(wireless, display);
+	  receive_wireless(wireless, display);
 
 	  update_adc_sensor_values(adc_sensor);
 	  int desired_angle = (int)get_trigger_input(trigger);
 	  send_wireless_desired_angle(wireless, desired_angle);
 
-	  update_display_number(display, desired_angle / 10);
+//	  update_display_number(display, desired_angle / 10);
   }
   /* USER CODE END 3 */
 }
