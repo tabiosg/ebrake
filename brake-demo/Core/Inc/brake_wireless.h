@@ -10,13 +10,14 @@
 #include "skater.h"
 #include "joint.h"
 
-#define TIME_INDICATING_WIRELESS_COMMS_LOST_MS 2000
+#define TIME_INDICATING_WIRELESS_COMMS_LOST_MS 3000
+
 
 // UART is used for wireless
 // communication with other devices.
 typedef struct {
 	UART_HandleTypeDef *uart;
-	uint8_t uart_buffer[10];
+	char uart_buffer[10];
 	int message_contents;
 	uint32_t ms_since_comms;
 } Wireless;

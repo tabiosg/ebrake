@@ -16,7 +16,7 @@ Wireless *new_wireless(UART_HandleTypeDef *huart) {
 // EFFECTS: Increases ms_since_comms.
 // Assumes function is called every 2 ms
 void refresh_wireless_status(Wireless *wireless) {
-	wireless->ms_since_comms = wireless->ms_since_comms > TIME_INDICATING_WIRELESS_COMMS_LOST_MS ?
+	wireless->ms_since_comms = wireless->ms_since_comms >= TIME_INDICATING_WIRELESS_COMMS_LOST_MS ?
 			TIME_INDICATING_WIRELESS_COMMS_LOST_MS : wireless->ms_since_comms + 2;
 }
 
@@ -54,7 +54,7 @@ bool parse_wireless_message(Wireless *wireless, Skater* skater, Joint* joint, ch
 	int start_of_transmit = -1;
 	int end_of_transmit = -1;
 	for (int i = 0; i < sizeof(wireless->uart_buffer) - 1; ++i) {
-		if (wireless->uart_buffer[i] == start_char && isdigit(wireless->uart_buffer[i + 1])) {
+		if (wireless->uart_buffer[i] == start_char && isdigit((unsigned char)wireless->uart_buffer[i + 1])) {
 			start_of_transmit = i + 1;
 			break;
 		}
@@ -86,11 +86,15 @@ bool parse_wireless_message(Wireless *wireless, Skater* skater, Joint* joint, ch
 // MODIFIES: Nothing
 // EFFECTS: Receives the wireless angle and changes the joint angle if skater is on the board
 void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
+	for (int i = 0; i < 10; ++i) {
+		wireless->uart_buffer[i] = 0;
+	}
+	HAL_Delay(10);
 	HAL_UART_Receive(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer), 500);
-	wireless->ms_since_comms = 0;
-
+	HAL_Delay(10);
 	bool target_success =  parse_wireless_message(wireless, skater, joint, 'T');
 	if (target_success) {
+		wireless->ms_since_comms = 0;
 		bool is_skater_here = !is_skater_gone(skater);
 		if (is_skater_here) {
 			set_joint_target(joint, (float)wireless->message_contents);
