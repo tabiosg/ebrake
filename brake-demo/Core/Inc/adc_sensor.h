@@ -3,11 +3,13 @@
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
 	ADC_HandleTypeDef *adc;
 	uint8_t total_ranks;
 	uint16_t values[10];
+	uint16_t buffer[10];
 } ADCSensor;
 
 /** PUBLIC FUNCTIONS **/
@@ -16,6 +18,11 @@ typedef struct {
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created ADCSensor object
 ADCSensor *new_adc_sensor(ADC_HandleTypeDef *hadc, uint8_t _total_ranks);
+
+// REQUIRES: adc_sensor is an ADCSensor object
+// MODIFIES: values
+// EFFECTS: Initializes the ADC sensor
+void init_adc_sensor(ADCSensor *adc_sensor);
 
 // REQUIRES: adc_sensor is an ADCSensor object and rank is the index
 // MODIFIES: nothing

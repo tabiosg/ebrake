@@ -1,0 +1,2 @@
+../Core/Src/motor.c:9:8:new_motor	24	static
+../Core/Src/motor.c:23:6:change_motor_steps	32	static

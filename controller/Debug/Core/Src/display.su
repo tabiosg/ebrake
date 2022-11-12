@@ -1,0 +1,2 @@
+../Core/Src/display.c:10:10:new_display	24	static
+../Core/Src/display.c:29:6:update_display_number	32	static

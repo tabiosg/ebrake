@@ -1,0 +1,10 @@
+10:56:15 **** Incremental Build of configuration Debug for project brake ****
+make -j16 all 
+arm-none-eabi-size   brake.elf 
+   text	   data	    bss	    dec	    hex	filename
+  63152	    488	   2352	  65992	  101c8	brake.elf
+Finished building: default.size.stdout
+ 
+
+10:56:15 Build Finished. 0 errors, 0 warnings. (took 218ms)
+

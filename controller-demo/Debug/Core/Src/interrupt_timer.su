@@ -1,0 +1,2 @@
+../Core/Src/interrupt_timer.c:8:17:new_interrupt_timer	24	static
+../Core/Src/interrupt_timer.c:17:6:start_interrupt_timer	16	static

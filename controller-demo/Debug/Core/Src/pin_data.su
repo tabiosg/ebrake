@@ -1,0 +1,2 @@
+../Core/Src/pin_data.c:9:10:new_pin_data	24	static
+../Core/Src/pin_data.c:19:6:set_pin_value	16	static

@@ -1,0 +1,2 @@
+../Core/Src/pwm_timer_data.c:10:11:new_pwm_timer	32	static
+../Core/Src/pwm_timer_data.c:25:6:start_pwm_timer	16	static

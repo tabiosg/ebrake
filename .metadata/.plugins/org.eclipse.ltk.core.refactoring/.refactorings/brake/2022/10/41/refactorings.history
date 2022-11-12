@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;brake/Core/Src/skater,c&apos; to &apos;skater.c&apos;" description="Rename resource &apos;skater,c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/skater,c" name="skater.c" stamp="1664992439214" updateReferences="true"/>
+</session>
