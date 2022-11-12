@@ -67,7 +67,6 @@ void Error_Handler(void);
 #define BATTERY_DATA_GPIO_Port GPIOA
 #define LIMIT_SWITCH_Pin GPIO_PIN_5
 #define LIMIT_SWITCH_GPIO_Port GPIOA
-#define LIMIT_SWITCH_EXTI_IRQn EXTI9_5_IRQn
 #define DRV8825_DIR_Pin GPIO_PIN_4
 #define DRV8825_DIR_GPIO_Port GPIOC
 #define DRV8825_STP_Pin GPIO_PIN_5

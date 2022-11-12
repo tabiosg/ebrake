@@ -90,7 +90,7 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 		wireless->uart_buffer[i] = 0;
 	}
 	HAL_Delay(10);
-	HAL_UART_Receive(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer), 500);
+	HAL_UART_Receive(wireless->uart, (uint8_t *)wireless->uart_buffer, sizeof(wireless->uart_buffer), 500);
 	HAL_Delay(10);
 	bool target_success =  parse_wireless_message(wireless, skater, joint, 'T');
 	if (target_success) {
