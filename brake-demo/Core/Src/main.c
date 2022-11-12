@@ -153,7 +153,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	adc_sensor = new_adc_sensor(&hadc1, 4);
+	adc_sensor = new_adc_sensor(&hadc1, 3);
 	imu = new_imu_sensor(&hi2c2);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin);
@@ -161,10 +161,10 @@ int main(void)
 	slow_interrupt_timer = new_interrupt_timer(&htim10);
 	fast_interrupt_timer = new_interrupt_timer(&htim11);
 	adc_interrupt_timer = new_interrupt_timer(&htim3);
-	potentiometer = new_potentiometer(adc_sensor, 2);
+	potentiometer = new_potentiometer(adc_sensor, 1);
 	joint = new_joint(motor, potentiometer);
 	force_sensor = new_force_sensor(adc_sensor, 0);
-	battery_sensor = new_battery_sensor(adc_sensor, 1);
+	battery_sensor = new_battery_sensor(adc_sensor, 2);
 	skater = new_skater(force_sensor);
 	wireless = new_wireless(&huart1);
 
@@ -301,7 +301,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T3_TRGO;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 4;
+  hadc1.Init.NbrOfConversion = 3;
   hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -313,7 +313,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -330,17 +330,8 @@ static void MX_ADC1_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_2;
+  sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = 3;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-  */
-  sConfig.Channel = ADC_CHANNEL_3;
-  sConfig.Rank = 4;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
