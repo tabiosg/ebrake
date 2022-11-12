@@ -181,7 +181,7 @@ int main(void)
 	  int desired_angle = (int)get_trigger_input(trigger);
 	  send_wireless_desired_angle(wireless, desired_angle);
 
-//	  update_display_number(display, desired_angle / 10);
+//	  update_display_number(display, desired_angle);
   }
   /* USER CODE END 3 */
 }

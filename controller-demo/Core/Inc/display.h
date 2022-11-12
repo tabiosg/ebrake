@@ -20,9 +20,9 @@ typedef struct {
 // EFFECTS: Returns a pointer to a created Display object
 Display *new_display(ShiftRegister *_shift_register);
 
-// REQUIRES: Display is a Display object and number is an integer 0 to 9
+// REQUIRES: Display is a Display object and number is an integer 0 to 99
 // MODIFIES: outputs of ports and pins
 // EFFECTS: displays number to particular display
-void update_display_number(Display *display, uint8_t number);
+void update_display_number(Display *display, uint16_t number);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
