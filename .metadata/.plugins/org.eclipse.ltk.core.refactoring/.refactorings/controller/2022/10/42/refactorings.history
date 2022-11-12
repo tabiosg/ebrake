@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;controller/Core/Src/shift_register.h&apos; to &apos;shift_register.c&apos;" description="Rename resource &apos;shift_register.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/shift_register.h" name="shift_register.c" stamp="1665513437667" updateReferences="true"/>
-</session>

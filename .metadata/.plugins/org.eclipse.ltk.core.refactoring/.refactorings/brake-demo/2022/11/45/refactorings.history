@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;brake-demo/Core/Inc/wireless.h&apos; to &apos;brake_wireless.h&apos;" description="Rename resource &apos;wireless.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/wireless.h" name="brake_wireless.h" stamp="1667655941584" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;brake-demo/Core/Src/wireless.c&apos; to &apos;brake_wireless.c&apos;" description="Rename resource &apos;wireless.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/wireless.c" name="brake_wireless.c" stamp="1667655949248" updateReferences="true"/>
-</session>
