@@ -23,14 +23,15 @@
 /* USER CODE BEGIN Includes */
 
 #include "adc_sensor.h"
+#include "brake_wireless.h"
+#include "battery_sensor.h"
 #include "force_sensor.h"
-#include "interrupt_timer.h"
 #include "imu.h"
+#include "interrupt_timer.h"
 #include "joint.h"
 #include "motor.h"
 #include "potentiometer.h"
 #include "skater.h"
-#include "wireless.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -43,6 +44,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define USE_POTENTIOMETER_FEEDBACK false
+#define USE_FORCE_SENSOR false
+#define USE_WIRELESS_COMMS_WATCHDOG false
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -65,6 +71,7 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 
 ADCSensor *adc_sensor = NULL;
+BatterySensor *battery_sensor = NULL;
 IMU *imu = NULL;
 Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
@@ -74,10 +81,10 @@ Skater *skater = NULL;
 Wireless *wireless = NULL;
 PinData* motor_direction_pin = NULL;
 PinData* motor_step_pin = NULL;
+PinData* limit_switch_pin = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
-uint8_t uart_buffer[30];
-char last_message[30];
+InterruptTimer* adc_interrupt_timer = NULL;
 bool send_message_flag = false;
 
 /* USER CODE END PV */
@@ -99,49 +106,37 @@ static void MX_TIM16_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
-	HAL_NVIC_DisableIRQ(USART1_IRQn);
-	memcpy(last_message, uart_buffer, sizeof(last_message));
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_UART_Receive_IT(huart, uart_buffer, 30);
-	__HAL_UART_CLEAR_OREFLAG(huart);
-	__HAL_UART_CLEAR_NEFLAG(huart);
-	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
-	if (last_message[1] == 'D') {
-		//Expected $DESIRED_ANGLE_CMD,<target>
-		char delim[] = ",";
-		char *identifier = strtok(last_message, delim);
-		if (!strcmp(identifier,"$DESIRED_ANGLE_CMD")){
-			if (!is_skater_gone(skater)) {
-				float target = atof(strtok(NULL,delim));
-				set_joint_target(joint, target);
-			}
-		}
-	}
-	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	// This is the limit switch callback function.
-	// If the limit switch is hit, then the joint should be zeroed.
-	if (GPIO_Pin == LIMIT_SWITCH_0_Pin) {
-		zero_joint(joint);
-	}
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc1) {
+	update_adc_sensor_values(adc_sensor);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
+		// 2 us ->
+//		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 		move_joint_to_target(joint);
-		send_message_flag = true;
+//		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 	}
 	if (htim == slow_interrupt_timer->timer) {
+		// 2 ms
 		update_adc_sensor_values(adc_sensor);
-		refresh_skater_status(skater);
-		refresh_joint_angle(joint);
+		if (USE_FORCE_SENSOR) {
+			refresh_skater_status(skater);
+		}
+		if (USE_LIMIT_SWITCH) {
+			refresh_joint_limit_switch(joint);
+		}
+		if (USE_POTENTIOMETER_FEEDBACK) {
+			refresh_joint_angle(joint);
+		}
 		if (is_skater_gone(skater)) {
 			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
 		}
+		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {
+			set_joint_target(joint, AUTOMATIC_RELAX_ANGLE_DEGREES);
+		}
+
+		refresh_wireless_status(wireless);
 	}
 }
 
@@ -155,16 +150,19 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	adc_sensor = new_adc_sensor(&hadc1, 2);
+	adc_sensor = new_adc_sensor(&hadc1, 3);
 	imu = new_imu_sensor(&hi2c2);
-	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin);
-	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin);
+	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
+	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
+	limit_switch_pin = new_pin_data(LIMIT_SWITCH_0_GPIO_Port, LIMIT_SWITCH_0_Pin, PIN_IS_INPUT);
 	motor = new_motor(motor_direction_pin, motor_step_pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
+	adc_interrupt_timer = new_interrupt_timer(&htim3);
 	potentiometer = new_potentiometer(adc_sensor, 1);
-	joint = new_joint(motor, potentiometer);
+	joint = new_joint(motor, potentiometer, limit_switch_pin);
 	force_sensor = new_force_sensor(adc_sensor, 0);
+	battery_sensor = new_battery_sensor(adc_sensor, 2);
 	skater = new_skater(force_sensor);
 	wireless = new_wireless(&huart1);
 
@@ -197,9 +195,11 @@ int main(void)
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
+  init_adc_sensor(adc_sensor);
+  start_interrupt_timer(adc_interrupt_timer);
+
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
-  HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
 
@@ -210,10 +210,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if (send_message_flag) {
-		  float current_speed = 0.0f; // TODO - get actual speed
+
+	  receive_wireless(wireless, skater, joint);
+
+	  // TODO - this statement is in an if statement since we are afraid that it takes too much time
+	  // and will decrease responsiveness. However, this may not actually be true
+	  // It is worth testing to see if this is actually the case.
+	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
+		  int current_speed = (int)joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
-		  send_message_flag = false;
+
+		  int battery_data = get_battery_sensor_data(battery_sensor);
+		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
+
 	  }
   }
   /* USER CODE END 3 */

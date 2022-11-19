@@ -24,10 +24,14 @@ ShiftRegister *new_shift_register(
 // MODIFIES: outputs of ports and pins
 // EFFECTS: shift value into register
 void shift_shift_register(ShiftRegister *shift_register, uint8_t value) {
+	set_pin_value(shift_register->ser_pin, 1);
 	set_pin_value(shift_register->ser_pin, value);
 	set_pin_value(shift_register->not_srclk_pin, 1);
 	set_pin_value(shift_register->srclk_pin, 1);
 	set_pin_value(shift_register->srclk_pin, 0);
+	set_pin_value(shift_register->rclk_pin, 1);
+	set_pin_value(shift_register->rclk_pin, 0);
+	set_pin_value(shift_register->ser_pin, 0);
 }
 
 // REQUIRES: shift_register is a ShiftRegister object and value is either 0 or 1

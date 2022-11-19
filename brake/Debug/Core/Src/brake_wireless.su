@@ -1,0 +1,8 @@
+../Core/Src/brake_wireless.c:8:11:new_wireless	24	static
+../Core/Src/brake_wireless.c:18:6:refresh_wireless_status	16	static
+../Core/Src/brake_wireless.c:26:6:is_wireless_comms_lost	16	static
+../Core/Src/brake_wireless.c:34:6:send_wireless_speed	40	static
+../Core/Src/brake_wireless.c:44:6:send_wireless_battery_data	40	static
+../Core/Src/brake_wireless.c:53:6:parse_wireless_message	64	static
+../Core/Src/brake_wireless.c:88:6:receive_wireless	40	static
+../Core/Src/brake_wireless.c:112:6:send_wireless_string_10	16	static

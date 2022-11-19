@@ -1,0 +1,27 @@
+!SESSION 2022-11-19 01:51:01.266 -----------------------------------------------
+eclipse.buildId=Version 1.10.1
+java.version=11.0.14.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-11-19 01:51:29.769
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-11-19 01:51:29.919
+!MESSAGE Log4j initialized with config file C:\Users\gutst\Documents\ebrake\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-11-19 01:51:34.269
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-11-19 01:53:15.154
+!MESSAGE Indexed 'brake-demo' (38 sources, 138 headers) in 7.4 sec: 13,316 declarations; 76,371 references; 2 unresolved inclusions; 42 syntax errors; 147 unresolved names (0.16%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-11-19 01:53:19.369
+!MESSAGE Indexed 'brake' (39 sources, 139 headers) in 4.18 sec: 14,235 declarations; 84,982 references; 3 unresolved inclusions; 26 syntax errors; 171 unresolved names (0.17%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-11-19 01:53:22.900
+!MESSAGE Indexed 'controller' (35 sources, 134 headers) in 3.5 sec: 13,059 declarations; 73,144 references; 3 unresolved inclusions; 26 syntax errors; 171 unresolved names (0.2%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-11-19 01:53:26.225
+!MESSAGE Indexed 'controller-demo' (34 sources, 135 headers) in 3.27 sec: 11,718 declarations; 63,603 references; 13 unresolved inclusions; 42 syntax errors; 147 unresolved names (0.19%)

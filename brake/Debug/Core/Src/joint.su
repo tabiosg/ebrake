@@ -1,5 +1,6 @@
-../Core/Src/joint.c:9:8:new_joint	24	static
-../Core/Src/joint.c:24:6:move_joint_to_target	32	static
-../Core/Src/joint.c:38:6:refresh_joint_angle	24	static
-../Core/Src/joint.c:48:6:set_joint_target	16	static
-../Core/Src/joint.c:56:6:zero_joint	16	static
+../Core/Src/joint.c:10:8:new_joint	32	static
+../Core/Src/joint.c:27:6:move_joint_to_target	40	static
+../Core/Src/joint.c:49:6:refresh_joint_limit_switch	16	static
+../Core/Src/joint.c:63:6:refresh_joint_angle	24	static
+../Core/Src/joint.c:79:6:set_joint_target	16	static
+../Core/Src/joint.c:87:6:zero_joint	16	static

@@ -1,0 +1,17 @@
+02:06:18 **** Incremental Build of configuration Debug for project brake ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0plus -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G031xx -c -I../Core/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "brake.elf" @"objects.list"   -mcpu=cortex-m0plus -T"C:\Users\gutst\Documents\ebrake\brake\STM32G031F8PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="brake.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: brake.elf
+ 
+arm-none-eabi-size   brake.elf 
+arm-none-eabi-objdump -h -S  brake.elf  > "brake.list"
+   text	   data	    bss	    dec	    hex	filename
+  59636	    488	   2304	  62428	   f3dc	brake.elf
+Finished building: default.size.stdout
+ 
+Finished building: brake.list
+ 
+
+02:06:19 Build Finished. 0 errors, 0 warnings. (took 1s.212ms)
+

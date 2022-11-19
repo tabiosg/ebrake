@@ -17,18 +17,14 @@ Motor *new_motor(
 }
 
 // REQUIRES: motor is a Motor object
-// and steps is the amount of steps to turn
+// and direction is a bool that dictates direction
 // MODIFIES: nothing
 // EFFECTS: Moves the motor a certain by a certain amount of steps
-void change_motor_steps(Motor *motor, int steps) {
-    set_pin_value(motor->dir_pin, steps >= 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    steps = abs(steps);
-    for (int i = 0; i < steps; ++i) {
-    	set_pin_value(motor->stp_pin, GPIO_PIN_SET);
-		for (int j = 0; j < 1000; ++j);
-		set_pin_value(motor->stp_pin, GPIO_PIN_RESET);
-		for (int j = 0; j < 1000; ++j);
-    }
+void step_motor_direction(Motor *motor, bool dir) {
+	set_pin_value(motor->dir_pin, dir);
+	set_pin_value(motor->stp_pin, GPIO_PIN_SET);
+	for (int i = 0; i < 10; ++i);
+	set_pin_value(motor->stp_pin, GPIO_PIN_RESET);
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

@@ -23,12 +23,13 @@
 /* USER CODE BEGIN Includes */
 
 #include "adc_sensor.h"
+#include "controller_wireless.h"
 #include "display.h"
 #include "interrupt_timer.h"
 #include "potentiometer.h"
 #include "shift_register.h"
+#include "battery_buzzer.h"
 #include "trigger.h"
-#include "wireless.h"
 #include <string.h>
 #include <stdbool.h>
 
@@ -60,6 +61,7 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 
 ADCSensor *adc_sensor = NULL;
+BatteryBuzzer *battery_buzzer = NULL;
 Display *display = NULL;
 Potentiometer *potentiometer = NULL;
 ShiftRegister *shift_register = NULL;
@@ -70,11 +72,9 @@ PinData* shift_srclk = NULL;
 PinData* shift_not_srclk = NULL;
 PinData* shift_rclk = NULL;
 PinData* shift_not_oe = NULL;
+PinData* buzzer = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
-uint8_t uart_buffer[30];
-char last_message[30];
-bool send_message_flag = false;
 
 /* USER CODE END PV */
 
@@ -93,31 +93,13 @@ static void MX_TIM16_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	HAL_NVIC_DisableIRQ(USART1_IRQn);
-	memcpy(last_message, uart_buffer, sizeof(last_message));
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_UART_Receive_IT(huart, uart_buffer, 30);
-	__HAL_UART_CLEAR_OREFLAG(huart);
-	__HAL_UART_CLEAR_NEFLAG(huart);
-	HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
-	if (last_message[1] == 'S') {
-		//Expected $SPEED_DATA,<target>
-		char delim[] = ",";
-		char *identifier = strtok(last_message, delim);
-		if (!strcmp(identifier,"SPEED_DATA")){
-			float speed = atof(strtok(NULL,delim));
-			update_display_number(display, speed);
-		}
-	}
-}
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
-		send_message_flag = true;
+		// called every 1 ms
 	}
 	if (htim == slow_interrupt_timer->timer) {
-		update_adc_sensor_values(adc_sensor);
+		// called every 2 ms
+		update_battery_buzzer_logic(battery_buzzer);
 	}
 }
 
@@ -135,6 +117,7 @@ int main(void)
 	shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin);
 	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
 	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
+	buzzer = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	adc_sensor = new_adc_sensor(&hadc1, 1);
@@ -178,7 +161,6 @@ int main(void)
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
-  HAL_UART_Receive_IT(&huart1, uart_buffer, 30);
 
   /* USER CODE END 2 */
 
@@ -189,11 +171,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if (send_message_flag) {
-		  float desired_angle = get_trigger_input(trigger);
-		  send_wireless_desired_angle(wireless, desired_angle);
-		  send_message_flag = false;
-	  }
+	  // TODO - COMMENT OUT FOR NOW - IT IS A BLOCKING FUNCTION, and it is not as important
+	  receive_wireless(wireless, display);
+
+	  update_adc_sensor_values(adc_sensor);
+	  int desired_angle = (int)get_trigger_input(trigger);
+	  send_wireless_desired_angle(wireless, desired_angle);
+
+	  update_display_number(display, desired_angle);
   }
   /* USER CODE END 3 */
 }

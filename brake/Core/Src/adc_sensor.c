@@ -12,7 +12,17 @@ ADCSensor *new_adc_sensor(ADC_HandleTypeDef *hadc, uint8_t _total_ranks) {
     for (uint8_t i = 0; i < _total_ranks; ++i) {
         adc_sensor->values[i] = 0;
     }
+    for (uint8_t i = 0; i < _total_ranks; ++i) {
+		adc_sensor->buffer[i] = 0;
+	}
     return adc_sensor;
+}
+
+// REQUIRES: adc_sensor is an ADCSensor object
+// MODIFIES: values
+// EFFECTS: Initializes the ADC sensor
+void init_adc_sensor(ADCSensor *adc_sensor) {
+	HAL_ADC_Start_DMA(adc_sensor->adc, adc_sensor->buffer, adc_sensor->total_ranks);
 }
 
 // REQUIRES: adc_sensor is an ADCSensor object and rank is the index
@@ -27,9 +37,7 @@ uint16_t get_adc_sensor_value(ADCSensor *adc_sensor, uint8_t rank) {
 // MODIFIES: values
 // EFFECTS: Updates the stored value of value.
 void update_adc_sensor_values(ADCSensor *adc_sensor) {
-	for (int i = 0; i < adc_sensor->total_ranks; ++i) {
-		HAL_ADC_Start_DMA(adc_sensor->adc, adc_sensor->values, adc_sensor->total_ranks);
-	}
+	memcpy(adc_sensor->values, adc_sensor->buffer, adc_sensor->total_ranks * sizeof(uint16_t));
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

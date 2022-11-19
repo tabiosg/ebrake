@@ -60,7 +60,7 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define SLOW_PERIOD 2000
-#define FAST_PERIOD 1000
+#define FAST_PERIOD 20
 #define BLUETOOTH_UART_RX_Pin GPIO_PIN_7
 #define BLUETOOTH_UART_RX_GPIO_Port GPIOB
 #define LIMIT_SWITCH_0_Pin GPIO_PIN_14

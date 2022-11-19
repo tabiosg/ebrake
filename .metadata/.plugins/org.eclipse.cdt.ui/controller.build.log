@@ -1,0 +1,10 @@
+02:06:21 **** Incremental Build of configuration Debug for project controller ****
+make -j16 all 
+arm-none-eabi-size   controller.elf 
+   text	   data	    bss	    dec	    hex	filename
+  52412	    488	   2144	  55044	   d704	controller.elf
+Finished building: default.size.stdout
+ 
+
+02:06:21 Build Finished. 0 errors, 0 warnings. (took 378ms)
+
