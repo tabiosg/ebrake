@@ -1,10 +1,17 @@
-02:06:21 **** Incremental Build of configuration Debug for project controller ****
+12:30:01 **** Incremental Build of configuration Debug for project controller ****
 make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0plus -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G031xx -c -I../Core/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "controller.elf" @"objects.list"   -mcpu=cortex-m0plus -T"C:\Users\gutst\Documents\ebrake\controller\STM32G031F8PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="controller.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: controller.elf
+ 
 arm-none-eabi-size   controller.elf 
+arm-none-eabi-objdump -h -S  controller.elf  > "controller.list"
    text	   data	    bss	    dec	    hex	filename
-  52412	    488	   2144	  55044	   d704	controller.elf
+  48152	    488	   2144	  50784	   c660	controller.elf
 Finished building: default.size.stdout
  
+Finished building: controller.list
+ 
 
-02:06:21 Build Finished. 0 errors, 0 warnings. (took 378ms)
+12:30:02 Build Finished. 0 errors, 0 warnings. (took 1s.86ms)
 

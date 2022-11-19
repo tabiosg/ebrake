@@ -73,6 +73,7 @@ PinData* shift_not_srclk = NULL;
 PinData* shift_rclk = NULL;
 PinData* shift_not_oe = NULL;
 PinData* buzzer = NULL;
+PinData* debug_led = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 
@@ -118,6 +119,7 @@ int main(void)
 	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
 	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
 	buzzer = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
+	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	adc_sensor = new_adc_sensor(&hadc1, 1);
@@ -171,7 +173,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  // TODO - COMMENT OUT FOR NOW - IT IS A BLOCKING FUNCTION, and it is not as important
+
 	  receive_wireless(wireless, display);
 
 	  update_adc_sensor_values(adc_sensor);
@@ -179,6 +181,24 @@ int main(void)
 	  send_wireless_desired_angle(wireless, desired_angle);
 
 	  update_display_number(display, desired_angle);
+
+
+//	  for (int i = 0; i < 100; ++i) {
+//		  HAL_Delay(300);
+//		  update_display_number(display, i);
+//	  }
+//	  update_display_number(display, 10);
+//	  update_display_number(display, 25);
+//	  set_pin_value(debug_led, 1);
+//	  set_pin_value(debug_led, 0);
+
+//	  for (int i = 0; i < 8; ++i) {
+//		  shift_shift_register(shift_register, 0);
+//	  }
+
+//	  for (int i = 0; i < 20; ++i) {
+//		  shift_shift_register(shift_register, 1);
+//	  }
   }
   /* USER CODE END 3 */
 }

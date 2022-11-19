@@ -76,10 +76,14 @@ void Error_Handler(void);
 #define POTENTIOMETER_GPIO_Port GPIOA
 #define BATTERYDATA_Pin GPIO_PIN_3
 #define BATTERYDATA_GPIO_Port GPIOA
+#define DEBUG_PIN_0_Pin GPIO_PIN_5
+#define DEBUG_PIN_0_GPIO_Port GPIOA
 #define DRV8825_STP_Pin GPIO_PIN_6
 #define DRV8825_STP_GPIO_Port GPIOA
 #define DRV8825_DIR_Pin GPIO_PIN_7
 #define DRV8825_DIR_GPIO_Port GPIOA
+#define DEBUG_PIN_1_Pin GPIO_PIN_0
+#define DEBUG_PIN_1_GPIO_Port GPIOB
 #define IMU_SCL_Pin GPIO_PIN_11
 #define IMU_SCL_GPIO_Port GPIOA
 #define IMU_SDA_Pin GPIO_PIN_12

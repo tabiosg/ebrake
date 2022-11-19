@@ -82,6 +82,9 @@ Wireless *wireless = NULL;
 PinData* motor_direction_pin = NULL;
 PinData* motor_step_pin = NULL;
 PinData* limit_switch_pin = NULL;
+PinData* debug_led = NULL;
+PinData* debug_pin_0 = NULL;
+PinData* debug_pin_1 = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 InterruptTimer* adc_interrupt_timer = NULL;
@@ -155,6 +158,9 @@ int main(void)
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
 	limit_switch_pin = new_pin_data(LIMIT_SWITCH_0_GPIO_Port, LIMIT_SWITCH_0_Pin, PIN_IS_INPUT);
+	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, PIN_IS_OUTPUT);
+	debug_pin_0 = new_pin_data(DEBUG_PIN_0_GPIO_Port, DEBUG_PIN_0_Pin, PIN_IS_OUTPUT);
+	debug_pin_1 = new_pin_data(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, PIN_IS_OUTPUT);
 	motor = new_motor(motor_direction_pin, motor_step_pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
@@ -224,6 +230,13 @@ int main(void)
 		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
 
 	  }
+
+//	set_pin_value(debug_led, 1);
+//	set_pin_value(debug_led, 0);
+//  	set_pin_value(debug_pin_0, 1);
+//  	set_pin_value(debug_pin_0, 0);
+//  	set_pin_value(debug_pin_1, 1);
+//	set_pin_value(debug_pin_1, 0);
   }
   /* USER CODE END 3 */
 }
@@ -579,7 +592,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DEBUG_PIN_0_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LIMIT_SWITCH_0_Pin */
   GPIO_InitStruct.Pin = LIMIT_SWITCH_0_Pin;
@@ -600,12 +616,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : DRV8825_DIR_Pin */
-  GPIO_InitStruct.Pin = DRV8825_DIR_Pin;
+  /*Configure GPIO pins : DEBUG_PIN_0_Pin DRV8825_DIR_Pin */
+  GPIO_InitStruct.Pin = DEBUG_PIN_0_Pin|DRV8825_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DRV8825_DIR_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DEBUG_PIN_1_Pin */
+  GPIO_InitStruct.Pin = DEBUG_PIN_1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(DEBUG_PIN_1_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
