@@ -10,7 +10,8 @@
 // Assumes that display is in common anode configuration (0 is on).
 typedef struct {
 	ShiftRegister *shift_register;
-	uint8_t display_numbers[10];
+	uint16_t left_display_numbers[10];
+	uint16_t right_display_numbers[10];
 } Display;
 
 /** PUBLIC FUNCTIONS **/

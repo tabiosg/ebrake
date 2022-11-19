@@ -180,7 +180,7 @@ int main(void)
 	  int desired_angle = (int)get_trigger_input(trigger);
 	  send_wireless_desired_angle(wireless, desired_angle);
 
-	  update_display_number(display, desired_angle);
+//	  update_display_number(display, desired_angle);
 
 
 //	  for (int i = 0; i < 100; ++i) {
@@ -265,7 +265,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_6B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
@@ -468,12 +468,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : BATTERY_STATUS_BUTTON_Pin */
-  GPIO_InitStruct.Pin = BATTERY_STATUS_BUTTON_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(BATTERY_STATUS_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SHIFT_NOT_OE_Pin */
   GPIO_InitStruct.Pin = SHIFT_NOT_OE_Pin;
