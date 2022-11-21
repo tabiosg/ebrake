@@ -3,7 +3,7 @@
 #include "pin_data.h"
 #include "adc_sensor.h"
 
-#define FORCE_SENSOR_VOLTAGE_PER_COUNT (3.3f / 4096.0f)
+#define FORCE_SENSOR_VOLTAGE_PER_COUNT (3.3f / 64.0f)
 
 // The load cell amp is the HX711.
 typedef struct {
