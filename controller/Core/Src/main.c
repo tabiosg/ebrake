@@ -163,6 +163,7 @@ int main(void)
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
+  update_display_number(display, 0);
 
   /* USER CODE END 2 */
 
@@ -174,11 +175,17 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
+
+
 	  receive_wireless(wireless, display);
 
 	  update_adc_sensor_values(adc_sensor);
 	  int desired_angle = (int)get_trigger_input(trigger);
 	  send_wireless_desired_angle(wireless, desired_angle);
+
+	  // ONLY FOR DEBUG
+
+	  HAL_Delay(2000);
 
 //	  update_display_number(display, desired_angle);
 

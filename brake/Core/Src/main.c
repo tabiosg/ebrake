@@ -123,6 +123,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	}
 	if (htim == slow_interrupt_timer->timer) {
+		set_pin_value(debug_pin_1, 1);
+
 		// 2 ms
 		update_adc_sensor_values(adc_sensor);
 		if (USE_FORCE_SENSOR) {
@@ -142,6 +144,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 
 		refresh_wireless_status(wireless);
+
+		set_pin_value(debug_pin_1, 0);
 	}
 }
 
@@ -232,6 +236,8 @@ int main(void)
 		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
 
 	  }
+	  set_pin_value(debug_pin_0, 1);
+	  set_pin_value(debug_pin_0, 0);
 
 
 //	  for (int i = 0; i < 90; i = i + 5) {
