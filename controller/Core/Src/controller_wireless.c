@@ -61,7 +61,7 @@ bool parse_wireless_message(Wireless *wireless, Display* display, char start_cha
 // MODIFIES: Nothing
 // EFFECTS: Receives the wireless speed and changes the display based on it
 void receive_wireless(Wireless *wireless, Display* display) {
-	HAL_UART_Receive(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer), 100);
+	HAL_UART_Receive_DMA(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer));
 
 	bool speed_success =  parse_wireless_message(wireless, display, 'S');
 	if (speed_success) {
