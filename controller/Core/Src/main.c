@@ -180,6 +180,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  // Our while loop is so fast so we need to put in some delay
+	  HAL_Delay(100);
 
 	  update_adc_sensor_values(adc_sensor);
 	  int desired_angle = (int)get_trigger_input(trigger);
