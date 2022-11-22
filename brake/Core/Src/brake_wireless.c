@@ -86,12 +86,12 @@ bool parse_wireless_message(Wireless *wireless, Skater* skater, Joint* joint, ch
 // MODIFIES: Nothing
 // EFFECTS: Receives the wireless angle and changes the joint angle if skater is on the board
 void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
-	for (int i = 0; i < 10; ++i) {
-		wireless->uart_buffer[i] = 0;
-	}
-	HAL_Delay(10);
-	HAL_UART_Receive(wireless->uart, (uint8_t *)wireless->uart_buffer, sizeof(wireless->uart_buffer), 500);
-	HAL_Delay(10);
+//	for (int i = 0; i < 10; ++i) {
+//		wireless->uart_buffer[i] = 0;
+//	}
+//	HAL_Delay(10);
+	HAL_UART_Receive_DMA(wireless->uart, (uint8_t *)wireless->uart_buffer, sizeof(wireless->uart_buffer));
+//	HAL_Delay(10);
 	bool target_success =  parse_wireless_message(wireless, skater, joint, 'T');
 	if (target_success) {
 		wireless->ms_since_comms = 0;

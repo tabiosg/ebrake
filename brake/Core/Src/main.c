@@ -67,6 +67,7 @@ TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
 
 UART_HandleTypeDef huart1;
+DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
@@ -108,6 +109,10 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	receive_wireless(wireless, skater, joint);
+}
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc1) {
 	update_adc_sensor_values(adc_sensor);
@@ -213,6 +218,8 @@ int main(void)
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
 
+  receive_wireless(wireless, skater, joint);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -222,8 +229,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-	  receive_wireless(wireless, skater, joint);
 
 	  // TODO - this statement is in an if statement since we are afraid that it takes too much time
 	  // and will decrease responsiveness. However, this may not actually be true
@@ -601,6 +606,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel2_3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
 
 }
 

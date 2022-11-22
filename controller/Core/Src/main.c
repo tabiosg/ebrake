@@ -185,7 +185,7 @@ int main(void)
 
 	  // ONLY FOR DEBUG
 
-	  HAL_Delay(2000);
+//	  HAL_Delay(2000);
 
 //	  update_display_number(display, desired_angle);
 
