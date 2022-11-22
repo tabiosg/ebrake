@@ -123,7 +123,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 		// 50 us ->
 //		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
+		set_pin_value(debug_pin_1, 1);
 		move_joint_to_target(joint);
+		set_pin_value(debug_pin_1, 0);
 //		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
 	}
@@ -233,7 +235,9 @@ int main(void)
 	  // TODO - this statement is in an if statement since we are afraid that it takes too much time
 	  // and will decrease responsiveness. However, this may not actually be true
 	  // It is worth testing to see if this is actually the case.
-	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
+	  HAL_Delay(1000);
+	  float difference_degrees = joint->desired_angle_degrees - joint->current_angle_degrees;
+	  if (fabs(difference_degrees) < DESIRED_ANGLE_LAX_DEGREES) {
 		  int current_speed = (int)joint->current_angle_degrees; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
 

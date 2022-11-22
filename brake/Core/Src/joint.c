@@ -26,7 +26,7 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _limit_s
 // EFFECTS: Moves the motor based on current angle and desired angle
 void move_joint_to_target(Joint *joint) {
 	float difference_degrees = joint->desired_angle_degrees - joint->current_angle_degrees;
-	if (fabs(difference_degrees) > DESIRED_ANGLE_LAX_DEGREES) {
+	if (fabs(difference_degrees) >= DESIRED_ANGLE_LAX_DEGREES) {
 		bool direction = !((difference_degrees > 0) ^ IS_MOTOR_SAME_DIRECTION_AS_POTENTIOMETER);
 		step_motor_direction(joint->motor, direction);
 		float steps = difference_degrees > 0 ? 1 : -1;
