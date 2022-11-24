@@ -62,7 +62,6 @@ DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c2;
 
-TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
 
@@ -88,7 +87,6 @@ PinData* debug_pin_0 = NULL;
 PinData* debug_pin_1 = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
-InterruptTimer* adc_interrupt_timer = NULL;
 bool send_message_flag = false;
 
 /* USER CODE END PV */
@@ -102,7 +100,6 @@ static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM14_Init(void);
 static void MX_TIM16_Init(void);
-static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -112,10 +109,6 @@ static void MX_TIM3_Init(void);
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	receive_wireless(wireless, skater, joint);
-}
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc1) {
-	update_adc_sensor_values(adc_sensor);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
@@ -177,7 +170,6 @@ int main(void)
 	motor = new_motor(motor_direction_pin, motor_step_pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
-	adc_interrupt_timer = new_interrupt_timer(&htim3);
 	potentiometer = new_potentiometer(adc_sensor, 1);
 	joint = new_joint(motor, potentiometer, limit_switch_pin);
 	force_sensor = new_force_sensor(adc_sensor, 0);
@@ -211,11 +203,7 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM14_Init();
   MX_TIM16_Init();
-  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-
-  init_adc_sensor(adc_sensor);
-  start_interrupt_timer(adc_interrupt_timer);
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
@@ -346,10 +334,10 @@ static void MX_ADC1_Init(void)
   hadc1.Init.LowPowerAutoPowerOff = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.NbrOfConversion = 3;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T3_TRGO;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
-  hadc1.Init.DMAContinuousRequests = ENABLE;
+  hadc1.Init.DiscontinuousConvMode = ENABLE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc1.Init.SamplingTimeCommon1 = ADC_SAMPLETIME_1CYCLE_5;
   hadc1.Init.SamplingTimeCommon2 = ADC_SAMPLETIME_1CYCLE_5;
@@ -438,51 +426,6 @@ static void MX_I2C2_Init(void)
   /* USER CODE BEGIN I2C2_Init 2 */
 
   /* USER CODE END I2C2_Init 2 */
-
-}
-
-/**
-  * @brief TIM3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM3_Init(void)
-{
-
-  /* USER CODE BEGIN TIM3_Init 0 */
-
-  /* USER CODE END TIM3_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM3_Init 1 */
-
-  /* USER CODE END TIM3_Init 1 */
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM3_Init 2 */
-
-  /* USER CODE END TIM3_Init 2 */
 
 }
 
