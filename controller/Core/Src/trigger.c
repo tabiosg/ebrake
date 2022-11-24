@@ -13,13 +13,13 @@ Trigger *new_trigger(Potentiometer *_potentiometer) {
 
 // REQUIRES: trigger is a Trigger object
 // MODIFIES: nothing
-// EFFECTS: Returns the currently desired angle being commanded
+// EFFECTS: Returns the currently desired steps being commanded
 // by user based on trigger
-float get_trigger_input(Trigger *trigger) {
+int16_t get_trigger_input(Trigger *trigger) {
 	uint32_t raw_counts = get_potentiometer_input(trigger->potentiometer);
-	float degrees = raw_counts * TRIGGER_DEGREES_PER_POTENTIOMETER_COUNTS;
-	float degrees_corrected = degrees - TRIGGER_OFFSET_DEGREES;
-	return degrees_corrected;
+	int16_t steps = raw_counts * TRIGGER_STEPS_PER_POTENTIOMETER_COUNTS;
+	int16_t steps_corrected = steps - TRIGGER_OFFSET_STEPS;
+	return steps_corrected;
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

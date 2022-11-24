@@ -1,2 +1,2 @@
 ../Core/Src/trigger.c:8:10:new_trigger	24	static
-../Core/Src/trigger.c:18:7:get_trigger_input	32	static
+../Core/Src/trigger.c:18:9:get_trigger_input	24	static

@@ -184,8 +184,8 @@ int main(void)
 	  HAL_Delay(50);
 
 	  update_adc_sensor_values(adc_sensor);
-	  int desired_angle = (int)get_trigger_input(trigger);
-	  send_wireless_desired_angle(wireless, desired_angle);
+	  int desired_angle_steps = (int)get_trigger_input(trigger);
+	  send_wireless_desired_angle(wireless, desired_angle_steps);
 
 	  // ONLY FOR DEBUG
 

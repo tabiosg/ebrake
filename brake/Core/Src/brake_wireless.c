@@ -97,7 +97,7 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 		wireless->ms_since_comms = 0;
 		bool is_skater_here = !is_skater_gone(skater);
 		if (is_skater_here) {
-			set_joint_target(joint, (float)wireless->message_contents);
+			set_joint_target(joint, wireless->message_contents);
 		}
 		return;
 	}

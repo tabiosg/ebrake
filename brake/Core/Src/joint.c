@@ -21,7 +21,6 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _limit_s
 }
 
 // REQUIRES: joint is a Joint object
-// and target is a float
 // MODIFIES: Nothing
 // EFFECTS: Returns whether or not current joint angle is close enough to desired angle
 bool is_joint_close_enough_to_target(Joint *joint) {
@@ -29,7 +28,6 @@ bool is_joint_close_enough_to_target(Joint *joint) {
 }
 
 // REQUIRES: joint is a Joint object
-// and target is a float
 // MODIFIES: Nothing
 // EFFECTS: Moves the motor based on current steps and desired steps
 void move_joint_to_target(Joint *joint) {
@@ -80,7 +78,7 @@ void refresh_joint_angle(Joint *joint) {
 }
 
 // REQUIRES: joint is a Joint object
-// and target is a float
+// and target is an integer
 // MODIFIES: desired_angle_steps
 // EFFECTS: Changes the desired_angle_steps
 void set_joint_target(Joint *joint, int32_t target) {

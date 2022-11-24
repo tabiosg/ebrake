@@ -20,7 +20,7 @@ Potentiometer *new_potentiometer(ADCSensor *_adc_sensor, uint8_t _rank);
 // REQUIRES: potentiometer is a Potentiometer object
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored value of trigger.
-// Expect an integer between 0 and 4096.
-uint32_t get_potentiometer_input(Potentiometer *potentiometer);
+// Expect an integer between 0 and 64.
+uint16_t get_potentiometer_input(Potentiometer *potentiometer);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
