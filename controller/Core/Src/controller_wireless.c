@@ -66,7 +66,7 @@ void receive_wireless(Wireless *wireless, Display* display) {
 	bool speed_success =  parse_wireless_message(wireless, display, 'S');
 	if (speed_success) {
 		//
-//		update_display_number(display, wireless->message_contents);
+		update_display_number(display, wireless->message_contents);
 		return;
 	}
 
@@ -74,7 +74,8 @@ void receive_wireless(Wireless *wireless, Display* display) {
 	if (battery_data_success) {
 		// TODO - Eventually it will have to be speed instead and this will have to be the buzzer.
 		int battery_data = wireless->message_contents;
-		update_display_number(display, battery_data);
+//		change_battery_buzzer_data(battery_data); // TODO - INCOMPLETE
+//		update_display_number(display, battery_data);
 		return;
 	}
 

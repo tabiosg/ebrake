@@ -137,10 +137,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			refresh_joint_angle(joint);
 		}
 		if (is_skater_gone(skater)) {
-			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_DEGREES);
+			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_STEPS);
 		}
 		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {
-			set_joint_target(joint, AUTOMATIC_RELAX_ANGLE_DEGREES);
+			set_joint_target(joint, AUTOMATIC_RELAX_ANGLE_STEPS);
 		}
 
 		refresh_wireless_status(wireless);
@@ -224,9 +224,8 @@ int main(void)
 	  // and will decrease responsiveness. However, this may not actually be true
 	  // It is worth testing to see if this is actually the case.
 	  HAL_Delay(1000);
-	  float difference_degrees = joint->desired_angle_degrees - joint->current_angle_degrees;
-	  if (fabs(difference_degrees) < DESIRED_ANGLE_LAX_DEGREES) {
-		  int current_speed = (int)joint->current_angle_degrees; // TODO - get actual speed
+	  if (is_joint_close_enough_to_target(joint)) {
+		  int current_speed = joint->current_angle_steps; // TODO - get actual speed
 		  send_wireless_speed(wireless, current_speed);
 
 		  int battery_data = get_battery_sensor_data(battery_sensor);
