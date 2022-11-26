@@ -123,7 +123,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	}
 	if (htim == slow_interrupt_timer->timer) {
-		set_pin_value(debug_pin_1, 1);
+//		set_pin_value(debug_pin_1, 1);
 
 		// 2 ms
 		update_adc_sensor_values(adc_sensor);
@@ -145,7 +145,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 		refresh_wireless_status(wireless);
 
-		set_pin_value(debug_pin_1, 0);
+//		set_pin_value(debug_pin_1, 0);
 	}
 }
 
