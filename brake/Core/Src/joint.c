@@ -24,7 +24,7 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _limit_s
 // MODIFIES: Nothing
 // EFFECTS: Returns whether or not current joint angle is close enough to desired angle
 bool is_joint_close_enough_to_target(Joint *joint) {
-	return joint->desired_angle_steps - joint->current_angle_steps < DESIRED_ANGLE_LAX_STEPS;
+	return abs(joint->desired_angle_steps - joint->current_angle_steps) < DESIRED_ANGLE_LAX_STEPS;
 }
 
 // REQUIRES: joint is a Joint object
@@ -82,7 +82,7 @@ void refresh_joint_angle(Joint *joint) {
 // MODIFIES: desired_angle_steps
 // EFFECTS: Changes the desired_angle_steps
 void set_joint_target(Joint *joint, int32_t target) {
-	joint->desired_angle_steps = target;
+	joint->desired_angle_steps = target * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT;
 }
 
 // REQUIRES: joint is a Joint object

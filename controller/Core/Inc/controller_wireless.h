@@ -25,11 +25,11 @@ typedef struct {
 Wireless *new_wireless(UART_HandleTypeDef *huart);
 
 // REQUIRES: wireless is a Wireless object
-// and desired_angle is the desired angle
+// and trigger_input is an int from 0 to 64
 // of the arm in degrees
 // MODIFIES: Nothing
-// EFFECTS: Sends desired angle degrees command over wireless
-void send_wireless_desired_angle(Wireless *wireless, int desired_angle);
+// EFFECTS: Sends trigger input command over wireless
+void send_wireless_trigger_input(Wireless *wireless, int trigger_input);
 
 // REQUIRES: wireless and display are objects
 // MODIFIES: Nothing

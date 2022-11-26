@@ -4,13 +4,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-// 96000 = 3000 steps * 32 pulses per step
-#define MAX_STEPS 96000
-
-//#define TRIGGER_STEPS_PER_POTENTIOMETER_COUNTS (MAX_STEPS / 64f)
-#define TRIGGER_STEPS_PER_POTENTIOMETER_COUNTS 1500
-#define TRIGGER_OFFSET_STEPS 0
-
 // A Skater keeps track of the state of
 // the skater on the board
 typedef struct {

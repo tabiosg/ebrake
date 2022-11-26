@@ -1,5 +1,5 @@
 ../Core/Src/controller_wireless.c:8:11:new_wireless	24	static
-../Core/Src/controller_wireless.c:19:6:send_wireless_desired_angle	40	static
+../Core/Src/controller_wireless.c:19:6:send_wireless_trigger_input	40	static
 ../Core/Src/controller_wireless.c:28:6:parse_wireless_message	64	static
 ../Core/Src/controller_wireless.c:63:6:receive_wireless	32	static
 ../Core/Src/controller_wireless.c:91:6:send_wireless_string_10	16	static

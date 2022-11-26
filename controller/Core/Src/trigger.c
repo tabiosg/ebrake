@@ -17,9 +17,7 @@ Trigger *new_trigger(Potentiometer *_potentiometer) {
 // by user based on trigger
 int16_t get_trigger_input(Trigger *trigger) {
 	uint32_t raw_counts = get_potentiometer_input(trigger->potentiometer);
-	int16_t steps = raw_counts * TRIGGER_STEPS_PER_POTENTIOMETER_COUNTS;
-	int16_t steps_corrected = steps - TRIGGER_OFFSET_STEPS;
-	return steps_corrected;
+	return raw_counts;
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
