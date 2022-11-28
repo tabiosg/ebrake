@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define VOLTAGE_INDICATING_SKATER_PRESENCE 1.5f
+#define RAW_FORCE_SENSOR_VALUE_INDICATING_SKATER_PRESENCE 43
 #define TIME_INDICATING_SKATER_ABSENCE_MS 1000
 
 // A Skater keeps track of the state of

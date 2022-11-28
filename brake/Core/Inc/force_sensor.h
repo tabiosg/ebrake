@@ -3,8 +3,6 @@
 #include "pin_data.h"
 #include "adc_sensor.h"
 
-#define FORCE_SENSOR_VOLTAGE_PER_COUNT (3.3f / 64.0f)
-
 // The load cell amp is the HX711.
 typedef struct {
 	ADCSensor *adc_sensor;
@@ -21,6 +19,6 @@ ForceSensor *new_force_sensor(ADCSensor *_adc_sensor, uint8_t _rank);
 // REQUIRES: ForceSensor is a force_sensor object
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored value force sensor voltage output.
-float get_force_sensor_data(ForceSensor *force_sensor);
+uint16_t get_force_sensor_data(ForceSensor *force_sensor);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
