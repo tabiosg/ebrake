@@ -58,18 +58,17 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define SLOW_PERIOD 2000
-#define FAST_PERIOD 40
+#define FAST_PERIOD 50
 #define BLUETOOTH_UART_RX_Pin GPIO_PIN_7
 #define BLUETOOTH_UART_RX_GPIO_Port GPIOB
-#define LIMIT_SWITCH_0_Pin GPIO_PIN_14
-#define LIMIT_SWITCH_0_GPIO_Port GPIOC
-#define LIMIT_SWITCH_0_EXTI_IRQn EXTI4_15_IRQn
+#define REST_LIMIT_SWITCH_Pin GPIO_PIN_9
+#define REST_LIMIT_SWITCH_GPIO_Port GPIOB
 #define DEBUG_LED_Pin GPIO_PIN_2
 #define DEBUG_LED_GPIO_Port GPIOF
 #define FORCE_SENSOR_Pin GPIO_PIN_0
 #define FORCE_SENSOR_GPIO_Port GPIOA
-#define LIMIT_SWITCH_1_Pin GPIO_PIN_1
-#define LIMIT_SWITCH_1_GPIO_Port GPIOA
+#define BRAKE_LIMIT_SWITCH_Pin GPIO_PIN_1
+#define BRAKE_LIMIT_SWITCH_GPIO_Port GPIOA
 #define POTENTIOMETER_Pin GPIO_PIN_2
 #define POTENTIOMETER_GPIO_Port GPIOA
 #define BATTERYDATA_Pin GPIO_PIN_3

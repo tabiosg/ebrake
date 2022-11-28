@@ -1,2 +1,2 @@
 ../Core/Src/motor.c:9:8:new_motor	24	static
-../Core/Src/motor.c:23:6:step_motor_direction	24	static
+../Core/Src/motor.c:23:6:step_motor_direction	16	static

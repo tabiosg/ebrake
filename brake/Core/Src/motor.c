@@ -23,7 +23,7 @@ Motor *new_motor(
 void step_motor_direction(Motor *motor, bool dir) {
 	set_pin_value(motor->dir_pin, dir);
 	set_pin_value(motor->stp_pin, GPIO_PIN_SET);
-	for (uint8_t i = 0; i < 10; ++i);
+//	for (uint8_t i = 0; i < 10; ++i);
 	set_pin_value(motor->stp_pin, GPIO_PIN_RESET);
 }
 

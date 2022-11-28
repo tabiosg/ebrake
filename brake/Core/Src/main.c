@@ -115,24 +115,55 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
 
+		set_pin_value(debug_pin_1, 1);
 		// 50 us ->
 //		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
-		set_pin_value(debug_pin_1, 1);
 		move_joint_to_target(joint);
-		set_pin_value(debug_pin_1, 0);
 //		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
+//		if (USE_LIMIT_SWITCH) {
+//			refresh_joint_limit_switch(joint);
+////			if (get_pin_value(joint->rest_limit_switch_pin)) {
+////				set_pin_value(debug_pin_1, 1);
+////			}
+////			else {
+////				set_pin_value(debug_pin_1, 0);
+////			}
+//		}
+		set_pin_value(debug_pin_1, 0);
 
 	}
 	if (htim == slow_interrupt_timer->timer) {
-//		set_pin_value(debug_pin_1, 1);
 
 		// 2 ms
 		update_adc_sensor_values(adc_sensor);
 		if (USE_FORCE_SENSOR) {
 			refresh_skater_status(skater);
 		}
+
+		if (USE_LIMIT_SWITCH) {
+	//		bool motor_thinks_is_at_rest = abs(joint->current_angle_steps - AUTOMATIC_RELAX_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
+			bool motor_thinks_is_at_rest = joint->current_angle_steps < DESIRED_ANGLE_LAX_STEPS;
+			if (motor_thinks_is_at_rest && !joint->is_rest_limit_switch_activated) {
+				// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
+				joint->current_angle_steps += ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS;
+			}
+			else {
+		//		bool motor_thinks_is_at_brake = abs(joint->current_angle_steps - AUTOMATIC_BRAKING_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
+				bool motor_thinks_is_at_brake = joint->current_angle_steps > AUTOMATIC_BRAKING_ANGLE_STEPS_LOW && joint->current_angle_steps < AUTOMATIC_BRAKING_ANGLE_STEPS_HIGH;
+				if (motor_thinks_is_at_brake && !joint->is_brake_limit_switch_activated) {
+					// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
+					joint->current_angle_steps -= ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS;
+				}
+			}
+		}
 		if (USE_LIMIT_SWITCH) {
 			refresh_joint_limit_switch(joint);
+//			if (get_pin_value(joint->rest_limit_switch_pin)) {
+//				set_pin_value(debug_pin_1, 1);
+//			}
+//			else {
+//				set_pin_value(debug_pin_1, 0);
+//			}
 		}
 		if (USE_POTENTIOMETER_FEEDBACK) {
 			refresh_joint_angle(joint);
@@ -146,7 +177,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 		refresh_wireless_status(wireless);
 
-//		set_pin_value(debug_pin_1, 0);
 	}
 }
 
@@ -164,8 +194,8 @@ int main(void)
 	imu = new_imu_sensor(&hi2c2);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
-	rest_limit_switch_pin = new_pin_data(LIMIT_SWITCH_0_GPIO_Port, LIMIT_SWITCH_0_Pin, PIN_IS_INPUT);
-	brake_limit_switch_pin = new_pin_data(LIMIT_SWITCH_1_GPIO_Port, LIMIT_SWITCH_1_Pin, PIN_IS_INPUT);
+	rest_limit_switch_pin = new_pin_data(REST_LIMIT_SWITCH_GPIO_Port, REST_LIMIT_SWITCH_Pin, PIN_IS_INPUT);
+	brake_limit_switch_pin = new_pin_data(BRAKE_LIMIT_SWITCH_GPIO_Port, BRAKE_LIMIT_SWITCH_Pin, PIN_IS_INPUT);
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, PIN_IS_OUTPUT);
 	debug_pin_0 = new_pin_data(DEBUG_PIN_0_GPIO_Port, DEBUG_PIN_0_Pin, PIN_IS_OUTPUT);
 	debug_pin_1 = new_pin_data(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, PIN_IS_OUTPUT);
@@ -571,24 +601,24 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, REST_LIMIT_SWITCH_Pin|DEBUG_PIN_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, DEBUG_PIN_0_Pin|DRV8825_STP_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, BRAKE_LIMIT_SWITCH_Pin|DEBUG_PIN_0_Pin|DRV8825_STP_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : LIMIT_SWITCH_0_Pin */
-  GPIO_InitStruct.Pin = LIMIT_SWITCH_0_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(LIMIT_SWITCH_0_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pin : REST_LIMIT_SWITCH_Pin */
+  GPIO_InitStruct.Pin = REST_LIMIT_SWITCH_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(REST_LIMIT_SWITCH_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : DEBUG_LED_Pin */
   GPIO_InitStruct.Pin = DEBUG_LED_Pin;
@@ -597,8 +627,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LIMIT_SWITCH_1_Pin PA4 */
-  GPIO_InitStruct.Pin = LIMIT_SWITCH_1_Pin|GPIO_PIN_4;
+  /*Configure GPIO pin : BRAKE_LIMIT_SWITCH_Pin */
+  GPIO_InitStruct.Pin = BRAKE_LIMIT_SWITCH_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(BRAKE_LIMIT_SWITCH_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
