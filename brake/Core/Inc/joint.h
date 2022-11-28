@@ -32,22 +32,24 @@
 typedef struct {
 	Motor *motor;
     Potentiometer *potentiometer;
-    PinData *limit_switch_pin;
+    PinData *rest_limit_switch_pin;
+    PinData *brake_limit_switch_pin;
     uint32_t potentiometer_value_at_rest_offset;
     int32_t current_angle_steps;
     int32_t desired_angle_steps;
     bool is_calibrated;
-    bool is_limit_switch_activated;
+    bool is_rest_limit_switch_activated;
+    bool is_brake_limit_switch_activated;
 } Joint;
 
 /** PUBLIC FUNCTIONS **/
 
 // REQUIRES: _motor is a Motor object,
 // _potentiometer is a Potentiometer object,
-// and _limit_switch_pin is a PinData object
+// and _rest_limit_switch_pin and _brake_limit_switch_pin is a PinData object
 // MODIFIES: Nothing
 // EFFECTS: Returns a pointer to a created Joint object
-Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _limit_switch_pin);
+Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _rest_limit_switch_pin, PinData* _brake_limit_switch_pin);
 
 // REQUIRES: joint is a Joint object
 // MODIFIES: Nothing

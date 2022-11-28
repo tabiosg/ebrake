@@ -4,19 +4,21 @@
 
 // REQUIRES: _motor is a Motor object,
 // _potentiometer is a Potentiometer object,
-// and _limit_switch_pin is a PinData object
+// and _rest_limit_switch_pin and _brake_limit_switch_pin is a PinData object
 // MODIFIES: Nothing
 // EFFECTS: Returns a pointer to a created Joint object
-Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _limit_switch_pin) {
+Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _rest_limit_switch_pin, PinData* _brake_limit_switch_pin) {
 	Joint *joint = (Joint*) malloc(sizeof(Joint));
 	joint->motor = _motor;
     joint->potentiometer = _potentiometer;
-    joint->limit_switch_pin = _limit_switch_pin;
+    joint->rest_limit_switch_pin = _rest_limit_switch_pin;
+    joint->brake_limit_switch_pin = _brake_limit_switch_pin;
     joint->potentiometer_value_at_rest_offset = 0;
     joint->current_angle_steps = 0;
     joint->desired_angle_steps = 0;
 	joint->is_calibrated = false;
-	joint->is_limit_switch_activated = true;
+	joint->is_rest_limit_switch_activated = true;
+	joint->is_brake_limit_switch_activated = false;
 	return joint;
 }
 
@@ -41,22 +43,37 @@ void move_joint_to_target(Joint *joint) {
 
 	if (USE_LIMIT_SWITCH) {
 		bool motor_thinks_is_at_rest = fabs(joint->current_angle_steps - AUTOMATIC_RELAX_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
-		if (motor_thinks_is_at_rest && !joint->is_limit_switch_activated) {
+		if (motor_thinks_is_at_rest && !joint->is_rest_limit_switch_activated) {
 			// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
 			joint->current_angle_steps += ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS;
+			return;
+		}
+
+		bool motor_thinks_is_at_brake = fabs(joint->current_angle_steps - AUTOMATIC_BRAKING_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
+		if (motor_thinks_is_at_brake && !joint->is_brake_limit_switch_activated) {
+			// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
+			joint->current_angle_steps -= ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS;
+			return;
 		}
 	}
 }
 
 // REQUIRES: joint is a Joint object
-// MODIFIES: is_limit_switch_activated
+// MODIFIES: is_rest_limit_switch_activated and is_brake_limit_switch_activated
 // EFFECTS: Updates joint limit switch value
 void refresh_joint_limit_switch(Joint *joint) {
 	if (USE_LIMIT_SWITCH) {
-		bool raw_pin_value = get_pin_value(joint->limit_switch_pin);
-		joint->is_limit_switch_activated = !raw_pin_value;
-		if (joint->is_limit_switch_activated) {
+		bool raw_rest_pin_value = get_pin_value(joint->rest_limit_switch_pin);
+		joint->is_rest_limit_switch_activated = !raw_rest_pin_value;
+		if (joint->is_rest_limit_switch_activated) {
 			zero_joint(joint);
+		}
+
+		bool raw_brake_pin_value = get_pin_value(joint->brake_limit_switch_pin);
+		joint->is_brake_limit_switch_activated = !raw_brake_pin_value;
+		if (joint->is_brake_limit_switch_activated) {
+			// TODO - currently does not support potentiometer offset
+			joint->current_angle_steps = AUTOMATIC_BRAKING_ANGLE_STEPS;
 		}
 	}
 }
@@ -66,7 +83,7 @@ void refresh_joint_limit_switch(Joint *joint) {
 // EFFECTS: Updates current_angle_steps based on potentiometer
 // reading and potentiometer offset
 void refresh_joint_angle(Joint *joint) {
-	if (USE_LIMIT_SWITCH && joint->is_limit_switch_activated) {
+	if (USE_LIMIT_SWITCH && joint->is_rest_limit_switch_activated) {
 		// TODO - this is technically redundant, but it does not hurt I think.
 		zero_joint(joint);
 	}
