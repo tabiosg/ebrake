@@ -36,7 +36,7 @@ Core/Src/controller_wireless.o: ../Core/Src/controller_wireless.c \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
  ../Core/Inc/display.h ../Core/Inc/shift_register.h \
- ../Core/Inc/pin_data.h
+ ../Core/Inc/pin_data.h ../Core/Inc/battery_buzzer.h
 ../Core/Inc/controller_wireless.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
@@ -76,3 +76,4 @@ Core/Src/controller_wireless.o: ../Core/Src/controller_wireless.c \
 ../Core/Inc/display.h:
 ../Core/Inc/shift_register.h:
 ../Core/Inc/pin_data.h:
+../Core/Inc/battery_buzzer.h:

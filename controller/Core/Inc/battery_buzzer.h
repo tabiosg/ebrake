@@ -21,16 +21,17 @@
 // This manages the battery puzzer
 typedef struct {
 	PinData *buzzer_pin;
+	PinData *battery_led_pin;
 	uint32_t ms_since_period_cycle;
 	uint8_t battery_data;
 } BatteryBuzzer;
 
 /** PUBLIC FUNCTIONS **/
 
-// REQUIRES: _buzzer_pin is the buzzer pin
+// REQUIRES: _buzzer_pin is the buzzer pin, _battery_led_pin is the battery led pin
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created BatteryBuzzer object
-BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin);
+BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin, PinData *_battery_led_pin);
 
 // REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing
@@ -51,5 +52,10 @@ void change_battery_buzzer_data(BatteryBuzzer *battery_buzzer, uint8_t data);
 // MODIFIES: nothing
 // EFFECTS: Changes the output noise of the battery buzzer.
 void change_battery_buzzer_noise_val(BatteryBuzzer *battery_buzzer, bool val);
+
+// REQUIRES: battery_buzzer is an object and val is if it should be on or off.
+// MODIFIES: nothing
+// EFFECTS: Turns the battery led on or off.
+void change_battery_led(BatteryBuzzer *battery_buzzer, bool val);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

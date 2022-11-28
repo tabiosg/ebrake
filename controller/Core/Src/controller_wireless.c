@@ -60,22 +60,18 @@ bool parse_wireless_message(Wireless *wireless, Display* display, char start_cha
 // REQUIRES: wireless and display are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the wireless speed and changes the display based on it
-void receive_wireless(Wireless *wireless, Display* display) {
+void receive_wireless(Wireless *wireless, Display* display, BatteryBuzzer* battery) {
 	HAL_UART_Receive_DMA(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer));
 
-	bool speed_success =  parse_wireless_message(wireless, display, 'S');
+	bool speed_success = parse_wireless_message(wireless, display, 'S');
 	if (speed_success) {
-		//
 		update_display_number(display, wireless->message_contents);
 		return;
 	}
 
 	bool battery_data_success = parse_wireless_message(wireless, display, 'B');
 	if (battery_data_success) {
-		// TODO - Eventually it will have to be speed instead and this will have to be the buzzer.
-		int battery_data = wireless->message_contents;
-//		change_battery_buzzer_data(battery_data); // TODO - INCOMPLETE
-//		update_display_number(display, battery_data);
+		change_battery_buzzer_data(battery, wireless->message_contents);
 		return;
 	}
 

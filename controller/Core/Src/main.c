@@ -75,6 +75,7 @@ PinData* shift_rclk = NULL;
 PinData* shift_not_oe = NULL;
 PinData* buzzer = NULL;
 PinData* debug_led = NULL;
+PinData* battery_led = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 
@@ -96,7 +97,7 @@ static void MX_TIM16_Init(void);
 /* USER CODE BEGIN 0 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	receive_wireless(wireless, display);
+	receive_wireless(wireless, display, battery_buzzer);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
@@ -123,7 +124,8 @@ int main(void)
 	shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin);
 	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
 	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
-	buzzer = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
+	buzzer = new_pin_data(BUZZER_GPIO_Port, BUZZER_Pin);
+	battery_led = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
@@ -138,6 +140,7 @@ int main(void)
 	display = new_display(shift_register);
 	trigger = new_trigger(potentiometer);
 	wireless = new_wireless(&huart1);
+	battery_buzzer = new_battery_buzzer(buzzer, battery_led);
 
   /* USER CODE END 1 */
 
@@ -169,7 +172,7 @@ int main(void)
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
   update_display_number(display, 0);
-  receive_wireless(wireless, display);
+  receive_wireless(wireless, display, battery_buzzer);
 
   /* USER CODE END 2 */
 

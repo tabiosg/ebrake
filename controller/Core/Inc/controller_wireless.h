@@ -8,6 +8,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "display.h"
+#include "battery_buzzer.h"
 
 // UART is used for wireless
 // communication with other devices.
@@ -39,7 +40,7 @@ bool parse_wireless_message(Wireless *wireless, Display* display, char start_cha
 // REQUIRES: wireless and display are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the wireless speed and changes the display based on it
-void receive_wireless(Wireless *wireless, Display* display);
+void receive_wireless(Wireless *wireless, Display* display, BatteryBuzzer* battery);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
 

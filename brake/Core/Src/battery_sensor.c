@@ -17,7 +17,7 @@ BatterySensor *new_battery_sensor(ADCSensor *_adc_sensor, uint8_t _rank) {
 // EFFECTS: Returns the currently stored value battery sensor data.
 float get_battery_sensor_data(BatterySensor *battery_sensor) {
     uint32_t raw_value = get_adc_sensor_value(battery_sensor->adc_sensor, battery_sensor->rank);
-    float voltage = raw_value * 3.3f / 4096.0;
+    float voltage = raw_value * 3.3f / 64.0;
     if (voltage > BATTERY_SENSOR_FIVE_BATTERY) {
     	return 5;
     }
