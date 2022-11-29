@@ -82,6 +82,7 @@ InterruptTimer* fast_interrupt_timer = NULL;
 WarningLed* warning_led = NULL;
 uint8_t *battery_data = NULL;
 
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

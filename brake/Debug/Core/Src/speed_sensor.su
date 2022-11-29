@@ -1,0 +1,2 @@
+../Core/Src/speed_sensor.c:8:14:new_speed_sensor	24	static
+../Core/Src/speed_sensor.c:19:9:get_speed_sensor_data	16	static

@@ -23,6 +23,6 @@ BatterySensor *new_battery_sensor(ADCSensor *_adc_sensor, uint8_t _rank);
 // REQUIRES: ForceSensor is a force_sensor object
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored value battery sensor data.
-float get_battery_sensor_data(BatterySensor *battery_sensor);
+uint8_t get_battery_sensor_data(BatterySensor *battery_sensor);
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

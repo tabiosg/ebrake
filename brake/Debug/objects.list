@@ -10,6 +10,7 @@
 "./Core/Src/pin_data.o"
 "./Core/Src/potentiometer.o"
 "./Core/Src/skater.o"
+"./Core/Src/speed_sensor.o"
 "./Core/Src/stm32g0xx_hal_msp.o"
 "./Core/Src/stm32g0xx_it.o"
 "./Core/Src/syscalls.o"

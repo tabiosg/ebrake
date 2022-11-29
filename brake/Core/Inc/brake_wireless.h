@@ -12,7 +12,6 @@
 
 #define TIME_INDICATING_WIRELESS_COMMS_LOST_MS 3000
 
-
 // UART is used for wireless
 // communication with other devices.
 typedef struct {

@@ -2,12 +2,13 @@
 
 /** PUBLIC FUNCTIONS **/
 
-// REQUIRES: hi2c is the i2c channel
+// REQUIRES: hi2c is the i2c channel and _addr is the address
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created IMU object
-IMU *new_imu_sensor(I2C_HandleTypeDef *hi2c) {
+IMU *new_imu_sensor(I2C_HandleTypeDef *hi2c, uint8_t _addr) {
     IMU *imu = (IMU*) malloc(sizeof(IMU));
 	imu->i2c = hi2c;
+	imu->addr = _addr;
 	return imu;
 }
 

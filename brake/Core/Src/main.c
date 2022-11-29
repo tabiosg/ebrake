@@ -32,6 +32,7 @@
 #include "motor.h"
 #include "potentiometer.h"
 #include "skater.h"
+#include "speed_sensor.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -72,12 +73,14 @@ DMA_HandleTypeDef hdma_usart1_rx;
 
 ADCSensor *adc_sensor = NULL;
 BatterySensor *battery_sensor = NULL;
-IMU *imu = NULL;
+IMU *front_imu = NULL;
+IMU *back_imu = NULL;
 Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
 Joint *joint = NULL;
 ForceSensor *force_sensor = NULL;
 Skater *skater = NULL;
+SpeedSensor *speed_sensor = NULL;
 Wireless *wireless = NULL;
 PinData* motor_direction_pin = NULL;
 PinData* motor_step_pin = NULL;
@@ -116,19 +119,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
 
 		set_pin_value(debug_pin_1, 1);
-		// 50 us ->
-//		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
+		// 50 us
 		move_joint_to_target(joint);
-//		HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
-//		if (USE_LIMIT_SWITCH) {
-//			refresh_joint_limit_switch(joint);
-////			if (get_pin_value(joint->rest_limit_switch_pin)) {
-////				set_pin_value(debug_pin_1, 1);
-////			}
-////			else {
-////				set_pin_value(debug_pin_1, 0);
-////			}
-//		}
 		set_pin_value(debug_pin_1, 0);
 
 	}
@@ -191,7 +183,9 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 	adc_sensor = new_adc_sensor(&hadc1, 3);
-	imu = new_imu_sensor(&hi2c2);
+	// TODO - Implement actual code for the IMUs
+	front_imu = new_imu_sensor(&hi2c2, ADDRESS_BOTH_GROUND);
+	back_imu = new_imu_sensor(&hi2c2, ADDRESS_BOTH_HIGH);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
 	rest_limit_switch_pin = new_pin_data(REST_LIMIT_SWITCH_GPIO_Port, REST_LIMIT_SWITCH_Pin, PIN_IS_INPUT);
@@ -208,6 +202,7 @@ int main(void)
 	battery_sensor = new_battery_sensor(adc_sensor, 2);
 	skater = new_skater(force_sensor);
 	wireless = new_wireless(&huart1);
+	speed_sensor = new_speed_sensor(front_imu, back_imu);
 
   /* USER CODE END 1 */
 
@@ -257,11 +252,11 @@ int main(void)
 	  // It is worth testing to see if this is actually the case.
 	  HAL_Delay(1000);
 	  if (is_joint_close_enough_to_target(joint)) {
-		  int current_speed = joint->current_angle_steps; // TODO - get actual speed
+		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
 		  send_wireless_speed(wireless, current_speed);
 
-		  int battery_data = get_battery_sensor_data(battery_sensor);
-		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
+		  uint8_t battery_data = get_battery_sensor_data(battery_sensor);
+		  send_wireless_battery_data(wireless, battery_data);
 
 	  }
 	  set_pin_value(debug_pin_0, 1);
