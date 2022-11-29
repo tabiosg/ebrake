@@ -30,6 +30,7 @@
 #include "shift_register.h"
 #include "battery_buzzer.h"
 #include "trigger.h"
+#include "warning_led.h"
 #include <string.h>
 #include <stdbool.h>
 
@@ -75,9 +76,10 @@ PinData* shift_rclk = NULL;
 PinData* shift_not_oe = NULL;
 PinData* buzzer = NULL;
 PinData* debug_led = NULL;
-PinData* battery_led = NULL;
+PinData* warning_led_pin = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
+WarningLed* warning_led = NULL;
 
 /* USER CODE END PV */
 
@@ -107,10 +109,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == slow_interrupt_timer->timer) {
 		// called every 2 ms
 		update_battery_buzzer_logic(battery_buzzer);
-		if (is_wireless_comms_lost(wireless)) {
-			//TODO: code here
-//			blink_battery
-		}
+		update_warning_led_logic(warning_led);
 		refresh_wireless_status(wireless);
 	}
 
@@ -131,7 +130,7 @@ int main(void)
 	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
 	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
 	buzzer = new_pin_data(BUZZER_GPIO_Port, BUZZER_Pin);
-	battery_led = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
+	warning_led_pin = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
@@ -146,7 +145,8 @@ int main(void)
 	display = new_display(shift_register);
 	trigger = new_trigger(potentiometer);
 	wireless = new_wireless(&huart1);
-	battery_buzzer = new_battery_buzzer(buzzer, battery_led);
+	battery_buzzer = new_battery_buzzer(buzzer);
+	warning_led = new_warning_led(warning_led_pin, battery_buzzer, wireless);
 
   /* USER CODE END 1 */
 

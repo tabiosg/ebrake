@@ -18,20 +18,19 @@
 #define CRITICALLY_LOW_BATTERY_BUZZ_PERIOD_MS 5000
 #define LOW_BATTERY_BUZZ_PERIOD_MS 15000
 
-// This manages the battery puzzer
+// This manages the battery buzzer
 typedef struct {
 	PinData *buzzer_pin;
-	PinData *battery_led_pin;
 	uint32_t ms_since_period_cycle;
 	uint8_t battery_data;
 } BatteryBuzzer;
 
 /** PUBLIC FUNCTIONS **/
 
-// REQUIRES: _buzzer_pin is the buzzer pin, _battery_led_pin is the battery led pin
+// REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created BatteryBuzzer object
-BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin, PinData *_battery_led_pin);
+BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin);
 
 // REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing

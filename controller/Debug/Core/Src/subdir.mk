@@ -19,7 +19,8 @@ C_SRCS += \
 ../Core/Src/syscalls.c \
 ../Core/Src/sysmem.c \
 ../Core/Src/system_stm32g0xx.c \
-../Core/Src/trigger.c 
+../Core/Src/trigger.c \
+../Core/Src/warning_led.c 
 
 OBJS += \
 ./Core/Src/adc_sensor.o \
@@ -36,7 +37,8 @@ OBJS += \
 ./Core/Src/syscalls.o \
 ./Core/Src/sysmem.o \
 ./Core/Src/system_stm32g0xx.o \
-./Core/Src/trigger.o 
+./Core/Src/trigger.o \
+./Core/Src/warning_led.o 
 
 C_DEPS += \
 ./Core/Src/adc_sensor.d \
@@ -53,7 +55,8 @@ C_DEPS += \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
 ./Core/Src/system_stm32g0xx.d \
-./Core/Src/trigger.d 
+./Core/Src/trigger.d \
+./Core/Src/warning_led.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -63,7 +66,7 @@ Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/adc_sensor.d ./Core/Src/adc_sensor.o ./Core/Src/adc_sensor.su ./Core/Src/battery_buzzer.d ./Core/Src/battery_buzzer.o ./Core/Src/battery_buzzer.su ./Core/Src/controller_wireless.d ./Core/Src/controller_wireless.o ./Core/Src/controller_wireless.su ./Core/Src/display.d ./Core/Src/display.o ./Core/Src/display.su ./Core/Src/interrupt_timer.d ./Core/Src/interrupt_timer.o ./Core/Src/interrupt_timer.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/pin_data.d ./Core/Src/pin_data.o ./Core/Src/pin_data.su ./Core/Src/potentiometer.d ./Core/Src/potentiometer.o ./Core/Src/potentiometer.su ./Core/Src/shift_register.d ./Core/Src/shift_register.o ./Core/Src/shift_register.su ./Core/Src/stm32g0xx_hal_msp.d ./Core/Src/stm32g0xx_hal_msp.o ./Core/Src/stm32g0xx_hal_msp.su ./Core/Src/stm32g0xx_it.d ./Core/Src/stm32g0xx_it.o ./Core/Src/stm32g0xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32g0xx.d ./Core/Src/system_stm32g0xx.o ./Core/Src/system_stm32g0xx.su ./Core/Src/trigger.d ./Core/Src/trigger.o ./Core/Src/trigger.su
+	-$(RM) ./Core/Src/adc_sensor.d ./Core/Src/adc_sensor.o ./Core/Src/adc_sensor.su ./Core/Src/battery_buzzer.d ./Core/Src/battery_buzzer.o ./Core/Src/battery_buzzer.su ./Core/Src/controller_wireless.d ./Core/Src/controller_wireless.o ./Core/Src/controller_wireless.su ./Core/Src/display.d ./Core/Src/display.o ./Core/Src/display.su ./Core/Src/interrupt_timer.d ./Core/Src/interrupt_timer.o ./Core/Src/interrupt_timer.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/pin_data.d ./Core/Src/pin_data.o ./Core/Src/pin_data.su ./Core/Src/potentiometer.d ./Core/Src/potentiometer.o ./Core/Src/potentiometer.su ./Core/Src/shift_register.d ./Core/Src/shift_register.o ./Core/Src/shift_register.su ./Core/Src/stm32g0xx_hal_msp.d ./Core/Src/stm32g0xx_hal_msp.o ./Core/Src/stm32g0xx_hal_msp.su ./Core/Src/stm32g0xx_it.d ./Core/Src/stm32g0xx_it.o ./Core/Src/stm32g0xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32g0xx.d ./Core/Src/system_stm32g0xx.o ./Core/Src/system_stm32g0xx.su ./Core/Src/trigger.d ./Core/Src/trigger.o ./Core/Src/trigger.su ./Core/Src/warning_led.d ./Core/Src/warning_led.o ./Core/Src/warning_led.su
 
 .PHONY: clean-Core-2f-Src
 

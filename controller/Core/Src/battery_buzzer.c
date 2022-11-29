@@ -3,10 +3,9 @@
 // REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created BatteryBuzzer object
-BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin, PinData *_battery_led_pin) {
+BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin) {
 	BatteryBuzzer *battery_buzzer = (BatteryBuzzer*) malloc(sizeof(BatteryBuzzer));
 	battery_buzzer->buzzer_pin = _buzzer_pin;
-	battery_buzzer->battery_led_pin = _battery_led_pin;
 	battery_buzzer->ms_since_period_cycle = 0;
 	battery_buzzer->battery_data = 5;
 	return battery_buzzer;
@@ -22,7 +21,6 @@ BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin, PinData *_battery_led_pi
 void update_battery_buzzer_logic(BatteryBuzzer *battery_buzzer) {
 	switch (battery_buzzer->battery_data) {
 	case NO_BATTERY_DATA:
-		change_battery_led(battery_buzzer, true);
 		if (battery_buzzer->ms_since_period_cycle == 0) {
 			change_battery_buzzer_noise_val(battery_buzzer, true);
 		}
@@ -34,7 +32,6 @@ void update_battery_buzzer_logic(BatteryBuzzer *battery_buzzer) {
 						0 : battery_buzzer->ms_since_period_cycle + 2;
 		break;
 	case CRITICALLY_LOW_BATTERY_DATA:
-		change_battery_led(battery_buzzer, true);
 		if (battery_buzzer->ms_since_period_cycle == 0) {
 			change_battery_buzzer_noise_val(battery_buzzer, true);
 		}
@@ -46,7 +43,6 @@ void update_battery_buzzer_logic(BatteryBuzzer *battery_buzzer) {
 						0 : battery_buzzer->ms_since_period_cycle + 2;
 		break;
 	case LOW_BATTERY_DATA:
-		change_battery_led(battery_buzzer, true);
 		if (battery_buzzer->ms_since_period_cycle == 0) {
 			change_battery_buzzer_noise_val(battery_buzzer, true);
 		}
@@ -59,7 +55,6 @@ void update_battery_buzzer_logic(BatteryBuzzer *battery_buzzer) {
 		break;
 	default:
 		battery_buzzer->ms_since_period_cycle = 0;
-		change_battery_led(battery_buzzer, false);
 		break;
 	}
 }
@@ -79,17 +74,3 @@ void change_battery_buzzer_data(BatteryBuzzer *battery_buzzer, uint8_t data) {
 void change_battery_buzzer_noise_val(BatteryBuzzer *battery_buzzer, bool val) {
 	set_pin_value(battery_buzzer->buzzer_pin, val);
 }
-
-// REQUIRES: battery_buzzer is an object and val is if it should be on or off.
-// MODIFIES: nothing
-// EFFECTS: Turns the battery led on or off.
-void change_battery_led(BatteryBuzzer *battery_buzzer, bool val) {
-	set_pin_value(battery_buzzer->battery_led_pin, val);
-}
-
-// REQUIRES: battery_buzzer is an object
-// MODIFIES: nothing
-// EFFECTS: Blinks the battery led if connection is lost.
-//void blink_battery_led(BatteryBuzzer *battery_buzzer) {
-//	change_battery_led(BatteryBuzzer *battery_buzzer, bool val)
-//}
