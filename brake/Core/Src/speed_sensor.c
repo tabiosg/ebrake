@@ -14,6 +14,14 @@ SpeedSensor *new_speed_sensor(IMU *_front_imu, IMU *_back_imu) {
 }
 
 // REQUIRES: SpeedSensor is a speed_sensor object
+// MODIFIES: speed
+// EFFECTS: Returns the currently stored speed value of the speed sensor
+// Assumes this function is called every 200ms.
+void refresh_speed_sensor_logic(SpeedSensor *speed_sensor) {
+
+}
+
+// REQUIRES: SpeedSensor is a speed_sensor object
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored speed value of the speed sensor
 uint8_t get_speed_sensor_data(SpeedSensor *speed_sensor) {

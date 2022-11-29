@@ -67,6 +67,7 @@ I2C_HandleTypeDef hi2c2;
 
 TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
+TIM_HandleTypeDef htim17;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
@@ -93,6 +94,7 @@ PinData* debug_pin_0 = NULL;
 PinData* debug_pin_1 = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
+InterruptTimer* imu_interrupt_timer = NULL;
 bool send_message_flag = false;
 
 /* USER CODE END PV */
@@ -106,6 +108,7 @@ static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM14_Init(void);
 static void MX_TIM16_Init(void);
+static void MX_TIM17_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -126,7 +129,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		set_pin_value(debug_pin_1, 0);
 
 	}
-	if (htim == slow_interrupt_timer->timer) {
+	else if (htim == slow_interrupt_timer->timer) {
 
 		// 2 ms
 		update_adc_sensor_values(adc_sensor);
@@ -157,11 +160,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			refresh_joint_angle(joint);
 		}
 
-		if (USE_IMU) {
-			refresh_imu_accel_in_axis(front_imu, Z_Axis);
-			refresh_imu_accel_in_axis(back_imu, Z_Axis);
-		}
-
 		if (is_skater_gone(skater)) {
 			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
 			if (board_is_on_the_floor) {
@@ -173,7 +171,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 
 		refresh_wireless_status(wireless);
-
+	}
+	else if (htim == imu_interrupt_timer->timer) {
+		// Called once every 200 ms
+		refresh_imu_accel_in_axis(front_imu, Z_Axis);
+		refresh_imu_accel_in_axis(back_imu, Z_Axis);
 	}
 }
 
@@ -201,6 +203,7 @@ int main(void)
 	motor = new_motor(motor_direction_pin, motor_step_pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
+	imu_interrupt_timer = new_interrupt_timer(&htim17);
 	potentiometer = new_potentiometer(adc_sensor, 1);
 	joint = new_joint(motor, potentiometer, rest_limit_switch_pin, brake_limit_switch_pin);
 	force_sensor = new_force_sensor(adc_sensor, 0);
@@ -235,10 +238,14 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM14_Init();
   MX_TIM16_Init();
+  MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
+  if (USE_IMU) {
+	  start_interrupt_timer(imu_interrupt_timer);
+  }
 
   receive_wireless(wireless, skater, joint);
 
@@ -520,6 +527,38 @@ static void MX_TIM16_Init(void)
   /* USER CODE BEGIN TIM16_Init 2 */
 
   /* USER CODE END TIM16_Init 2 */
+
+}
+
+/**
+  * @brief TIM17 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM17_Init(void)
+{
+
+  /* USER CODE BEGIN TIM17_Init 0 */
+
+  /* USER CODE END TIM17_Init 0 */
+
+  /* USER CODE BEGIN TIM17_Init 1 */
+
+  /* USER CODE END TIM17_Init 1 */
+  htim17.Instance = TIM17;
+  htim17.Init.Prescaler = 127;
+  htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim17.Init.Period = IMU_PERIOD;
+  htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim17.Init.RepetitionCounter = 0;
+  htim17.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim17) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM17_Init 2 */
+
+  /* USER CODE END TIM17_Init 2 */
 
 }
 
