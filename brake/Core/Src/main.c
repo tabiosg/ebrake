@@ -49,6 +49,7 @@
 #define USE_POTENTIOMETER_FEEDBACK false
 #define USE_FORCE_SENSOR false
 #define USE_WIRELESS_COMMS_WATCHDOG false
+#define USE_LIMIT_SWITCH false
 #define USE_IMU false
 
 /* USER CODE END PD */
@@ -151,12 +152,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 		if (USE_LIMIT_SWITCH) {
 			refresh_joint_limit_switch(joint);
-//			if (get_pin_value(joint->rest_limit_switch_pin)) {
-//				set_pin_value(debug_pin_1, 1);
-//			}
-//			else {
-//				set_pin_value(debug_pin_1, 0);
-//			}
 		}
 		if (USE_POTENTIOMETER_FEEDBACK) {
 			refresh_joint_angle(joint);

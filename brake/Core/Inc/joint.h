@@ -32,7 +32,6 @@
 #define ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS 9000
 
 #define IS_MOTOR_SAME_DIRECTION_AS_POTENTIOMETER false
-#define USE_LIMIT_SWITCH false
 
 // A Joint composes of a motor, a device to measure angle,
 // an angle, and a desired angle.

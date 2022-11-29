@@ -46,19 +46,17 @@ void move_joint_to_target(Joint *joint) {
 // MODIFIES: is_rest_limit_switch_activated and is_brake_limit_switch_activated
 // EFFECTS: Updates joint limit switch value
 void refresh_joint_limit_switch(Joint *joint) {
-	if (USE_LIMIT_SWITCH) {
-		bool raw_rest_pin_value = get_pin_value(joint->rest_limit_switch_pin);
-		joint->is_rest_limit_switch_activated = raw_rest_pin_value;
-		if (joint->is_rest_limit_switch_activated) {
-			zero_joint(joint);
-		}
+	bool raw_rest_pin_value = get_pin_value(joint->rest_limit_switch_pin);
+	joint->is_rest_limit_switch_activated = raw_rest_pin_value;
+	if (joint->is_rest_limit_switch_activated) {
+		zero_joint(joint);
+	}
 
-		bool raw_brake_pin_value = get_pin_value(joint->brake_limit_switch_pin);
-		joint->is_brake_limit_switch_activated = raw_brake_pin_value;
-		if (joint->is_brake_limit_switch_activated) {
-			// TODO - currently does not support potentiometer offset
-			joint->current_angle_steps = AUTOMATIC_BRAKING_ANGLE_STEPS;
-		}
+	bool raw_brake_pin_value = get_pin_value(joint->brake_limit_switch_pin);
+	joint->is_brake_limit_switch_activated = raw_brake_pin_value;
+	if (joint->is_brake_limit_switch_activated) {
+		// TODO - currently does not support potentiometer offset
+		joint->current_angle_steps = AUTOMATIC_BRAKING_ANGLE_STEPS;
 	}
 }
 
@@ -67,8 +65,7 @@ void refresh_joint_limit_switch(Joint *joint) {
 // EFFECTS: Updates current_angle_steps based on potentiometer
 // reading and potentiometer offset
 void refresh_joint_angle(Joint *joint) {
-	if (USE_LIMIT_SWITCH && joint->is_rest_limit_switch_activated) {
-		// TODO - this is technically redundant, but it does not hurt I think.
+	if (joint->is_rest_limit_switch_activated) {
 		zero_joint(joint);
 	}
 	else {
