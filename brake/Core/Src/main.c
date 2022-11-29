@@ -49,6 +49,7 @@
 #define USE_POTENTIOMETER_FEEDBACK false
 #define USE_FORCE_SENSOR false
 #define USE_WIRELESS_COMMS_WATCHDOG false
+#define USE_IMU false
 
 /* USER CODE END PD */
 
@@ -160,8 +161,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		if (USE_POTENTIOMETER_FEEDBACK) {
 			refresh_joint_angle(joint);
 		}
+
+		if (USE_IMU) {
+			refresh_imu_accel_in_axis(front_imu, Z_Axis);
+			refresh_imu_accel_in_axis(back_imu, Z_Axis);
+		}
+
 		if (is_skater_gone(skater)) {
-			set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_STEPS);
+			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
+			if (board_is_on_the_floor) {
+				set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_STEPS);
+			}
 		}
 		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {
 			set_joint_target(joint, AUTOMATIC_RELAX_ANGLE_STEPS);
