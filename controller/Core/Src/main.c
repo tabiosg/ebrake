@@ -131,7 +131,7 @@ int main(void)
 	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
 	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
 	buzzer = new_pin_data(BUZZER_GPIO_Port, BUZZER_Pin);
-	warning_led_pin = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
+	warning_led_pin = new_pin_data(WARNING_LED_GPIO_Port, WARNING_LED_Pin);
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
@@ -472,7 +472,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, BUZZER_Pin|BATTERY_OUTPUT_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
+  HAL_GPIO_WritePin(GPIOA, BUZZER_Pin|WARNING_LED_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
                           |SHIFT_NOT_SRCLK_Pin|SHIFT_RCLK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -485,9 +485,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BUZZER_Pin BATTERY_OUTPUT_Pin SHIFT_SER_Pin SHIFT_SRCLK_Pin
+  /*Configure GPIO pins : BUZZER_Pin WARNING_LED_Pin SHIFT_SER_Pin SHIFT_SRCLK_Pin
                            SHIFT_NOT_SRCLK_Pin SHIFT_RCLK_Pin */
-  GPIO_InitStruct.Pin = BUZZER_Pin|BATTERY_OUTPUT_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
+  GPIO_InitStruct.Pin = BUZZER_Pin|WARNING_LED_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
                           |SHIFT_NOT_SRCLK_Pin|SHIFT_RCLK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;

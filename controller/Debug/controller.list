@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_line   000198d9  00000000  00000000  00058fec  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0009f790  00000000  00000000  000728c5  2**0
+ 18 .debug_str    0009f78a  00000000  00000000  000728c5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  00112055  2**0
+ 19 .comment      00000050  00000000  00000000  0011204f  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000058c4  00000000  00000000  001120a8  2**2
+ 20 .debug_frame  000058c4  00000000  00000000  001120a0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -5807,7 +5807,7 @@ int main(void)
  8002bba:	0002      	movs	r2, r0
  8002bbc:	4b60      	ldr	r3, [pc, #384]	; (8002d40 <main+0x1f0>)
  8002bbe:	601a      	str	r2, [r3, #0]
-	warning_led_pin = new_pin_data(BATTERY_OUTPUT_GPIO_Port, BATTERY_OUTPUT_Pin);
+	warning_led_pin = new_pin_data(WARNING_LED_GPIO_Port, WARNING_LED_Pin);
  8002bc0:	23a0      	movs	r3, #160	; 0xa0
  8002bc2:	05db      	lsls	r3, r3, #23
  8002bc4:	2108      	movs	r1, #8
@@ -6666,7 +6666,7 @@ static void MX_GPIO_Init(void)
  80030d6:	f002 f81b 	bl	8005110 <HAL_GPIO_WritePin>
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, BUZZER_Pin|BATTERY_OUTPUT_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
+  HAL_GPIO_WritePin(GPIOA, BUZZER_Pin|WARNING_LED_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
  80030da:	23a0      	movs	r3, #160	; 0xa0
  80030dc:	05db      	lsls	r3, r3, #23
  80030de:	2200      	movs	r2, #0
@@ -6707,9 +6707,9 @@ static void MX_GPIO_Init(void)
  8003112:	0010      	movs	r0, r2
  8003114:	f001 fe98 	bl	8004e48 <HAL_GPIO_Init>
 
-  /*Configure GPIO pins : BUZZER_Pin BATTERY_OUTPUT_Pin SHIFT_SER_Pin SHIFT_SRCLK_Pin
+  /*Configure GPIO pins : BUZZER_Pin WARNING_LED_Pin SHIFT_SER_Pin SHIFT_SRCLK_Pin
                            SHIFT_NOT_SRCLK_Pin SHIFT_RCLK_Pin */
-  GPIO_InitStruct.Pin = BUZZER_Pin|BATTERY_OUTPUT_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
+  GPIO_InitStruct.Pin = BUZZER_Pin|WARNING_LED_Pin|SHIFT_SER_Pin|SHIFT_SRCLK_Pin
  8003118:	193b      	adds	r3, r7, r4
  800311a:	22fa      	movs	r2, #250	; 0xfa
  800311c:	601a      	str	r2, [r3, #0]
