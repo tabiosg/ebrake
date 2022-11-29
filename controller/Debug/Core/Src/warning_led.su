@@ -1,2 +1,2 @@
 ../Core/Src/warning_led.c:7:13:new_warning_led	32	static
-../Core/Src/warning_led.c:23:6:update_warning_led_logic	16	static
+../Core/Src/warning_led.c:22:6:update_warning_led_logic	16	static

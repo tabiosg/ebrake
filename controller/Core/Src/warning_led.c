@@ -1,15 +1,14 @@
 #include "warning_led.h"
 
-// REQUIRES: _warning_led_pin is the warning LED pin, _battery_buzzer is the battery buzzer object,
+// REQUIRES: _warning_led_pin is the warning LED pin,
 // and _wireless is the wireless object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created WarningLed object
-WarningLed *new_warning_led(PinData *_warning_led_pin, BatteryBuzzer* _battery_buzzer, Wireless* _wireless) {
+WarningLed *new_warning_led(PinData *_warning_led_pin, uint8_t* _battery_data, Wireless* _wireless) {
 	WarningLed *warning_led = (WarningLed*) malloc(sizeof(WarningLed));
-	warning_led->battery_buzzer = _battery_buzzer;
 	warning_led->warning_led_pin = _warning_led_pin;
 	warning_led->ms_since_period_cycle = 0;
-	warning_led->battery_buzzer = _battery_buzzer;
+	warning_led->battery_data = _battery_data;
 	warning_led->wireless = _wireless;
 	return warning_led;
 }
@@ -33,7 +32,7 @@ void update_warning_led_logic(WarningLed *warning_led) {
 				warning_led->ms_since_period_cycle == WARNING_LED_PERIOD_MS ?
 								0 : warning_led->ms_since_period_cycle + 2;
 	}
-	else if (warning_led->battery_buzzer->battery_data <= LOW_BATTERY_DATA) {
+	else if (*warning_led->battery_data <= LOW_BATTERY_DATA) {
 		// Keep the LED on
 		if (warning_led->ms_since_period_cycle == 0) {
 			set_pin_value(warning_led->warning_led_pin, true);

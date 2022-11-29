@@ -3,11 +3,11 @@
 // REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created BatteryBuzzer object
-BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin) {
+BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin, uint8_t *_battery_data) {
 	BatteryBuzzer *battery_buzzer = (BatteryBuzzer*) malloc(sizeof(BatteryBuzzer));
 	battery_buzzer->buzzer_pin = _buzzer_pin;
 	battery_buzzer->ms_since_period_cycle = 0;
-	battery_buzzer->battery_data = 5;
+	battery_buzzer->battery_data = _battery_data;
 	return battery_buzzer;
 }
 
@@ -19,7 +19,7 @@ BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin) {
 // It will buzz for 1 second every 15 seconds if low.
 // This function is expected to be called every 2 ms.
 void update_battery_buzzer_logic(BatteryBuzzer *battery_buzzer) {
-	switch (battery_buzzer->battery_data) {
+	switch (*battery_buzzer->battery_data) {
 	case NO_BATTERY_DATA:
 		if (battery_buzzer->ms_since_period_cycle == 0) {
 			change_battery_buzzer_noise_val(battery_buzzer, true);
@@ -65,7 +65,7 @@ void update_battery_buzzer_logic(BatteryBuzzer *battery_buzzer) {
 // MODIFIES: nothing
 // EFFECTS: Updates the battery buzzer data
 void change_battery_buzzer_data(BatteryBuzzer *battery_buzzer, uint8_t data) {
-	battery_buzzer->battery_data = data;
+	*battery_buzzer->battery_data = data;
 }
 
 // REQUIRES: battery_buzzer is an object and val is if it should be on or off.

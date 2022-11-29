@@ -15,17 +15,17 @@
 typedef struct {
 	PinData *warning_led_pin;
 	uint32_t ms_since_period_cycle;
-	BatteryBuzzer* battery_buzzer;
+	uint8_t* battery_data;
 	Wireless* wireless;
 } WarningLed;
 
 /** PUBLIC FUNCTIONS **/
 
-// REQUIRES: _warning_led_pin is the warning LED pin, _battery_buzzer is the battery buzzer object,
+// REQUIRES: _warning_led_pin is the warning LED pin,
 // and _wireless is the wireless object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created WarningLed object
-WarningLed *new_warning_led(PinData *_warning_led_pin, BatteryBuzzer* _battery_buzzer, Wireless* _wireless);
+WarningLed *new_warning_led(PinData *_warning_led_pin, uint8_t* _battery_data, Wireless* _wireless);
 
 // REQUIRES: warning_led is the warning LED
 // MODIFIES: nothing

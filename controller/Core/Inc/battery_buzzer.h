@@ -22,7 +22,7 @@
 typedef struct {
 	PinData *buzzer_pin;
 	uint32_t ms_since_period_cycle;
-	uint8_t battery_data;
+	uint8_t* battery_data;
 } BatteryBuzzer;
 
 /** PUBLIC FUNCTIONS **/
@@ -30,7 +30,7 @@ typedef struct {
 // REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created BatteryBuzzer object
-BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin);
+BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin, uint8_t *_battery_data);
 
 // REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing
