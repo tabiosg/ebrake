@@ -86,3 +86,10 @@ void change_battery_buzzer_noise_val(BatteryBuzzer *battery_buzzer, bool val) {
 void change_battery_led(BatteryBuzzer *battery_buzzer, bool val) {
 	set_pin_value(battery_buzzer->battery_led_pin, val);
 }
+
+// REQUIRES: battery_buzzer is an object
+// MODIFIES: nothing
+// EFFECTS: Blinks the battery led if connection is lost.
+//void blink_battery_led(BatteryBuzzer *battery_buzzer) {
+//	change_battery_led(BatteryBuzzer *battery_buzzer, bool val)
+//}

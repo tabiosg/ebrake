@@ -107,7 +107,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == slow_interrupt_timer->timer) {
 		// called every 2 ms
 		update_battery_buzzer_logic(battery_buzzer);
+		if (is_wireless_comms_lost(wireless)) {
+			//TODO: code here
+//			blink_battery
+		}
+		refresh_wireless_status(wireless);
 	}
+
 }
 
 /* USER CODE END 0 */

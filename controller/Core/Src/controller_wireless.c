@@ -65,12 +65,14 @@ void receive_wireless(Wireless *wireless, Display* display, BatteryBuzzer* batte
 
 	bool speed_success = parse_wireless_message(wireless, display, 'S');
 	if (speed_success) {
+		wireless->ms_since_comms = 0;
 		update_display_number(display, wireless->message_contents);
 		return;
 	}
 
 	bool battery_data_success = parse_wireless_message(wireless, display, 'B');
 	if (battery_data_success) {
+		wireless->ms_since_comms = 0;
 		change_battery_buzzer_data(battery, wireless->message_contents);
 		return;
 	}
@@ -89,3 +91,20 @@ void send_wireless_string_10(Wireless *wireless, char string[10]) {
 	HAL_UART_Transmit(wireless->uart, (uint8_t *)string, sizeof(wireless->uart_buffer), 200);
 	HAL_Delay(50);
 }
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Increases ms_since_comms.
+// Assumes function is called every 2 ms
+void refresh_wireless_status(Wireless *wireless) {
+	wireless->ms_since_comms = wireless->ms_since_comms >= TIME_INDICATING_WIRELESS_COMMS_LOST_MS ?
+			TIME_INDICATING_WIRELESS_COMMS_LOST_MS : wireless->ms_since_comms + 2;
+}
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Returns whether or not wireless comms were lost
+bool is_wireless_comms_lost(Wireless *wireless) {
+	return wireless->ms_since_comms >= TIME_INDICATING_WIRELESS_COMMS_LOST_MS;
+}
+

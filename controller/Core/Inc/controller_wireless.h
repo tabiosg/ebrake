@@ -10,12 +10,15 @@
 #include "display.h"
 #include "battery_buzzer.h"
 
+#define TIME_INDICATING_WIRELESS_COMMS_LOST_MS 3000
+
 // UART is used for wireless
 // communication with other devices.
 typedef struct {
 	UART_HandleTypeDef *uart;
 	uint8_t uart_buffer[10];
 	int message_contents;
+	uint32_t ms_since_comms;
 } Wireless;
 
 /** PUBLIC FUNCTIONS **/
@@ -49,3 +52,14 @@ void receive_wireless(Wireless *wireless, Display* display, BatteryBuzzer* batte
 // MODIFIES: Nothing
 // EFFECTS: Sends the character array over wireless
 void send_wireless_string_10(Wireless *wireless, char string[10]);
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Increases ms_since_comms.
+// Assumes function is called every 2 ms
+void refresh_wireless_status(Wireless *wireless);
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
+// EFFECTS: Returns whether or not wireless comms were lost
+bool is_wireless_comms_lost(Wireless *wireless);

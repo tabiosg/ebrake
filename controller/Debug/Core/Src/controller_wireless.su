@@ -2,4 +2,6 @@
 ../Core/Src/controller_wireless.c:19:6:send_wireless_trigger_input	40	static
 ../Core/Src/controller_wireless.c:28:6:parse_wireless_message	64	static
 ../Core/Src/controller_wireless.c:63:6:receive_wireless	40	static
-../Core/Src/controller_wireless.c:87:6:send_wireless_string_10	16	static
+../Core/Src/controller_wireless.c:89:6:send_wireless_string_10	16	static
+../Core/Src/controller_wireless.c:99:6:refresh_wireless_status	16	static
+../Core/Src/controller_wireless.c:107:6:is_wireless_comms_lost	16	static
