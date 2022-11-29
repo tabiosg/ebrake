@@ -19,7 +19,7 @@ typedef struct {
 	UART_HandleTypeDef *uart;
 	char uart_buffer[10];
 	int message_contents;
-	uint32_t ms_since_comms;
+	uint16_t ms_since_comms;
 } Wireless;
 
 /** PUBLIC FUNCTIONS **/
