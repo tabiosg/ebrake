@@ -14,14 +14,14 @@
 #define FULLY_BATTERY 5
 
 #define BATTERY_BUZZ_TIME_MS 1000
-#define NO_BATTERY_PERIOD_MS 3000
-#define CRITICALLY_LOW_BATTERY_BUZZ_PERIOD_MS 5000
-#define LOW_BATTERY_BUZZ_PERIOD_MS 15000
+#define NO_BATTERY_PERIOD_MS 15000
+#define CRITICALLY_LOW_BATTERY_BUZZ_PERIOD_MS 30000
+#define LOW_BATTERY_BUZZ_PERIOD_MS 60000
 
 // This manages the battery buzzer
 typedef struct {
 	PinData *buzzer_pin;
-	uint32_t ms_since_period_cycle;
+	uint16_t ms_since_period_cycle;
 	uint8_t* battery_data;
 } BatteryBuzzer;
 

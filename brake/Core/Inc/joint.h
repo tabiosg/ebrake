@@ -10,6 +10,14 @@
 // 35968 = 1124 steps * 32 pulses per step
 #define AUTOMATIC_BRAKING_ANGLE_STEPS 35968
 
+//#define TRANSITION_WAY_POINT_STEPS (AUTOMATIC_BRAKING_ANGLE_STEPS * 0.75f)
+#define TRANSITION_WAY_POINT_STEPS 26976
+
+//#define RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_INITIAL (TRANSITION_WAY_POINT_STEPS / 32.0f)
+#define RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_INITIAL 843
+
+//#define RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_FINAL (AUTOMATIC_BRAKING_ANGLE_STEPS * 0.25f / 32.0f)
+#define RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_FINAL 281
 
 //#define RATIO_OF_RAW_POTENT_DATA_PER_JOINT_STEP (64.0f / (AUTOMATIC_BRAKING_ANGLE_STEPS))
 #define RATIO_OF_RAW_POTENT_DATA_PER_JOINT_STEP 0.00177936f;
@@ -81,6 +89,9 @@ void refresh_joint_angle(Joint *joint);
 // and target is an integer
 // MODIFIES: desired_angle_steps
 // EFFECTS: Changes the desired_angle_steps
+// Assume that the target is between 0 and 63.
+// If the target is 50% of the max (63), then it should max to about 75% of the max steps.
+// After that, it should still be linear.
 void set_joint_target(Joint *joint, int32_t target);
 
 // REQUIRES: joint is a Joint object

@@ -79,8 +79,16 @@ void refresh_joint_angle(Joint *joint) {
 // and target is an integer
 // MODIFIES: desired_angle_steps
 // EFFECTS: Changes the desired_angle_steps
+// Assume that the target is between 0 and 63.
+// If the target is 50% of the max (63), then it should max to 75% of the max steps.
+// After that, it should still be linear.
 void set_joint_target(Joint *joint, int32_t target) {
-	joint->desired_angle_steps = target * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT;
+	if (target < 32) {
+		joint->desired_angle_steps = target * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_INITIAL;
+	}
+	else {
+		joint->desired_angle_steps = TRANSITION_WAY_POINT_STEPS + (target - 32) * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_FINAL;
+	}
 }
 
 // REQUIRES: joint is a Joint object

@@ -14,9 +14,9 @@ BatteryBuzzer *new_battery_buzzer(PinData *_buzzer_pin, uint8_t *_battery_data) 
 // REQUIRES: _buzzer_pin is the buzzer pin
 // MODIFIES: nothing
 // EFFECTS: Updates the logic of the battery buzzer.
-// It will buzz for 1 second every 3 seconds if no battery.
-// It will buzz for 1 second every 5 seconds if extremely low.
-// It will buzz for 1 second every 15 seconds if low.
+// It will buzz for 1 second every 10 seconds if no battery.
+// It will buzz for 1 second every 30 seconds if extremely low.
+// It will buzz for 1 second every 60 seconds if low.
 // This function is expected to be called every 2 ms.
 void update_battery_buzzer_logic(BatteryBuzzer *battery_buzzer) {
 	switch (*battery_buzzer->battery_data) {
