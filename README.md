@@ -1,5 +1,3 @@
-# NOTE: 17 SPINS TO TOP OF MOTOR
-
 # Electronic Braking System for Longboards
 
 For EECS 473, our group decided on making an electronic braking system for longboards. Developed by Austin, Iman, Wendy, Nathan, and Guthrie. Original idea was created by Nathan.
