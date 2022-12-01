@@ -6999,7 +6999,7 @@ void set_joint_target(Joint *joint, int32_t target) {
 		joint->desired_angle_steps = TRANSITION_WAY_POINT_STEPS + (target - 32) * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_FINAL;
  800350e:	683b      	ldr	r3, [r7, #0]
  8003510:	3b20      	subs	r3, #32
- 8003512:	229d      	movs	r2, #157	; 0x9d
+ 8003512:	22d2      	movs	r2, #210	; 0xd2
  8003514:	4353      	muls	r3, r2
  8003516:	4a04      	ldr	r2, [pc, #16]	; (8003528 <set_joint_target+0x40>)
  8003518:	189a      	adds	r2, r3, r2
