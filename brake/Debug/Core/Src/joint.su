@@ -4,4 +4,4 @@
 ../Core/Src/joint.c:48:6:refresh_joint_limit_switch	32	static
 ../Core/Src/joint.c:69:6:refresh_joint_angle	24	static
 ../Core/Src/joint.c:87:6:set_joint_target	16	static
-../Core/Src/joint.c:100:6:zero_joint	16	static
+../Core/Src/joint.c:103:6:zero_joint	16	static

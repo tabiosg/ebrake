@@ -49,7 +49,7 @@
 #define USE_POTENTIOMETER_FEEDBACK false
 #define USE_FORCE_SENSOR false
 #define USE_WIRELESS_COMMS_WATCHDOG false
-#define USE_LIMIT_SWITCH false
+#define USE_LIMIT_SWITCH true
 #define USE_IMU false
 
 /* USER CODE END PD */
@@ -195,8 +195,8 @@ int main(void)
 	back_imu = new_imu_sensor(&hi2c2, ADDRESS_BOTH_HIGH);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
-	rest_limit_switch_pin = new_pin_data(REST_LIMIT_SWITCH_GPIO_Port, REST_LIMIT_SWITCH_Pin, PIN_IS_INPUT);
-	brake_limit_switch_pin = new_pin_data(BRAKE_LIMIT_SWITCH_GPIO_Port, BRAKE_LIMIT_SWITCH_Pin, PIN_IS_INPUT);
+	rest_limit_switch_pin = new_pin_data(LIMIT_SWITCH_2_GPIO_Port, LIMIT_SWITCH_2_Pin, PIN_IS_INPUT);
+	brake_limit_switch_pin = new_pin_data(LIMIT_SWITCH_1_GPIO_Port, LIMIT_SWITCH_1_Pin, PIN_IS_INPUT);
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, PIN_IS_OUTPUT);
 	debug_pin_0 = new_pin_data(DEBUG_PIN_0_GPIO_Port, DEBUG_PIN_0_Pin, PIN_IS_OUTPUT);
 	debug_pin_1 = new_pin_data(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, PIN_IS_OUTPUT);
@@ -644,20 +644,20 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, REST_LIMIT_SWITCH_Pin|DEBUG_PIN_1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LIMIT_SWITCH_1_Pin|DEBUG_PIN_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, BRAKE_LIMIT_SWITCH_Pin|DEBUG_PIN_0_Pin|DRV8825_STP_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LIMIT_SWITCH_2_Pin|DEBUG_PIN_0_Pin|DRV8825_STP_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : REST_LIMIT_SWITCH_Pin */
-  GPIO_InitStruct.Pin = REST_LIMIT_SWITCH_Pin;
+  /*Configure GPIO pin : LIMIT_SWITCH_1_Pin */
+  GPIO_InitStruct.Pin = LIMIT_SWITCH_1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(REST_LIMIT_SWITCH_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(LIMIT_SWITCH_1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : DEBUG_LED_Pin */
   GPIO_InitStruct.Pin = DEBUG_LED_Pin;
@@ -666,12 +666,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : BRAKE_LIMIT_SWITCH_Pin */
-  GPIO_InitStruct.Pin = BRAKE_LIMIT_SWITCH_Pin;
+  /*Configure GPIO pin : LIMIT_SWITCH_2_Pin */
+  GPIO_InitStruct.Pin = LIMIT_SWITCH_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(BRAKE_LIMIT_SWITCH_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(LIMIT_SWITCH_2_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PA4 */
   GPIO_InitStruct.Pin = GPIO_PIN_4;
