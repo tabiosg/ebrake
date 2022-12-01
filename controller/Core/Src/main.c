@@ -80,7 +80,7 @@ PinData* warning_led_pin = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 WarningLed* warning_led = NULL;
-uint8_t *battery_data = NULL;
+uint8_t battery_data;
 
 
 /* USER CODE END PV */
@@ -147,9 +147,9 @@ int main(void)
 	display = new_display(shift_register);
 	trigger = new_trigger(potentiometer);
 	wireless = new_wireless(&huart1);
-	battery_buzzer = new_battery_buzzer(buzzer, battery_data);
-	warning_led = new_warning_led(warning_led_pin, battery_data, wireless);
-	*battery_data = 5;
+	battery_buzzer = new_battery_buzzer(buzzer, &battery_data);
+	warning_led = new_warning_led(warning_led_pin, &battery_data, wireless);
+	battery_data = 5;
 
   /* USER CODE END 1 */
 
