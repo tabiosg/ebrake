@@ -2,6 +2,6 @@
 ../Core/Src/joint.c:28:6:is_joint_close_enough_to_target	16	static
 ../Core/Src/joint.c:35:6:move_joint_to_target	32	static
 ../Core/Src/joint.c:48:6:refresh_joint_limit_switch	32	static
-../Core/Src/joint.c:67:6:refresh_joint_angle	24	static
-../Core/Src/joint.c:85:6:set_joint_target	16	static
-../Core/Src/joint.c:98:6:zero_joint	16	static
+../Core/Src/joint.c:69:6:refresh_joint_angle	24	static
+../Core/Src/joint.c:87:6:set_joint_target	16	static
+../Core/Src/joint.c:100:6:zero_joint	16	static

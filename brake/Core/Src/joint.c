@@ -51,13 +51,15 @@ void refresh_joint_limit_switch(Joint *joint) {
 	if (joint->is_rest_limit_switch_activated) {
 		zero_joint(joint);
 	}
-
-	bool raw_brake_pin_value = get_pin_value(joint->brake_limit_switch_pin);
-	joint->is_brake_limit_switch_activated = raw_brake_pin_value;
-	if (joint->is_brake_limit_switch_activated) {
-		// TODO - currently does not support potentiometer offset
-		joint->current_angle_steps = AUTOMATIC_BRAKING_ANGLE_STEPS;
+	else {
+		bool raw_brake_pin_value = get_pin_value(joint->brake_limit_switch_pin);
+		joint->is_brake_limit_switch_activated = raw_brake_pin_value;
+		if (joint->is_brake_limit_switch_activated) {
+			// TODO - currently does not support potentiometer offset
+			joint->current_angle_steps = AUTOMATIC_BRAKING_ANGLE_STEPS;
+		}
 	}
+
 }
 
 // REQUIRES: joint is a Joint object
