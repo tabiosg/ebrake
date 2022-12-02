@@ -26,7 +26,7 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _rest_li
 // MODIFIES: Nothing
 // EFFECTS: Returns whether or not current joint angle is close enough to desired angle
 bool is_joint_close_enough_to_target(Joint *joint) {
-	return abs(joint->desired_angle_steps - joint->current_angle_steps) < DESIRED_ANGLE_LAX_STEPS;
+	return joint->desired_angle_steps == joint->current_angle_steps;
 }
 
 // REQUIRES: joint is a Joint object
@@ -56,7 +56,7 @@ void refresh_joint_limit_switch(Joint *joint) {
 		joint->is_brake_limit_switch_activated = raw_brake_pin_value;
 		if (joint->is_brake_limit_switch_activated) {
 			// TODO - currently does not support potentiometer offset
-			joint->current_angle_steps = AUTOMATIC_BRAKING_ANGLE_STEPS;
+			joint->current_angle_steps = MAX_BRAKING_ANGLE;
 		}
 	}
 
@@ -66,15 +66,16 @@ void refresh_joint_limit_switch(Joint *joint) {
 // MODIFIES: current_angle_steps
 // EFFECTS: Updates current_angle_steps based on potentiometer
 // reading and potentiometer offset
-void refresh_joint_angle(Joint *joint) {
-	if (joint->is_rest_limit_switch_activated) {
-		zero_joint(joint);
-	}
-	else {
-		uint32_t raw_data = get_potentiometer_input(joint->potentiometer);
-		int32_t adjusted_data = raw_data - joint->potentiometer_value_at_rest_offset;
-		joint->current_angle_steps = adjusted_data / RATIO_OF_RAW_POTENT_DATA_PER_JOINT_STEP;
-	}
+void refresh_joint_angle_with_potentiometer(Joint *joint) {
+	// TODO - We do not use a potentiometer for our project so right now, it does nothing.
+//	if (joint->is_rest_limit_switch_activated) {
+//		zero_joint(joint);
+//	}
+//	else {
+//		uint32_t raw_data = get_potentiometer_input(joint->potentiometer);
+//		int32_t adjusted_data = raw_data - joint->potentiometer_value_at_rest_offset;
+//		joint->current_angle_steps = adjusted_data / RATIO_OF_RAW_POTENT_DATA_PER_JOINT_STEP;
+//	}
 }
 
 // REQUIRES: joint is a Joint object

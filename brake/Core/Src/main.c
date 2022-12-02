@@ -47,7 +47,7 @@
 /* USER CODE BEGIN PD */
 
 #define USE_POTENTIOMETER_FEEDBACK false
-#define USE_FORCE_SENSOR true
+#define USE_FORCE_SENSOR false
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
 #define USE_IMU false
@@ -139,15 +139,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 		if (USE_LIMIT_SWITCH) {
 	//		bool motor_thinks_is_at_rest = abs(joint->current_angle_steps - AUTOMATIC_RELAX_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
-			bool motor_thinks_is_at_rest = joint->current_angle_steps < DESIRED_ANGLE_LAX_STEPS;
+			bool motor_thinks_is_at_rest = joint->current_angle_steps == AUTOMATIC_RELAX_ANGLE_STEPS;
 			if (motor_thinks_is_at_rest && !joint->is_rest_limit_switch_activated) {
 				// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
 				joint->current_angle_steps += ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS;
 			}
 			else {
 		//		bool motor_thinks_is_at_brake = abs(joint->current_angle_steps - AUTOMATIC_BRAKING_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
-				bool motor_thinks_is_at_brake = joint->current_angle_steps > AUTOMATIC_BRAKING_ANGLE_STEPS_LOW && joint->current_angle_steps < AUTOMATIC_BRAKING_ANGLE_STEPS_HIGH;
-				if (motor_thinks_is_at_brake && !joint->is_brake_limit_switch_activated) {
+				bool motor_thinks_is_at_brake_max = joint->current_angle_steps == MAX_BRAKING_ANGLE;
+				if (motor_thinks_is_at_brake_max && !joint->is_brake_limit_switch_activated) {
 					// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
 					joint->current_angle_steps -= ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS;
 				}
@@ -157,13 +157,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			refresh_joint_limit_switch(joint);
 		}
 		if (USE_POTENTIOMETER_FEEDBACK) {
-			refresh_joint_angle(joint);
+			refresh_joint_angle_with_potentiometer(joint);
 		}
 
 		if (is_skater_gone(skater)) {
 			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
 			if (board_is_on_the_floor) {
-				set_joint_target(joint, AUTOMATIC_BRAKING_ANGLE_STEPS);
+				set_joint_target(joint, FLOOR_BRAKING_ANGLE_HARD);
 			}
 		}
 		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {

@@ -98,18 +98,24 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 		bool is_skater_here = !is_skater_gone(skater);
 		if (is_skater_here) {
 			int trigger_val = wireless->message_contents;
-			// Assume that the target is between 0 and 63.
-			// If the target is 50% of the max (63), then it should max to 75% of the max steps.
-			// After that, it should still be linear.
 			int32_t desired_steps = 0;
-			if (0 <= trigger_val && trigger_val < 5) {
+			if (0 <= trigger_val && trigger_val < 10) {
 				desired_steps = 0;
 			}
 			else if (trigger_val < 32) {
-				desired_steps = trigger_val * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_INITIAL;
+				desired_steps = MID_WAY_TO_BRAKING_ANGLE;
+			}
+			else if (trigger_val < 45) {
+				desired_steps = RIGHT_BEFORE_BRAKING_ANGLE;
+			}
+			else if (trigger_val < 55){
+				desired_steps = FLOOR_BRAKING_ANGLE_LIGHT;
+			}
+			else if (trigger_val < 60){
+				desired_steps = FLOOR_BRAKING_ANGLE_HARD;
 			}
 			else if (trigger_val < 64){
-				desired_steps = TRANSITION_WAY_POINT_STEPS + (trigger_val - 32) * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_FINAL;
+				desired_steps = MAX_BRAKING_ANGLE;
 			}
 			set_joint_target(joint, desired_steps);
 		}
