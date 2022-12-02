@@ -25,7 +25,7 @@ bool is_skater_gone(Skater *skater) {
 // This function is expected to be called every 2 ms.
 void refresh_skater_status(Skater *skater) {
 	uint16_t raw_value = get_force_sensor_data(skater->force_sensor);
-	bool is_skater_detected = raw_value > RAW_FORCE_SENSOR_VALUE_INDICATING_SKATER_PRESENCE;
+	bool is_skater_detected = raw_value < RAW_FORCE_SENSOR_VALUE_INDICATING_SKATER_PRESENCE;
 
 	// If skater is detected, reset value to 0.
 	// If skater is not detected, then keep incrementing ms_since_skater_detected

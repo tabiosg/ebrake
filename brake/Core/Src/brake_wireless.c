@@ -97,7 +97,21 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 		wireless->ms_since_comms = 0;
 		bool is_skater_here = !is_skater_gone(skater);
 		if (is_skater_here) {
-			set_joint_target(joint, wireless->message_contents);
+			int trigger_val = wireless->message_contents;
+			// Assume that the target is between 0 and 63.
+			// If the target is 50% of the max (63), then it should max to 75% of the max steps.
+			// After that, it should still be linear.
+			int32_t desired_steps = 0;
+			if (0 <= trigger_val && trigger_val < 5) {
+				desired_steps = 0;
+			}
+			else if (trigger_val < 32) {
+				desired_steps = trigger_val * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_INITIAL;
+			}
+			else if (trigger_val < 64){
+				desired_steps = TRANSITION_WAY_POINT_STEPS + (trigger_val - 32) * RATIO_OF_JOINT_STEP_PER_TRIGGER_INPUT_FINAL;
+			}
+			set_joint_target(joint, desired_steps);
 		}
 		return;
 	}

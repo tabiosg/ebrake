@@ -47,7 +47,7 @@
 /* USER CODE BEGIN PD */
 
 #define USE_POTENTIOMETER_FEEDBACK false
-#define USE_FORCE_SENSOR false
+#define USE_FORCE_SENSOR true
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
 #define USE_IMU false
