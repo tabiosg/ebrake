@@ -272,6 +272,9 @@ int main(void)
 		  uint8_t battery_data = get_battery_sensor_data(battery_sensor);
 		  send_wireless_battery_data(wireless, battery_data);
 
+		  uint8_t is_skater_detected = !is_skater_gone(skater);
+		  send_wireless_detect_skater_status(wireless, is_skater_detected);
+
 	  }
 	  set_pin_value(debug_pin_0, 1);
 	  set_pin_value(debug_pin_0, 0);

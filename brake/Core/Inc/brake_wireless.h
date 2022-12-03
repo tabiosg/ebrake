@@ -35,6 +35,12 @@ Wireless *new_wireless(UART_HandleTypeDef *huart);
 void send_wireless_speed(Wireless *wireless, int speed);
 
 // REQUIRES: wireless is a Wireless object
+// and skater_status is 0 if board does not detect skater
+// MODIFIES: Nothing
+// EFFECTS: Send wireless skater status
+void send_wireless_detect_skater_status(Wireless *wireless, uint8_t skater_status);
+
+// REQUIRES: wireless is a Wireless object
 // MODIFIES: Nothing
 // EFFECTS: Increases ms_since_comms.
 // Assumes function is called every 2 ms

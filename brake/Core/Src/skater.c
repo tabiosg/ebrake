@@ -20,6 +20,13 @@ bool has_skater_recently_left_board(Skater *skater) {
 }
 
 // REQUIRES: skater is a Skater object
+// MODIFIES: nothing
+// EFFECTS: Returns whether skater is gone or not
+bool is_skater_gone(Skater *skater) {
+	return 1000 < skater->ms_since_skater_detected;
+}
+
+// REQUIRES: skater is a Skater object
 // MODIFIES: ms_since_skater_detected
 // EFFECTS: Updates the value of ms_since_skater_detected
 // This function is expected to be called every 2 ms.

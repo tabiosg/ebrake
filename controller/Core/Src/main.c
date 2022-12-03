@@ -101,7 +101,7 @@ static void MX_TIM16_Init(void);
 /* USER CODE BEGIN 0 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	receive_wireless(wireless, display, battery_buzzer);
+	receive_wireless(wireless);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
@@ -111,7 +111,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == slow_interrupt_timer->timer) {
 		// called every 2 ms
 		update_battery_buzzer_logic(battery_buzzer);
-		update_warning_led_logic(warning_led);
+		update_warning_led_logic(warning_led, is_wireless_comms_lost(wireless));
 		refresh_wireless_status(wireless);
 	}
 
@@ -146,9 +146,9 @@ int main(void)
 			shift_not_oe);
 	display = new_display(shift_register);
 	trigger = new_trigger(potentiometer);
-	wireless = new_wireless(&huart1);
 	battery_buzzer = new_battery_buzzer(buzzer, &battery_data);
-	warning_led = new_warning_led(warning_led_pin, &battery_data, wireless);
+	warning_led = new_warning_led(warning_led_pin, &battery_data);
+	wireless = new_wireless(&huart1, display, battery_buzzer, warning_led);
 	battery_data = 5;
 
   /* USER CODE END 1 */
@@ -181,7 +181,7 @@ int main(void)
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
   update_display_number(display, 0);
-  receive_wireless(wireless, display, battery_buzzer);
+  receive_wireless(wireless);
 
   /* USER CODE END 2 */
 

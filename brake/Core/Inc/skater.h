@@ -28,6 +28,11 @@ Skater *new_skater(ForceSensor *_force_sensor);
 bool has_skater_recently_left_board(Skater *skater);
 
 // REQUIRES: skater is a Skater object
+// MODIFIES: nothing
+// EFFECTS: Returns whether skater is gone or not
+bool is_skater_gone(Skater *skater);
+
+// REQUIRES: skater is a Skater object
 // MODIFIES: ms_since_skater_detected
 // EFFECTS: Updates the value of ms_since_skater_detected
 void refresh_skater_status(Skater *skater);

@@ -37,6 +37,16 @@ void send_wireless_speed(Wireless *wireless, int speed) {
 }
 
 // REQUIRES: wireless is a Wireless object
+// and skater_status is 0 if board does not detect skater
+// MODIFIES: Nothing
+// EFFECTS: Send wireless skater status
+void send_wireless_detect_skater_status(Wireless *wireless, uint8_t skater_status) {
+	char string[sizeof(wireless->uart_buffer)];
+	sprintf((char *)string, "D%iED%iE", skater_status, skater_status);
+	send_wireless_string_10(wireless, string);
+}
+
+// REQUIRES: wireless is a Wireless object
 // and battery_data is the battery data
 // MODIFIES: Nothing
 // EFFECTS: Sends battery data over wireless

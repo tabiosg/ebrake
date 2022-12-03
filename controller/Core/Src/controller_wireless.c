@@ -5,9 +5,12 @@
 // REQUIRES: huart is a UART channel
 // MODIFIES: Nothing
 // EFFECTS: Returns a pointer to a created Wireless object
-Wireless *new_wireless(UART_HandleTypeDef *huart) {
+Wireless *new_wireless(UART_HandleTypeDef *huart, Display* _display, BatteryBuzzer* _battery_buzzer, WarningLed* _warning_led) {
 	Wireless *wireless = (Wireless*) malloc(sizeof(Wireless));
 	wireless->uart = huart;
+	wireless->display = _display;
+	wireless->battery_buzzer = _battery_buzzer;
+	wireless->warning_led = _warning_led;
 	return wireless;
 }
 
@@ -22,10 +25,10 @@ void send_wireless_trigger_input(Wireless *wireless, int trigger_input) {
 	send_wireless_string_10(wireless, string);
 }
 
-// REQUIRES: wireless and display are objects
+// REQUIRES: wireless is a Wireless object
 // MODIFIES: Nothing
 // EFFECTS: Attempts to parse data based on wireless buffer and returns true if success
-bool parse_wireless_message(Wireless *wireless, Display* display, char start_char) {
+bool parse_wireless_message(Wireless *wireless, char start_char) {
 	int start_of_transmit = -1;
 	int end_of_transmit = -1;
 	for (int i = 0; i < sizeof(wireless->uart_buffer) - 1; ++i) {
@@ -57,26 +60,32 @@ bool parse_wireless_message(Wireless *wireless, Display* display, char start_cha
 	return true;
 }
 
-// REQUIRES: wireless and display are objects
+// REQUIRES: wireless is a Wireless object
 // MODIFIES: Nothing
-// EFFECTS: Receives the wireless speed and changes the display based on it
-void receive_wireless(Wireless *wireless, Display* display, BatteryBuzzer* battery) {
+// EFFECTS: Receives the wireless message and updates program based on it
+void receive_wireless(Wireless *wireless) {
 	HAL_UART_Receive_DMA(wireless->uart, wireless->uart_buffer, sizeof(wireless->uart_buffer));
 
-	bool speed_success = parse_wireless_message(wireless, display, 'S');
+	bool speed_success = parse_wireless_message(wireless, 'S');
 	if (speed_success) {
 		wireless->ms_since_comms = 0;
-		update_display_number(display, wireless->message_contents);
+		update_display_number(wireless->display, wireless->message_contents);
 		return;
 	}
 
-	bool battery_data_success = parse_wireless_message(wireless, display, 'B');
+	bool battery_data_success = parse_wireless_message(wireless, 'B');
 	if (battery_data_success) {
 		wireless->ms_since_comms = 0;
-		change_battery_buzzer_data(battery, wireless->message_contents);
+		change_battery_buzzer_data(wireless->battery_buzzer, wireless->message_contents);
 		return;
 	}
 
+	bool detect_skater_success = parse_wireless_message(wireless, 'D');
+	if (detect_skater_success) {
+		wireless->ms_since_comms = 0;
+		wireless->warning_led->is_skater_detected_on_board = wireless->message_contents != 0;
+		return;
+	}
 }
 
 

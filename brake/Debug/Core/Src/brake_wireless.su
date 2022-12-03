@@ -2,7 +2,8 @@
 ../Core/Src/brake_wireless.c:18:6:refresh_wireless_status	16	static
 ../Core/Src/brake_wireless.c:25:6:is_wireless_comms_lost	16	static
 ../Core/Src/brake_wireless.c:33:6:send_wireless_speed	40	static
-../Core/Src/brake_wireless.c:43:6:send_wireless_battery_data	40	static
-../Core/Src/brake_wireless.c:52:6:parse_wireless_message	64	static
-../Core/Src/brake_wireless.c:87:6:receive_wireless	48	static
-../Core/Src/brake_wireless.c:125:6:send_wireless_string_10	16	static
+../Core/Src/brake_wireless.c:43:6:send_wireless_detect_skater_status	40	static
+../Core/Src/brake_wireless.c:53:6:send_wireless_battery_data	40	static
+../Core/Src/brake_wireless.c:62:6:parse_wireless_message	64	static
+../Core/Src/brake_wireless.c:97:6:receive_wireless	48	static
+../Core/Src/brake_wireless.c:135:6:send_wireless_string_10	16	static
