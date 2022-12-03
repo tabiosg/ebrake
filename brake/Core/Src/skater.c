@@ -14,9 +14,9 @@ Skater *new_skater(ForceSensor *_force_sensor) {
 
 // REQUIRES: skater is a Skater object
 // MODIFIES: nothing
-// EFFECTS: Returns whether skater is gone or not
-bool is_skater_gone(Skater *skater) {
-	return skater->ms_since_skater_detected >= TIME_INDICATING_SKATER_ABSENCE_MS;
+// EFFECTS: Returns whether skater has recently left board
+bool has_skater_recently_left_board(Skater *skater) {
+	return 1000 <= skater->ms_since_skater_detected && skater->ms_since_skater_detected <= TIME_TO_RELEASE_BRAKE_AFTER_SKATER_NOT_DETECTED;
 }
 
 // REQUIRES: skater is a Skater object

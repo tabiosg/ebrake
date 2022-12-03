@@ -94,7 +94,7 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 	bool target_success =  parse_wireless_message(wireless, skater, joint, 'T');
 	if (target_success) {
 		wireless->ms_since_comms = 0;
-		bool is_skater_here = !is_skater_gone(skater);
+		bool is_skater_here = !has_skater_recently_left_board(skater);
 		if (is_skater_here) {
 			int trigger_val = wireless->message_contents;
 			int32_t desired_steps = RIGHT_BEFORE_BRAKING_STEPS;
@@ -104,14 +104,8 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 			else if (trigger_val < 32) {
 				desired_steps = RIGHT_BEFORE_BRAKING_STEPS;
 			}
-			else if (trigger_val < 45) {
-				desired_steps = RIGHT_BEFORE_BRAKING_STEPS;
-			}
-			else if (trigger_val < 55){
-				desired_steps = FLOOR_BRAKING_STEPS_LIGHT;
-			}
-			else if (trigger_val < 60){
-				desired_steps = FLOOR_BRAKING_STEPS_HARD;
+			else if (trigger_val < 63) {
+				desired_steps = (trigger_val - 32) * (MAX_BRAKING_STEPS - RIGHT_BEFORE_BRAKING_STEPS) + RIGHT_BEFORE_BRAKING_STEPS;
 			}
 			else if (trigger_val < 64){
 				desired_steps = MAX_BRAKING_STEPS;

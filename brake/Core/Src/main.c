@@ -160,7 +160,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			refresh_joint_angle_with_potentiometer(joint);
 		}
 
-		if (1000 <= skater->ms_since_skater_detected && skater->ms_since_skater_detected <= TIME_TO_RELEASE_BRAKE_AFTER_SKATER_NOT_DETECTED) {
+		if (has_skater_recently_left_board(skater)) {
 			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
 			if (board_is_on_the_floor) {
 				set_joint_target(joint, FLOOR_BRAKING_STEPS_HARD);
