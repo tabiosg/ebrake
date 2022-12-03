@@ -28,12 +28,9 @@ void refresh_skater_status(Skater *skater) {
 	bool is_skater_detected = raw_value < RAW_FORCE_SENSOR_VALUE_INDICATING_SKATER_PRESENCE;
 
 	// If skater is detected, reset value to 0.
-	// If skater is not detected, then keep incrementing ms_since_skater_detected
-	// until it surpasses the expected maximum.
-	// TODO - verify if 2 is the correct number to be adding.
+	// If skater is not detected, then keep incrementing ms_since_skater_detected.
 	skater->ms_since_skater_detected = is_skater_detected ?
-			0 : skater->ms_since_skater_detected > TIME_INDICATING_SKATER_ABSENCE_MS ?
-					TIME_INDICATING_SKATER_ABSENCE_MS : skater->ms_since_skater_detected + 2;
+			0 : skater->ms_since_skater_detected + 2;
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

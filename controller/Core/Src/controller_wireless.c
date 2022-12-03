@@ -97,8 +97,7 @@ void send_wireless_string_10(Wireless *wireless, char string[10]) {
 // EFFECTS: Increases ms_since_comms.
 // Assumes function is called every 2 ms
 void refresh_wireless_status(Wireless *wireless) {
-	wireless->ms_since_comms = wireless->ms_since_comms >= TIME_INDICATING_WIRELESS_COMMS_LOST_MS ?
-			TIME_INDICATING_WIRELESS_COMMS_LOST_MS : wireless->ms_since_comms + 2;
+	wireless->ms_since_comms += 2;
 }
 
 // REQUIRES: wireless is a Wireless object
