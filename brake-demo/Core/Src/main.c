@@ -73,6 +73,7 @@ UART_HandleTypeDef huart1;
 ADCSensor *adc_sensor = NULL;
 BatterySensor *battery_sensor = NULL;
 IMU *imu = NULL;
+IMU *imu2 = NULL;
 Motor *motor = NULL;
 Potentiometer *potentiometer = NULL;
 Joint *joint = NULL;
@@ -151,7 +152,8 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 	adc_sensor = new_adc_sensor(&hadc1, 3);
-	imu = new_imu(&hi2c2, ADDRESS_BOTH_GROUND);
+	imu = new_imu(&hi2c2, false);
+	imu2 = new_imu(&hi2c2, true);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
 	limit_switch_pin = new_pin_data(LIMIT_SWITCH_GPIO_Port, LIMIT_SWITCH_Pin, PIN_IS_INPUT);
@@ -202,6 +204,11 @@ int main(void)
 //  start_interrupt_timer(slow_interrupt_timer);
 
   init_imu(imu);
+  float max_value = 0;
+	  float values[3];
+	  float values2[3];
+  values[2] = 0;
+  values2[2] = 0;
 
   /* USER CODE END 2 */
 
@@ -214,24 +221,42 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  HAL_Delay(500);
-	  refresh_imu_accel_in_axis(imu, Z_Axis);
-	  int16_t test = get_imu_accel_in_axis(imu, Z_Axis);
+
+	  for (size_t i = 2; i < 3; ++i) {
+		  refresh_imu_accel_in_axis(imu, i);
+		  values[i] = get_imu_accel_in_axis(imu, i);
+	  }
+
+	  for (size_t i = 2; i < 3; ++i) {
+		  refresh_imu_accel_in_axis(imu2, i);
+		  values2[i] = get_imu_accel_in_axis(imu2, i);
+	  }
+
+	  if (fabs(values[2]) > max_value || fabs(values2[2] > max_value)) {
+		  if (values[2] > max_value) {
+			  max_value = values[2];
+		  }
+		  if (values2[2] > max_value) {
+			  max_value = values[2];
+		  }
+	  }
 
 //	  receive_wireless(wireless, skater, joint);
 
 	  // TODO - this statement is in an if statement since we are afraid that it takes too much time
 	  // and will decrease responsiveness. However, this may not actually be true
 	  // It is worth testing to see if this is actually the case.
-	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
-		  int current_speed = (int)joint->current_angle_degrees; // TODO - get actual speed
-		  send_wireless_speed(wireless, current_speed);
+//	  if (joint->desired_angle_degrees == joint->current_angle_degrees) {
+//		  int current_speed = (int)joint->current_angle_degrees; // TODO - get actual speed
+//		  send_wireless_speed(wireless, current_speed);
+//
+//		  int battery_data = get_battery_sensor_data(battery_sensor);
+//		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
+//
+//	  }
 
-		  int battery_data = get_battery_sensor_data(battery_sensor);
-		  send_wireless_battery_data(wireless, battery_data);  // TODO - get actual battery data
-
-	  }
   }
+
   /* USER CODE END 3 */
 }
 

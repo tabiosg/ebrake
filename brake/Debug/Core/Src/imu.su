@@ -1,7 +1,7 @@
 ../Core/Src/imu.c:8:6:new_imu	24	static
-../Core/Src/imu.c:24:6:init_imu	16	static
-../Core/Src/imu.c:32:6:refresh_imu_accel_in_axis	40	static
-../Core/Src/imu.c:53:9:get_imu_accel_in_axis	16	static
-../Core/Src/imu.c:60:6:is_imu_z_accel_equal_to_gravity	32	static
-../Core/Src/imu.c:67:6:write_imu_register	24	static
-../Core/Src/imu.c:82:9:read_imu_register	24	static
+../Core/Src/imu.c:30:6:init_imu	16	static
+../Core/Src/imu.c:43:6:refresh_imu_accel_in_axis	48	static
+../Core/Src/imu.c:83:7:get_imu_accel_in_axis	16	static
+../Core/Src/imu.c:90:6:is_imu_z_accel_equal_to_gravity	24	static
+../Core/Src/imu.c:97:6:write_imu_register	24	static
+../Core/Src/imu.c:112:9:read_imu_register	24	static
