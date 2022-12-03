@@ -151,7 +151,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 	adc_sensor = new_adc_sensor(&hadc1, 3);
-	imu = new_imu_sensor(&hi2c2);
+	imu = new_imu(&hi2c2, ADDRESS_BOTH_GROUND);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
 	limit_switch_pin = new_pin_data(LIMIT_SWITCH_GPIO_Port, LIMIT_SWITCH_Pin, PIN_IS_INPUT);
@@ -195,12 +195,13 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
-  init_adc_sensor(adc_sensor);
-  start_interrupt_timer(adc_interrupt_timer);
+//  init_adc_sensor(adc_sensor);
+//  start_interrupt_timer(adc_interrupt_timer);
+//
+//  start_interrupt_timer(fast_interrupt_timer);
+//  start_interrupt_timer(slow_interrupt_timer);
 
-  start_interrupt_timer(fast_interrupt_timer);
-  start_interrupt_timer(slow_interrupt_timer);
-
+  init_imu(imu);
 
   /* USER CODE END 2 */
 
@@ -213,7 +214,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  receive_wireless(wireless, skater, joint);
+	  HAL_Delay(500);
+	  refresh_imu_accel_in_axis(imu, Z_Axis);
+	  int16_t test = get_imu_accel_in_axis(imu, Z_Axis);
+
+//	  receive_wireless(wireless, skater, joint);
 
 	  // TODO - this statement is in an if statement since we are afraid that it takes too much time
 	  // and will decrease responsiveness. However, this may not actually be true

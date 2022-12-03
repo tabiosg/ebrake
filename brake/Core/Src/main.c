@@ -191,8 +191,8 @@ int main(void)
 
 	adc_sensor = new_adc_sensor(&hadc1, 3);
 	// TODO - Implement actual code for the IMUs
-	front_imu = new_imu_sensor(&hi2c2, ADDRESS_BOTH_GROUND);
-	back_imu = new_imu_sensor(&hi2c2, ADDRESS_BOTH_HIGH);
+	front_imu = new_imu(&hi2c2, ADDRESS_BOTH_GROUND);
+	back_imu = new_imu(&hi2c2, ADDRESS_BOTH_HIGH);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
 	rest_limit_switch_pin = new_pin_data(LIMIT_SWITCH_2_GPIO_Port, LIMIT_SWITCH_2_Pin, PIN_IS_INPUT);
@@ -240,6 +240,9 @@ int main(void)
   MX_TIM16_Init();
   MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
+
+  init_imu(front_imu);
+  init_imu(back_imu);
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
