@@ -115,7 +115,7 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 				desired_steps = RIGHT_BEFORE_BRAKING_STEPS;
 			}
 			else if (trigger_val < 63) {
-				desired_steps = (trigger_val - 32) * (MAX_BRAKING_STEPS - RIGHT_BEFORE_BRAKING_STEPS) + RIGHT_BEFORE_BRAKING_STEPS;
+				desired_steps = (trigger_val - 32) * (MAX_BRAKING_STEPS - RIGHT_BEFORE_BRAKING_STEPS) / 32 + RIGHT_BEFORE_BRAKING_STEPS;
 			}
 			else if (trigger_val < 64){
 				desired_steps = MAX_BRAKING_STEPS;

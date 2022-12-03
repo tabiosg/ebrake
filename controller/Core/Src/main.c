@@ -205,7 +205,6 @@ int main(void)
 
 //	  update_display_number(display, desired_angle);
 
-
 //	  for (int i = 0; i < 100; ++i) {
 //		  HAL_Delay(300);
 //		  update_display_number(display, i);
