@@ -9,21 +9,24 @@
 
 // should be multiple of 256
 // I measured 25140 being range of limit switch, round up if needed
-#define MAX_BRAKING_ANGLE 26000
+#define MAX_BRAKING_STEPS 26000
 
-#define FLOOR_BRAKING_ANGLE_LIGHT 23800
+#define FLOOR_BRAKING_STEPS_HARD 25000
 
-#define FLOOR_BRAKING_ANGLE_HARD 25000
+#define FLOOR_BRAKING_STEPS_LIGHT 23800
 
-#define RIGHT_BEFORE_BRAKING_ANGLE 20000
+//#define RIGHT_BEFORE_BRAKING_STEPS 20000
+#define RIGHT_BEFORE_BRAKING_STEPS 16000
 
-#define MID_WAY_TO_BRAKING_ANGLE 10000
-
-#define AUTOMATIC_RELAX_ANGLE_STEPS 0
+#define MID_WAY_TO_BRAKING_STEPS 10000
 
 #define ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS 1500
 
+#define CALIBRATION_POINT_REST_STEPS 0
+
 #define IS_MOTOR_SAME_DIRECTION_AS_POTENTIOMETER false
+
+#define MAX_REST_STEPS 0
 
 // A Joint composes of a motor, a device to measure angle,
 // an angle, and a desired angle.

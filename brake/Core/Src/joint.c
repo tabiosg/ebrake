@@ -14,8 +14,8 @@ Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _rest_li
     joint->rest_limit_switch_pin = _rest_limit_switch_pin;
     joint->brake_limit_switch_pin = _brake_limit_switch_pin;
     joint->potentiometer_value_at_rest_offset = 0;
-    joint->current_angle_steps = 0;
-    joint->desired_angle_steps = 0;
+    joint->current_angle_steps = CALIBRATION_POINT_REST_STEPS;
+    joint->desired_angle_steps = CALIBRATION_POINT_REST_STEPS;
 	joint->is_calibrated = false;
 	joint->is_rest_limit_switch_activated = true;
 	joint->is_brake_limit_switch_activated = false;
@@ -49,6 +49,7 @@ void refresh_joint_limit_switch(Joint *joint) {
 	bool raw_rest_pin_value = get_pin_value(joint->rest_limit_switch_pin);
 	joint->is_rest_limit_switch_activated = raw_rest_pin_value;
 	if (joint->is_rest_limit_switch_activated) {
+		joint->is_calibrated = true;
 		zero_joint(joint);
 	}
 	else {
@@ -56,7 +57,7 @@ void refresh_joint_limit_switch(Joint *joint) {
 		joint->is_brake_limit_switch_activated = raw_brake_pin_value;
 		if (joint->is_brake_limit_switch_activated) {
 			// TODO - currently does not support potentiometer offset
-			joint->current_angle_steps = MAX_BRAKING_ANGLE;
+			joint->current_angle_steps = MAX_BRAKING_STEPS;
 		}
 	}
 
@@ -83,7 +84,12 @@ void refresh_joint_angle_with_potentiometer(Joint *joint) {
 // MODIFIES: desired_angle_steps
 // EFFECTS: Changes the desired_angle_steps
 void set_joint_target(Joint *joint, int32_t target) {
-	joint->desired_angle_steps = target;
+	if (joint->is_calibrated) {
+		joint->desired_angle_steps = target;
+	}
+	else {
+		joint->desired_angle_steps = CALIBRATION_POINT_REST_STEPS;
+	}
 }
 
 // REQUIRES: joint is a Joint object
