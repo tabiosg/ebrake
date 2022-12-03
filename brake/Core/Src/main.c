@@ -47,7 +47,7 @@
 /* USER CODE BEGIN PD */
 
 #define USE_POTENTIOMETER_FEEDBACK false
-#define USE_FORCE_SENSOR false
+#define USE_FORCE_SENSOR true
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
 #define USE_IMU false
@@ -264,7 +264,9 @@ int main(void)
 	  // It is worth testing to see if this is actually the case.
 	  HAL_Delay(1000);
 	  if (is_joint_close_enough_to_target(joint)) {
-		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
+		  // TODO - fix once we actually get speed
+//		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
+		  uint8_t current_speed = joint->current_angle_steps / 1000;  // DUMMY VAL
 		  send_wireless_speed(wireless, current_speed);
 
 		  uint8_t battery_data = get_battery_sensor_data(battery_sensor);
