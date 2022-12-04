@@ -204,11 +204,14 @@ int main(void)
 //  start_interrupt_timer(slow_interrupt_timer);
 
   init_imu(imu);
+  init_imu(imu2);
   float max_value = 0;
 	  float values[3];
 	  float values2[3];
-  values[2] = 0;
-  values2[2] = 0;
+for (size_t i = 0; i < 3; ++i) {
+	 values[i] = 0;
+	  values2[i] = 0;
+}
 
   /* USER CODE END 2 */
 
@@ -221,13 +224,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-
-	  for (size_t i = 2; i < 3; ++i) {
+	  HAL_Delay(1000);
+	  for (size_t i = 0; i < 3; ++i) {
 		  refresh_imu_accel_in_axis(imu, i);
 		  values[i] = get_imu_accel_in_axis(imu, i);
 	  }
 
-	  for (size_t i = 2; i < 3; ++i) {
+	  for (size_t i = 0; i < 3; ++i) {
 		  refresh_imu_accel_in_axis(imu2, i);
 		  values2[i] = get_imu_accel_in_axis(imu2, i);
 	  }

@@ -50,7 +50,7 @@
 #define USE_FORCE_SENSOR true
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
-#define USE_IMU false
+#define USE_IMU true
 
 /* USER CODE END PD */
 
@@ -169,14 +169,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {
 			set_joint_target(joint, RIGHT_BEFORE_BRAKING_STEPS);
 		}
+		if (USE_IMU) {
+			refresh_imu_accel_in_axis(front_imu, Z_Axis);
+			refresh_imu_accel_in_axis(back_imu, Z_Axis);
+			refresh_speed_sensor_logic(speed_sensor);
+		}
 
 		refresh_wireless_status(wireless);
 	}
-	else if (htim == imu_interrupt_timer->timer) {
-		// Called once every 200 ms
-		refresh_imu_accel_in_axis(front_imu, Z_Axis);
-		refresh_imu_accel_in_axis(back_imu, Z_Axis);
-	}
+//	else if (htim == imu_interrupt_timer->timer) {
+//		// Called once every 200 ms
+//		refresh_imu_accel_in_axis(front_imu, Z_Axis);
+//		refresh_imu_accel_in_axis(back_imu, Z_Axis);
+//	}
 }
 
 /* USER CODE END 0 */
@@ -246,9 +251,9 @@ int main(void)
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
-  if (USE_IMU) {
-	  start_interrupt_timer(imu_interrupt_timer);
-  }
+//  if (USE_IMU) {
+//	  start_interrupt_timer(imu_interrupt_timer);
+//  }
 
   receive_wireless(wireless, skater, joint);
 

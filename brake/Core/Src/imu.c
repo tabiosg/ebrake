@@ -13,7 +13,7 @@ IMU *new_imu(I2C_HandleTypeDef *hi2c, bool _is_511) {
 		imu->addr = ADDRESS_511_ACCEL;
 	}
 	else {
-		imu->addr = ADDRESS_521_ACCEL_GROUND;
+		imu->addr = ADDRESS_521_ACCEL_ADDR_HIGH;
 	}
 	imu->accel_values[0] = 0.0f;
 	imu->accel_values[1] = 0.0f;
@@ -33,7 +33,7 @@ void init_imu(IMU* imu) {
 		write_imu_register(imu, 0x23, 0x48); // set control reg 4a
 	}
 	else {
-		write_imu_register(imu, 0x6B, 0x00);
+		write_imu_register(imu, 0x6B, 0x00);  // wakeup
 	}
 }
 
@@ -102,8 +102,8 @@ void write_imu_register(IMU* imu, uint8_t reg, uint8_t data) {
 		imu->addr << 1,
 		imu->buffer,
 		2,
-		50);
-	HAL_Delay(5);
+		5);
+//	HAL_Delay(10);
 }
 
 // REQUIRES: IMU is an IMU object
@@ -122,7 +122,8 @@ uint8_t read_imu_register(IMU* imu, uint8_t reg) {
 		(imu->addr << 1) | 1,
 		imu->buffer,
 		1,
-		50);
+		5);
+//	HAL_Delay(10);
 	return imu->buffer[0];
 }
 

@@ -6,13 +6,15 @@
 #include <math.h>
 
 #define ADDRESS_511_ACCEL 0x19
-#define ADDRESS_521_ACCEL_GROUND 0x68
+#define ADDRESS_521_ACCEL_ADDR_HIGH 0x69
 
 #define IMU_ACCEL_NOISE 1.0f
 #define IMU_Z_ACCEL_GRAVITY -9.81f
 
-// This link is useful
+// This link is useful for the 511
 // https://blog.robertelder.org/gy-511-lsm303dlhc/
+// This link is useful for the 521
+// https://mschoeffler.com/2017/10/05/tutorial-how-to-use-the-gy-521-module-mpu-6050-breakout-board-with-the-arduino-uno/
 typedef struct {
 	I2C_HandleTypeDef *i2c;
 	uint8_t addr;
