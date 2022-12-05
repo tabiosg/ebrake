@@ -249,9 +249,10 @@ int main(void)
   MX_TIM16_Init();
   MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
-
-  init_imu(front_imu);
-  init_imu(back_imu);
+  if (USE_IMU) {
+	  init_imu(front_imu);
+	  init_imu(back_imu);
+  }
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);

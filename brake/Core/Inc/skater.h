@@ -5,11 +5,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
+// So it is ground -> 130k resistor -> ref -> thermistor that goes to 180k when cold and 100k when hot -> 3.3v
+// 130 / (130 + 100) * 63 = 35.6
 #define ROOM_TEMP_SKATER_PRESENCE_VALUE 43
 #define ROOM_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 30
 
+// 130 / (130 + 180) * 63 = 26.4
 #define COLD_TEMP_SKATER_PRESENCE_VALUE 41
-#define COLD_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 0
+#define COLD_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 20
 
 #define COLDEST_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 0
 
@@ -23,6 +27,7 @@ typedef struct {
     uint32_t ms_since_skater_detected;
     uint16_t raw_value_indicating_skater_presence;
     Thermistor *thermistor;
+    bool use_temperature_to_adjust_force_sensor;
 } Skater;
 
 /** PUBLIC FUNCTIONS **/
