@@ -8,17 +8,20 @@
 #define ADDRESS_511_ACCEL 0x19
 #define ADDRESS_521_ACCEL_ADDR_HIGH 0x69
 
-#define IMU_ACCEL_NOISE 1.0f
-#define IMU_Z_ACCEL_GRAVITY -9.81f
+#define IMU_ACCEL_NOISE 0.25f
+#define IMU_Z_ACCEL_GRAVITY_GS -1.0f
+#define CONVERT_RAW_IMU_TO_GS ((4000.0f / 65536.0f) / 1000.0f)
 
 // This link is useful for the 511
 // https://blog.robertelder.org/gy-511-lsm303dlhc/
 // This link is useful for the 521
 // https://mschoeffler.com/2017/10/05/tutorial-how-to-use-the-gy-521-module-mpu-6050-breakout-board-with-the-arduino-uno/
+// This is useful for 511 interrupts
+// https://forum.pololu.com/t/solved-interrupt-recognition-on-lsm303dlh/7283
 typedef struct {
 	I2C_HandleTypeDef *i2c;
 	uint8_t addr;
-	int16_t accel_values[3];
+	uint16_t accel_values[3];
 	uint8_t buffer[10];
 	bool is_511;
 } IMU;
@@ -51,7 +54,7 @@ void refresh_imu_accel_in_axis(IMU *imu, axis axis);
 
 // REQUIRES: IMU is an IMU object and axis is an axis
 // MODIFIES: nothing
-// EFFECTS: Returns the imu acceleration in the axis in m/s^2
+// EFFECTS: Returns the imu acceleration in the axis in g_s
 float get_imu_accel_in_axis(IMU *imu, axis axis);
 
 // REQUIRES: IMU is an IMU object
@@ -68,6 +71,5 @@ void write_imu_register(IMU* imu, uint8_t reg, uint8_t data);
 // MODIFIES: nothing
 // EFFECTS: Reads IMU from a register
 uint8_t read_imu_register(IMU* imu, uint8_t reg);
-
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

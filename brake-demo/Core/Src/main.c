@@ -224,13 +224,13 @@ for (size_t i = 0; i < 3; ++i) {
 
     /* USER CODE BEGIN 3 */
 
-	  HAL_Delay(1000);
-	  for (size_t i = 0; i < 3; ++i) {
+	  HAL_Delay(100);
+	  for (size_t i = 2; i < 3; ++i) {
 		  refresh_imu_accel_in_axis(imu, i);
 		  values[i] = get_imu_accel_in_axis(imu, i);
 	  }
 
-	  for (size_t i = 0; i < 3; ++i) {
+	  for (size_t i = 2; i < 3; ++i) {
 		  refresh_imu_accel_in_axis(imu2, i);
 		  values2[i] = get_imu_accel_in_axis(imu2, i);
 	  }
@@ -243,6 +243,8 @@ for (size_t i = 0; i < 3; ++i) {
 			  max_value = values[2];
 		  }
 	  }
+
+
 
 //	  receive_wireless(wireless, skater, joint);
 
