@@ -15,9 +15,9 @@ IMU *new_imu(I2C_HandleTypeDef *hi2c, bool _is_511) {
 	else {
 		imu->addr = ADDRESS_521_ACCEL_ADDR_HIGH;
 	}
-	imu->accel_values[0] = 0.0f;
-	imu->accel_values[1] = 0.0f;
-	imu->accel_values[2] = IMU_Z_ACCEL_GRAVITY;
+	imu->accel_values[0] = 0.0;
+	imu->accel_values[1] = 0.0;
+	imu->accel_values[2] = IMU_Z_ACCEL_GRAVITY * 2048.0;
 	for (size_t i = 0; i < 10; ++i) {
 		imu->buffer[i] = 0;
 	}
@@ -88,7 +88,9 @@ float get_imu_accel_in_axis(IMU *imu, axis axis) {
 // MODIFIES: nothing
 // EFFECTS: Returns if IMU z accel is equal to gravity
 bool is_imu_z_accel_equal_to_gravity(IMU *imu) {
-    return fabs(get_imu_accel_in_axis(imu, Z_Axis) - IMU_Z_ACCEL_GRAVITY) < IMU_ACCEL_NOISE;
+	float z_val = get_imu_accel_in_axis(imu, Z_Axis);
+	float diff = fabs(z_val - IMU_Z_ACCEL_GRAVITY);
+    return diff < IMU_ACCEL_NOISE;
 }
 
 // REQUIRES: IMU is an IMU object

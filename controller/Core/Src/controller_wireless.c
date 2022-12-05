@@ -69,13 +69,14 @@ void receive_wireless(Wireless *wireless) {
 	bool speed_success = parse_wireless_message(wireless, 'S');
 	if (speed_success) {
 		wireless->ms_since_comms = 0;
-		update_display_number(wireless->display, wireless->message_contents);
+//		update_display_number(wireless->display, wireless->message_contents);  // TODO - UNCOMMENT EVENTUALLY
 		return;
 	}
 
 	bool battery_data_success = parse_wireless_message(wireless, 'B');
 	if (battery_data_success) {
 		wireless->ms_since_comms = 0;
+		update_display_number(wireless->display, wireless->message_contents);  // TODO - REMOVE EVENTUALLY
 		change_battery_buzzer_data(wireless->battery_buzzer, wireless->message_contents);
 		return;
 	}

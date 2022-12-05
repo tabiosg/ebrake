@@ -30,6 +30,7 @@ void refresh_speed_sensor_logic(SpeedSensor *speed_sensor) {
 		float mph = meters_per_second * MPH_TO_MPS_RATIO;
 		if (mph > 99.0f) {
 			mph = 99.0f;
+
 		}
 		speed_sensor->speed = mph;
 	}

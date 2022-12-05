@@ -36,8 +36,12 @@ void refresh_skater_status(Skater *skater) {
 
 	// If skater is detected, reset value to 0.
 	// If skater is not detected, then keep incrementing ms_since_skater_detected.
-	skater->ms_since_skater_detected = is_skater_detected ?
-			0 : skater->ms_since_skater_detected + 2;
+	if (is_skater_detected) {
+		skater->ms_since_skater_detected = 0;
+	}
+	else {
+		skater->ms_since_skater_detected += 2;
+	}
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

@@ -50,7 +50,7 @@
 #define USE_FORCE_SENSOR true
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
-#define USE_IMU true
+#define USE_IMU false
 
 /* USER CODE END PD */
 
@@ -163,7 +163,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		if (has_skater_recently_left_board(skater)) {
 			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
 			if (board_is_on_the_floor) {
-				set_joint_target(joint, FLOOR_BRAKING_STEPS_HARD);
+				set_joint_target(joint, MAX_BRAKING_STEPS);
 			}
 		}
 		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {
