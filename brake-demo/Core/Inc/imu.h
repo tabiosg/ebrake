@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include "i2c_mux.h"
 
 #define ADDRESS_511_ACCEL 0x19
-#define ADDRESS_521_ACCEL_ADDR_HIGH 0x69
 
 #define IMU_ACCEL_NOISE 0.25f
 #define IMU_Z_ACCEL_GRAVITY_GS -1.0f
@@ -21,9 +21,10 @@
 typedef struct {
 	I2C_HandleTypeDef *i2c;
 	uint8_t addr;
-	uint16_t accel_values[3];
+	int16_t accel_values[3];
 	uint8_t buffer[10];
-	bool is_511;
+	I2CMux *i2c_mux;
+	uint8_t mux_channel;
 } IMU;
 
 typedef enum
@@ -40,7 +41,7 @@ typedef enum
 // REQUIRES: hi2c is the i2c channel
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created IMU object
-IMU *new_imu(I2C_HandleTypeDef *hi2c, bool _is_511);
+IMU *new_imu(I2C_HandleTypeDef *hi2c, I2CMux *_i2c_mux, uint8_t _channel);
 
 // REQUIRES: IMU is an IMU object
 // MODIFIES: nothing
@@ -54,7 +55,7 @@ void refresh_imu_accel_in_axis(IMU *imu, axis axis);
 
 // REQUIRES: IMU is an IMU object and axis is an axis
 // MODIFIES: nothing
-// EFFECTS: Returns the imu acceleration in the axis in g_s
+// EFFECTS: Returns the imu acceleration in the axis in m/s^2
 float get_imu_accel_in_axis(IMU *imu, axis axis);
 
 // REQUIRES: IMU is an IMU object
@@ -71,5 +72,6 @@ void write_imu_register(IMU* imu, uint8_t reg, uint8_t data);
 // MODIFIES: nothing
 // EFFECTS: Reads IMU from a register
 uint8_t read_imu_register(IMU* imu, uint8_t reg);
+
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

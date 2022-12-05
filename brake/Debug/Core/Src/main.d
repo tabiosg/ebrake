@@ -39,7 +39,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/adc_sensor.h ../Core/Inc/brake_wireless.h \
  ../Core/Inc/skater.h ../Core/Inc/force_sensor.h ../Core/Inc/pin_data.h \
  ../Core/Inc/joint.h ../Core/Inc/motor.h ../Core/Inc/potentiometer.h \
- ../Core/Inc/battery_sensor.h ../Core/Inc/imu.h \
+ ../Core/Inc/battery_sensor.h ../Core/Inc/i2c_mux.h ../Core/Inc/imu.h \
  ../Core/Inc/interrupt_timer.h ../Core/Inc/speed_sensor.h
 ../Core/Inc/main.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
@@ -88,6 +88,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/motor.h:
 ../Core/Inc/potentiometer.h:
 ../Core/Inc/battery_sensor.h:
+../Core/Inc/i2c_mux.h:
 ../Core/Inc/imu.h:
 ../Core/Inc/interrupt_timer.h:
 ../Core/Inc/speed_sensor.h:

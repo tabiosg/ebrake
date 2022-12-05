@@ -1,0 +1,2 @@
+../Core/Src/i2c_mux.c:8:9:new_i2c_mux	16	static
+../Core/Src/i2c_mux.c:23:6:activate_i2c_mux_channel	16	static

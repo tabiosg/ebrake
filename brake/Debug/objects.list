@@ -2,6 +2,7 @@
 "./Core/Src/battery_sensor.o"
 "./Core/Src/brake_wireless.o"
 "./Core/Src/force_sensor.o"
+"./Core/Src/i2c_mux.o"
 "./Core/Src/imu.o"
 "./Core/Src/interrupt_timer.o"
 "./Core/Src/joint.o"

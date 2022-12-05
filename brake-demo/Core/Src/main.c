@@ -26,6 +26,7 @@
 #include "brake_wireless.h"
 #include "battery_sensor.h"
 #include "force_sensor.h"
+#include "i2c_mux.h"
 #include "imu.h"
 #include "interrupt_timer.h"
 #include "joint.h"
@@ -72,6 +73,7 @@ UART_HandleTypeDef huart1;
 
 ADCSensor *adc_sensor = NULL;
 BatterySensor *battery_sensor = NULL;
+I2CMux* i2c_mux = NULL;
 IMU *imu = NULL;
 IMU *imu2 = NULL;
 Motor *motor = NULL;
@@ -152,8 +154,9 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 	adc_sensor = new_adc_sensor(&hadc1, 3);
-	imu = new_imu(&hi2c2, false);
-	imu2 = new_imu(&hi2c2, true);
+	i2c_mux = new_i2c_mux(&hi2c2);
+	imu = new_imu(&hi2c2, i2c_mux, 0);
+	imu2 = new_imu(&hi2c2, i2c_mux, 1);
 	motor_direction_pin = new_pin_data(DRV8825_DIR_GPIO_Port, DRV8825_DIR_Pin, PIN_IS_OUTPUT);
 	motor_step_pin = new_pin_data(DRV8825_STP_GPIO_Port, DRV8825_STP_Pin, PIN_IS_OUTPUT);
 	limit_switch_pin = new_pin_data(LIMIT_SWITCH_GPIO_Port, LIMIT_SWITCH_Pin, PIN_IS_INPUT);
@@ -204,7 +207,7 @@ int main(void)
 //  start_interrupt_timer(slow_interrupt_timer);
 
   init_imu(imu);
-  init_imu(imu2);
+//  init_imu(imu2);
   float max_value = 0;
 	  float values[3];
 	  float values2[3];
