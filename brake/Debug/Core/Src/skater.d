@@ -37,7 +37,7 @@ Core/Src/skater.o: ../Core/Src/skater.c ../Core/Inc/skater.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
- ../Core/Inc/adc_sensor.h
+ ../Core/Inc/adc_sensor.h ../Core/Inc/thermistor.h
 ../Core/Inc/skater.h:
 ../Core/Inc/force_sensor.h:
 ../Core/Inc/pin_data.h:
@@ -79,3 +79,4 @@ Core/Src/skater.o: ../Core/Src/skater.c ../Core/Inc/skater.h \
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h:
 ../Core/Inc/adc_sensor.h:
+../Core/Inc/thermistor.h:

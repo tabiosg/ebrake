@@ -33,6 +33,7 @@
 #include "motor.h"
 #include "skater.h"
 #include "speed_sensor.h"
+#include "thermistor.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -83,6 +84,7 @@ Joint *joint = NULL;
 ForceSensor *force_sensor = NULL;
 Skater *skater = NULL;
 SpeedSensor *speed_sensor = NULL;
+Thermistor* thermistor = NULL;
 Wireless *wireless = NULL;
 PinData* motor_direction_pin = NULL;
 PinData* motor_step_pin = NULL;
@@ -213,8 +215,9 @@ int main(void)
 	imu_interrupt_timer = new_interrupt_timer(&htim17);
 	joint = new_joint(motor, rest_limit_switch_pin, brake_limit_switch_pin);
 	force_sensor = new_force_sensor(adc_sensor, 0);
+	thermistor = new_thermistor(adc_sensor, 1);
 	battery_sensor = new_battery_sensor(adc_sensor, 2);
-	skater = new_skater(force_sensor);
+	skater = new_skater(force_sensor, thermistor);
 	wireless = new_wireless(&huart1);
 	speed_sensor = new_speed_sensor(front_imu, back_imu);
 
@@ -258,6 +261,8 @@ int main(void)
 
   receive_wireless(wireless, skater, joint);
 
+  bool debug_change = true;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -274,7 +279,15 @@ int main(void)
 	  HAL_Delay(1000);
 	  if (is_joint_close_enough_to_target(joint)) {
 		  // TODO - fix once we actually get speed
-		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
+		  uint8_t current_speed = 0;
+//		  current_speed = get_speed_sensor_data(speed_sensor);
+		  debug_change = !debug_change;
+		  if (debug_change) {
+			  current_speed = get_force_sensor_data(force_sensor);
+		  }
+		  else {
+			  current_speed = get_thermistor_data(thermistor);
+		  }
 //		  uint8_t current_speed = joint->current_angle_steps / 1000;  // DUMMY VAL
 		  send_wireless_speed(wireless, current_speed);
 

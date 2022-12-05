@@ -22,7 +22,8 @@ C_SRCS += \
 ../Core/Src/stm32g0xx_it.c \
 ../Core/Src/syscalls.c \
 ../Core/Src/sysmem.c \
-../Core/Src/system_stm32g0xx.c 
+../Core/Src/system_stm32g0xx.c \
+../Core/Src/thermistor.c 
 
 OBJS += \
 ./Core/Src/adc_sensor.o \
@@ -42,7 +43,8 @@ OBJS += \
 ./Core/Src/stm32g0xx_it.o \
 ./Core/Src/syscalls.o \
 ./Core/Src/sysmem.o \
-./Core/Src/system_stm32g0xx.o 
+./Core/Src/system_stm32g0xx.o \
+./Core/Src/thermistor.o 
 
 C_DEPS += \
 ./Core/Src/adc_sensor.d \
@@ -62,7 +64,8 @@ C_DEPS += \
 ./Core/Src/stm32g0xx_it.d \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
-./Core/Src/system_stm32g0xx.d 
+./Core/Src/system_stm32g0xx.d \
+./Core/Src/thermistor.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -72,7 +75,7 @@ Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/adc_sensor.d ./Core/Src/adc_sensor.o ./Core/Src/adc_sensor.su ./Core/Src/battery_sensor.d ./Core/Src/battery_sensor.o ./Core/Src/battery_sensor.su ./Core/Src/brake_wireless.d ./Core/Src/brake_wireless.o ./Core/Src/brake_wireless.su ./Core/Src/force_sensor.d ./Core/Src/force_sensor.o ./Core/Src/force_sensor.su ./Core/Src/i2c_mux.d ./Core/Src/i2c_mux.o ./Core/Src/i2c_mux.su ./Core/Src/imu.d ./Core/Src/imu.o ./Core/Src/imu.su ./Core/Src/interrupt_timer.d ./Core/Src/interrupt_timer.o ./Core/Src/interrupt_timer.su ./Core/Src/joint.d ./Core/Src/joint.o ./Core/Src/joint.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/motor.d ./Core/Src/motor.o ./Core/Src/motor.su ./Core/Src/pin_data.d ./Core/Src/pin_data.o ./Core/Src/pin_data.su ./Core/Src/skater.d ./Core/Src/skater.o ./Core/Src/skater.su ./Core/Src/speed_sensor.d ./Core/Src/speed_sensor.o ./Core/Src/speed_sensor.su ./Core/Src/stm32g0xx_hal_msp.d ./Core/Src/stm32g0xx_hal_msp.o ./Core/Src/stm32g0xx_hal_msp.su ./Core/Src/stm32g0xx_it.d ./Core/Src/stm32g0xx_it.o ./Core/Src/stm32g0xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32g0xx.d ./Core/Src/system_stm32g0xx.o ./Core/Src/system_stm32g0xx.su
+	-$(RM) ./Core/Src/adc_sensor.d ./Core/Src/adc_sensor.o ./Core/Src/adc_sensor.su ./Core/Src/battery_sensor.d ./Core/Src/battery_sensor.o ./Core/Src/battery_sensor.su ./Core/Src/brake_wireless.d ./Core/Src/brake_wireless.o ./Core/Src/brake_wireless.su ./Core/Src/force_sensor.d ./Core/Src/force_sensor.o ./Core/Src/force_sensor.su ./Core/Src/i2c_mux.d ./Core/Src/i2c_mux.o ./Core/Src/i2c_mux.su ./Core/Src/imu.d ./Core/Src/imu.o ./Core/Src/imu.su ./Core/Src/interrupt_timer.d ./Core/Src/interrupt_timer.o ./Core/Src/interrupt_timer.su ./Core/Src/joint.d ./Core/Src/joint.o ./Core/Src/joint.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/motor.d ./Core/Src/motor.o ./Core/Src/motor.su ./Core/Src/pin_data.d ./Core/Src/pin_data.o ./Core/Src/pin_data.su ./Core/Src/skater.d ./Core/Src/skater.o ./Core/Src/skater.su ./Core/Src/speed_sensor.d ./Core/Src/speed_sensor.o ./Core/Src/speed_sensor.su ./Core/Src/stm32g0xx_hal_msp.d ./Core/Src/stm32g0xx_hal_msp.o ./Core/Src/stm32g0xx_hal_msp.su ./Core/Src/stm32g0xx_it.d ./Core/Src/stm32g0xx_it.o ./Core/Src/stm32g0xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32g0xx.d ./Core/Src/system_stm32g0xx.o ./Core/Src/system_stm32g0xx.su ./Core/Src/thermistor.d ./Core/Src/thermistor.o ./Core/Src/thermistor.su
 
 .PHONY: clean-Core-2f-Src
 

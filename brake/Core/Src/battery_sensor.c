@@ -12,7 +12,7 @@ BatterySensor *new_battery_sensor(ADCSensor *_adc_sensor, uint8_t _rank) {
 	return battery_sensor;
 }
 
-// REQUIRES: ForceSensor is a force_sensor object
+// REQUIRES: battery_sensor is a BatterySensor object
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored value battery sensor data.
 uint8_t get_battery_sensor_data(BatterySensor *battery_sensor) {

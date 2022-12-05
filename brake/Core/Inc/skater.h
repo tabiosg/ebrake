@@ -1,10 +1,18 @@
 #pragma once
 
 #include "force_sensor.h"
+#include "thermistor.h"
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define RAW_FORCE_SENSOR_VALUE_INDICATING_SKATER_PRESENCE 43
+#define ROOM_TEMP_SKATER_PRESENCE_VALUE 43
+#define ROOM_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 30
+
+#define COLD_TEMP_SKATER_PRESENCE_VALUE 41
+#define COLD_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 0
+
+#define COLDEST_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 0
+
 #define TIME_INDICATING_SKATER_ABSENCE_MS 250
 #define TIME_TO_RELEASE_BRAKE_AFTER_SKATER_NOT_DETECTED 4000
 
@@ -13,14 +21,16 @@
 typedef struct {
 	ForceSensor *force_sensor;
     uint32_t ms_since_skater_detected;
+    uint16_t raw_value_indicating_skater_presence;
+    Thermistor *thermistor;
 } Skater;
 
 /** PUBLIC FUNCTIONS **/
 
-// REQUIRES: _force_sensor is a ForceSensor object
+// REQUIRES: _force_sensor is a ForceSensor object and _thermistor is a Thermistor object
 // MODIFIES: Nothing
 // EFFECTS: Returns a pointer to a created Skater object
-Skater *new_skater(ForceSensor *_force_sensor);
+Skater *new_skater(ForceSensor *_force_sensor, Thermistor *_thermistor);
 
 // REQUIRES: skater is a Skater object
 // MODIFIES: nothing
