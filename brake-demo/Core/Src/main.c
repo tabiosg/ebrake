@@ -33,6 +33,7 @@
 #include "motor.h"
 #include "potentiometer.h"
 #include "skater.h"
+#include "speed_sensor.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -88,6 +89,7 @@ PinData* limit_switch_pin = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 InterruptTimer* adc_interrupt_timer = NULL;
+SpeedSensor* speed_sensor = NULL;
 bool send_message_flag = false;
 
 /* USER CODE END PV */
@@ -111,6 +113,17 @@ static void MX_TIM3_Init(void);
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc1) {
 	update_adc_sensor_values(adc_sensor);
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if(GPIO_Pin == GPIO_PIN_0)
+    {
+    	trigger_speed_sensor_interrupt(speed_sensor, true);
+    }
+    else if (GPIO_Pin == GPIO_PIN_1) {
+    	trigger_speed_sensor_interrupt(speed_sensor, false);
+    }
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
@@ -170,6 +183,7 @@ int main(void)
 	battery_sensor = new_battery_sensor(adc_sensor, 2);
 	skater = new_skater(force_sensor);
 	wireless = new_wireless(&huart1);
+	speed_sensor = new_speed_sensor(imu, imu2);
 
   /* USER CODE END 1 */
 
@@ -579,8 +593,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -588,6 +602,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PC0 PC1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LIMIT_SWITCH_Pin */
   GPIO_InitStruct.Pin = LIMIT_SWITCH_Pin;
@@ -608,6 +628,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 }
 

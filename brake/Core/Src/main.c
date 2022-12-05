@@ -122,6 +122,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	receive_wireless(wireless, skater, joint);
 }
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if(GPIO_Pin == PA5_FRONT_IMU_INT_Pin)
+    {
+    	trigger_speed_sensor_interrupt(speed_sensor, true);
+    }
+    else if (GPIO_Pin == PB0_BACK_IMU_INT_Pin) {
+    	trigger_speed_sensor_interrupt(speed_sensor, false);
+    }
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
 
@@ -173,17 +184,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 		if (USE_IMU) {
 			refresh_imu_accel_in_axis(front_imu, Z_Axis);
-			refresh_imu_accel_in_axis(back_imu, Z_Axis);
+//			refresh_imu_accel_in_axis(back_imu, Z_Axis);
 			refresh_speed_sensor_logic(speed_sensor);
 		}
 
 		refresh_wireless_status(wireless);
 	}
-//	else if (htim == imu_interrupt_timer->timer) {
-//		// Called once every 200 ms
-//		refresh_imu_accel_in_axis(front_imu, Z_Axis);
-//		refresh_imu_accel_in_axis(back_imu, Z_Axis);
-//	}
 }
 
 /* USER CODE END 0 */
@@ -205,8 +211,8 @@ int main(void)
 	rest_limit_switch_pin = new_pin_data(LIMIT_SWITCH_2_GPIO_Port, LIMIT_SWITCH_2_Pin, PIN_IS_INPUT);
 	brake_limit_switch_pin = new_pin_data(LIMIT_SWITCH_1_GPIO_Port, LIMIT_SWITCH_1_Pin, PIN_IS_INPUT);
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, PIN_IS_OUTPUT);
-	debug_pin_0 = new_pin_data(DEBUG_PIN_0_GPIO_Port, DEBUG_PIN_0_Pin, PIN_IS_OUTPUT);
-	debug_pin_1 = new_pin_data(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, PIN_IS_OUTPUT);
+//	debug_pin_0 = new_pin_data(DEBUG_PIN_0_GPIO_Port, DEBUG_PIN_0_Pin, PIN_IS_OUTPUT);
+//	debug_pin_1 = new_pin_data(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, PIN_IS_OUTPUT);
 	motor = new_motor(motor_direction_pin, motor_step_pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
@@ -275,8 +281,8 @@ int main(void)
 	  HAL_Delay(1000);
 	  if (is_joint_close_enough_to_target(joint)) {
 		  // TODO - fix once we actually get speed
-//		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
-		  uint8_t current_speed = joint->current_angle_steps / 1000;  // DUMMY VAL
+		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
+//		  uint8_t current_speed = joint->current_angle_steps / 1000;  // DUMMY VAL
 		  send_wireless_speed(wireless, current_speed);
 
 		  uint8_t battery_data = get_battery_sensor_data(battery_sensor);
@@ -286,8 +292,8 @@ int main(void)
 		  send_wireless_detect_skater_status(wireless, is_skater_detected);
 
 	  }
-	  set_pin_value(debug_pin_0, 1);
-	  set_pin_value(debug_pin_0, 0);
+//	  set_pin_value(debug_pin_0, 1);
+//	  set_pin_value(debug_pin_0, 0);
 
 
 //	  for (int i = 0; i < 90; i = i + 5) {
@@ -659,13 +665,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LIMIT_SWITCH_1_Pin|DEBUG_PIN_1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LIMIT_SWITCH_1_GPIO_Port, LIMIT_SWITCH_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LIMIT_SWITCH_2_Pin|DEBUG_PIN_0_Pin|DRV8825_STP_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LIMIT_SWITCH_2_Pin|DRV8825_STP_Pin|DRV8825_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LIMIT_SWITCH_1_Pin */
   GPIO_InitStruct.Pin = LIMIT_SWITCH_1_Pin;
@@ -688,27 +694,29 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LIMIT_SWITCH_2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  /*Configure GPIO pins : PA4 PA5_FRONT_IMU_INT_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_4|PA5_FRONT_IMU_INT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : DEBUG_PIN_0_Pin DRV8825_STP_Pin DRV8825_DIR_Pin */
-  GPIO_InitStruct.Pin = DEBUG_PIN_0_Pin|DRV8825_STP_Pin|DRV8825_DIR_Pin;
+  /*Configure GPIO pins : DRV8825_STP_Pin DRV8825_DIR_Pin */
+  GPIO_InitStruct.Pin = DRV8825_STP_Pin|DRV8825_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : DEBUG_PIN_1_Pin */
-  GPIO_InitStruct.Pin = DEBUG_PIN_1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pin : PB0_BACK_IMU_INT_Pin */
+  GPIO_InitStruct.Pin = PB0_BACK_IMU_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DEBUG_PIN_1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(PB0_BACK_IMU_INT_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
+
   HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 

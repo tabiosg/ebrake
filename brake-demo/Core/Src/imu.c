@@ -55,6 +55,7 @@ void init_imu(IMU* imu) {
 	// z high event
 
 	write_imu_register(imu, 0x32, 0xE0);
+//	write_imu_register(imu, 0x32, 0xE0);
 //		write_imu_register(imu, 0x32, 0xFF);
 //		write_imu_register(imu, 0x32, 0x01);  // set int1 threshold A
 	// I think 1 lsb is supposed to be 1 mg but idrk

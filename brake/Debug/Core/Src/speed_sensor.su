@@ -1,3 +1,4 @@
 ../Core/Src/speed_sensor.c:8:14:new_speed_sensor	16	static
-../Core/Src/speed_sensor.c:21:6:refresh_speed_sensor_logic	16	static
-../Core/Src/speed_sensor.c:43:9:get_speed_sensor_data	0	static
+../Core/Src/speed_sensor.c:21:6:refresh_speed_sensor_logic	0	static
+../Core/Src/speed_sensor.c:32:6:trigger_speed_sensor_interrupt	16	static
+../Core/Src/speed_sensor.c:49:9:get_speed_sensor_data	0	static
