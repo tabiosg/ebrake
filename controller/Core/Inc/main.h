@@ -79,6 +79,8 @@ void Error_Handler(void);
 #define SHIFT_RCLK_GPIO_Port GPIOA
 #define SHIFT_NOT_OE_Pin GPIO_PIN_0
 #define SHIFT_NOT_OE_GPIO_Port GPIOB
+#define CALIB_BUTTON_Pin GPIO_PIN_11
+#define CALIB_BUTTON_GPIO_Port GPIOA
 #define BLUETOOTH_UART_TX_Pin GPIO_PIN_6
 #define BLUETOOTH_UART_TX_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

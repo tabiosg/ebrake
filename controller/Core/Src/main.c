@@ -77,6 +77,7 @@ PinData* shift_not_oe = NULL;
 PinData* buzzer = NULL;
 PinData* debug_led = NULL;
 PinData* warning_led_pin = NULL;
+PinData* calib_button = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
 InterruptTimer* fast_interrupt_timer = NULL;
 WarningLed* warning_led = NULL;
@@ -126,14 +127,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	shift_ser = new_pin_data(SHIFT_SER_GPIO_Port, SHIFT_SER_Pin);
-	shift_srclk = new_pin_data(SHIFT_SRCLK_GPIO_Port, SHIFT_SRCLK_Pin);
-	shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin);
-	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin);
-	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin);
-	buzzer = new_pin_data(BUZZER_GPIO_Port, BUZZER_Pin);
-	warning_led_pin = new_pin_data(WARNING_LED_GPIO_Port, WARNING_LED_Pin);
-	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
+	shift_ser = new_pin_data(SHIFT_SER_GPIO_Port, SHIFT_SER_Pin, PIN_IS_OUTPUT);
+	shift_srclk = new_pin_data(SHIFT_SRCLK_GPIO_Port, SHIFT_SRCLK_Pin, PIN_IS_OUTPUT);
+	shift_not_srclk = new_pin_data(SHIFT_NOT_SRCLK_GPIO_Port, SHIFT_NOT_SRCLK_Pin, PIN_IS_OUTPUT);
+	shift_rclk = new_pin_data(SHIFT_RCLK_GPIO_Port, SHIFT_RCLK_Pin, PIN_IS_OUTPUT);
+	shift_not_oe = new_pin_data(SHIFT_NOT_OE_GPIO_Port, SHIFT_NOT_OE_Pin, PIN_IS_OUTPUT);
+	buzzer = new_pin_data(BUZZER_GPIO_Port, BUZZER_Pin, PIN_IS_OUTPUT);
+	warning_led_pin = new_pin_data(WARNING_LED_GPIO_Port, WARNING_LED_Pin, PIN_IS_OUTPUT);
+	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, PIN_IS_OUTPUT);
+	calib_button = new_pin_data(CALIB_BUTTON_GPIO_Port, CALIB_BUTTON_Pin, PIN_IS_INPUT);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	adc_sensor = new_adc_sensor(&hadc1, 1);
@@ -198,6 +200,10 @@ int main(void)
 	  update_adc_sensor_values(adc_sensor);
 	  int raw_trigger_counts = (int)get_trigger_input(trigger);
 	  send_wireless_trigger_input(wireless, raw_trigger_counts);
+
+	  if (get_pin_value(calib_button)) {
+		  send_wireless_calib(wireless);
+	  }
 
 	  // ONLY FOR DEBUG
 
@@ -500,6 +506,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SHIFT_NOT_OE_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : CALIB_BUTTON_Pin */
+  GPIO_InitStruct.Pin = CALIB_BUTTON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(CALIB_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
 }
 

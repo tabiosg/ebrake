@@ -41,6 +41,11 @@ void send_wireless_trigger_input(Wireless *wireless, int trigger_input);
 
 // REQUIRES: wireless is a Wireless object
 // MODIFIES: Nothing
+// EFFECTS: Sends calibration command over wireless
+void send_wireless_calib(Wireless *wireless);
+
+// REQUIRES: wireless is a Wireless object
+// MODIFIES: Nothing
 // EFFECTS: Attempts to parse data based on wireless buffer and returns true if success
 bool parse_wireless_message(Wireless *wireless, char start_char);
 
