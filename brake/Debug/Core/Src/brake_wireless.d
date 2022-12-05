@@ -38,8 +38,7 @@ Core/Src/brake_wireless.o: ../Core/Src/brake_wireless.c \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
  ../Core/Inc/skater.h ../Core/Inc/force_sensor.h ../Core/Inc/pin_data.h \
- ../Core/Inc/adc_sensor.h ../Core/Inc/joint.h ../Core/Inc/motor.h \
- ../Core/Inc/potentiometer.h
+ ../Core/Inc/adc_sensor.h ../Core/Inc/joint.h ../Core/Inc/motor.h
 ../Core/Inc/brake_wireless.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
@@ -84,4 +83,3 @@ Core/Src/brake_wireless.o: ../Core/Src/brake_wireless.c \
 ../Core/Inc/adc_sensor.h:
 ../Core/Inc/joint.h:
 ../Core/Inc/motor.h:
-../Core/Inc/potentiometer.h:

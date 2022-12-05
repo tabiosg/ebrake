@@ -31,7 +31,6 @@
 #include "interrupt_timer.h"
 #include "joint.h"
 #include "motor.h"
-#include "potentiometer.h"
 #include "skater.h"
 #include "speed_sensor.h"
 #include <stdbool.h>
@@ -47,7 +46,6 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define USE_POTENTIOMETER_FEEDBACK false
 #define USE_FORCE_SENSOR true
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
@@ -81,7 +79,6 @@ I2CMux *i2c_mux = NULL;
 IMU *front_imu = NULL;
 IMU *back_imu = NULL;
 Motor *motor = NULL;
-Potentiometer *potentiometer = NULL;
 Joint *joint = NULL;
 ForceSensor *force_sensor = NULL;
 Skater *skater = NULL;
@@ -169,9 +166,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		if (USE_LIMIT_SWITCH) {
 			refresh_joint_limit_switch(joint);
 		}
-		if (USE_POTENTIOMETER_FEEDBACK) {
-			refresh_joint_angle_with_potentiometer(joint);
-		}
 
 		if (has_skater_recently_left_board(skater)) {
 			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
@@ -217,8 +211,7 @@ int main(void)
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	imu_interrupt_timer = new_interrupt_timer(&htim17);
-	potentiometer = new_potentiometer(adc_sensor, 1);
-	joint = new_joint(motor, potentiometer, rest_limit_switch_pin, brake_limit_switch_pin);
+	joint = new_joint(motor, rest_limit_switch_pin, brake_limit_switch_pin);
 	force_sensor = new_force_sensor(adc_sensor, 0);
 	battery_sensor = new_battery_sensor(adc_sensor, 2);
 	skater = new_skater(force_sensor);

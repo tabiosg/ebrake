@@ -1,2 +1,0 @@
-../Core/Src/potentiometer.c:8:16:new_potentiometer	16	static
-../Core/Src/potentiometer.c:19:10:get_potentiometer_input	8	static

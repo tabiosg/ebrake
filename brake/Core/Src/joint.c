@@ -3,17 +3,14 @@
 /** PUBLIC FUNCTIONS **/
 
 // REQUIRES: _motor is a Motor object,
-// _potentiometer is a Potentiometer object,
 // and _rest_limit_switch_pin and _brake_limit_switch_pin is a PinData object
 // MODIFIES: Nothing
 // EFFECTS: Returns a pointer to a created Joint object
-Joint *new_joint(Motor* _motor, Potentiometer* _potentiometer, PinData* _rest_limit_switch_pin, PinData* _brake_limit_switch_pin) {
+Joint *new_joint(Motor* _motor, PinData* _rest_limit_switch_pin, PinData* _brake_limit_switch_pin) {
 	Joint *joint = (Joint*) malloc(sizeof(Joint));
 	joint->motor = _motor;
-    joint->potentiometer = _potentiometer;
     joint->rest_limit_switch_pin = _rest_limit_switch_pin;
     joint->brake_limit_switch_pin = _brake_limit_switch_pin;
-    joint->potentiometer_value_at_rest_offset = 0;
     joint->current_angle_steps = CALIBRATION_POINT_REST_STEPS;
     joint->desired_angle_steps = CALIBRATION_POINT_REST_STEPS;
 	joint->is_calibrated = false;
@@ -35,8 +32,7 @@ bool is_joint_close_enough_to_target(Joint *joint) {
 void move_joint_to_target(Joint *joint) {
 	if (!is_joint_close_enough_to_target(joint)) {
 		bool is_difference_steps_positive = joint->desired_angle_steps > joint->current_angle_steps;
-		bool direction = !((is_difference_steps_positive) ^ IS_MOTOR_SAME_DIRECTION_AS_POTENTIOMETER);
-		step_motor_direction(joint->motor, direction);
+		step_motor_direction(joint->motor, is_difference_steps_positive);
 		int8_t steps = is_difference_steps_positive ? 1 : -1;
 		joint->current_angle_steps += steps;
 	}
@@ -64,22 +60,6 @@ void refresh_joint_limit_switch(Joint *joint) {
 }
 
 // REQUIRES: joint is a Joint object
-// MODIFIES: current_angle_steps
-// EFFECTS: Updates current_angle_steps based on potentiometer
-// reading and potentiometer offset
-void refresh_joint_angle_with_potentiometer(Joint *joint) {
-	// TODO - We do not use a potentiometer for our project so right now, it does nothing.
-//	if (joint->is_rest_limit_switch_activated) {
-//		zero_joint(joint);
-//	}
-//	else {
-//		uint32_t raw_data = get_potentiometer_input(joint->potentiometer);
-//		int32_t adjusted_data = raw_data - joint->potentiometer_value_at_rest_offset;
-//		joint->current_angle_steps = adjusted_data / RATIO_OF_RAW_POTENT_DATA_PER_JOINT_STEP;
-//	}
-}
-
-// REQUIRES: joint is a Joint object
 // and target is an integer
 // MODIFIES: desired_angle_steps
 // EFFECTS: Changes the desired_angle_steps
@@ -94,10 +74,8 @@ void set_joint_target(Joint *joint, int32_t target) {
 
 // REQUIRES: joint is a Joint object
 // MODIFIES: potentiometer_error
-// EFFECTS: Updates the potentiometer_error so that
-// current potentiometer readings are mapped to zero
+// EFFECTS: Zeros the joint
 void zero_joint(Joint *joint) {
-	joint->potentiometer_value_at_rest_offset = get_potentiometer_input(joint->potentiometer);
 	joint->current_angle_steps = 0;
 }
 
