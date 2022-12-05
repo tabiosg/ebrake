@@ -47,4 +47,9 @@ bool is_skater_gone(Skater *skater);
 // EFFECTS: Updates the value of ms_since_skater_detected
 void refresh_skater_status(Skater *skater);
 
+// REQUIRES: skater is a Skater object
+// MODIFIES: raw_value_indicating_skater_presence
+// EFFECTS: Calibrates skater threshold value, assuming current value means no skater
+void calibrate_skater_threshold(Skater *skater);
+
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

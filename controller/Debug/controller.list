@@ -6870,9 +6870,9 @@ static void MX_GPIO_Init(void)
  800320c:	187b      	adds	r3, r7, r1
  800320e:	2200      	movs	r2, #0
  8003210:	605a      	str	r2, [r3, #4]
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
  8003212:	187b      	adds	r3, r7, r1
- 8003214:	2200      	movs	r2, #0
+ 8003214:	2202      	movs	r2, #2
  8003216:	609a      	str	r2, [r3, #8]
   HAL_GPIO_Init(CALIB_BUTTON_GPIO_Port, &GPIO_InitStruct);
  8003218:	187a      	adds	r2, r7, r1

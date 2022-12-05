@@ -59,7 +59,7 @@ void send_wireless_battery_data(Wireless *wireless, int battery_data) {
 // REQUIRES: wireless and display are objects
 // MODIFIES: Nothing
 // EFFECTS: Attempts to parse data based on wireless buffer and returns true if success
-bool parse_wireless_message(Wireless *wireless, Skater* skater, Joint* joint, char start_char) {
+bool parse_wireless_message(Wireless *wireless, char start_char) {
 	int start_of_transmit = -1;
 	int end_of_transmit = -1;
 	for (int i = 0; i < sizeof(wireless->uart_buffer) - 1; ++i) {
@@ -101,7 +101,7 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 //	HAL_Delay(10);
 	HAL_UART_Receive_DMA(wireless->uart, (uint8_t *)wireless->uart_buffer, sizeof(wireless->uart_buffer));
 //	HAL_Delay(10);
-	bool target_success =  parse_wireless_message(wireless, skater, joint, 'T');
+	bool target_success = parse_wireless_message(wireless, 'T');
 	if (target_success) {
 		wireless->ms_since_comms = 0;
 		bool is_skater_here = !has_skater_recently_left_board(skater);
@@ -123,6 +123,10 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 			set_joint_target(joint, desired_steps);
 		}
 		return;
+	}
+	bool calib_success = parse_wireless_message(wireless, 'C');
+	if (calib_success) {
+		calibrate_skater_threshold(skater);
 	}
 }
 

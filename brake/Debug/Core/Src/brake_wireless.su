@@ -6,4 +6,4 @@
 ../Core/Src/brake_wireless.c:53:6:send_wireless_battery_data	24	static
 ../Core/Src/brake_wireless.c:62:6:parse_wireless_message	24	static
 ../Core/Src/brake_wireless.c:97:6:receive_wireless	16	static
-../Core/Src/brake_wireless.c:135:6:send_wireless_string_10	16	static
+../Core/Src/brake_wireless.c:139:6:send_wireless_string_10	16	static

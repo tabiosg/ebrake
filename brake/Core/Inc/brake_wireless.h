@@ -57,10 +57,10 @@ bool is_wireless_comms_lost(Wireless *wireless);
 // EFFECTS: Sends battery data over wireless
 void send_wireless_battery_data(Wireless *wireless, int battery_data);
 
-// REQUIRES: wireless, skater, and joint are objects
+// REQUIRES: wireless are objects
 // MODIFIES: Nothing
 // EFFECTS: Attempts to parse data based on wireless buffer and returns true if success
-bool parse_wireless_message(Wireless *wireless, Skater* skater, Joint* joint, char start_char);
+bool parse_wireless_message(Wireless *wireless, char start_char);
 
 // REQUIRES: wireless, skater, and joint are objects
 // MODIFIES: Nothing

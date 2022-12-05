@@ -58,4 +58,14 @@ void refresh_skater_status(Skater *skater) {
 	}
 }
 
+// REQUIRES: skater is a Skater object
+// MODIFIES: raw_value_indicating_skater_presence
+// EFFECTS: Calibrates skater threshold value, assuming current value means no skater
+void calibrate_skater_threshold(Skater *skater) {
+	uint16_t current_raw_force_value = get_force_sensor_data(skater->force_sensor);
+	if (current_raw_force_value > 2) {
+		skater->raw_value_indicating_skater_presence = skater->raw_value_indicating_skater_presence - 2;
+	}
+}
+
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
