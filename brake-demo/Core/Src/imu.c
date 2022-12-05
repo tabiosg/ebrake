@@ -11,7 +11,7 @@ IMU *new_imu(I2C_HandleTypeDef *hi2c, I2CMux *_i2c_mux, uint8_t _channel) {
 	imu->addr = ADDRESS_511_ACCEL;
 	imu->accel_values[0] = 0.0;
 	imu->accel_values[1] = 0.0;
-	imu->accel_values[2] = (IMU_Z_ACCEL_GRAVITY_GS + 2) / CONVERT_RAW_IMU_TO_GS;
+	imu->accel_values[2] = (IMU_Z_ACCEL_GRAVITY_GS) / CONVERT_RAW_IMU_TO_GS;
 	for (size_t i = 0; i < 10; ++i) {
 		imu->buffer[i] = 0;
 	}
@@ -54,7 +54,7 @@ void init_imu(IMU* imu) {
 	// or combination of interrupt events
 	// z high event
 
-	write_imu_register(imu, 0x32, 0xFF);
+	write_imu_register(imu, 0x32, 0xE0);
 //		write_imu_register(imu, 0x32, 0xFF);
 //		write_imu_register(imu, 0x32, 0x01);  // set int1 threshold A
 	// I think 1 lsb is supposed to be 1 mg but idrk
@@ -89,8 +89,8 @@ void refresh_imu_accel_in_axis(IMU *imu, axis axis) {
 // MODIFIES: nothing
 // EFFECTS: Returns the imu acceleration in the axis in g_s
 float get_imu_accel_in_axis(IMU *imu, axis axis) {
-	float g_s_diff = ((uint16_t) imu->accel_values[axis]) * CONVERT_RAW_IMU_TO_GS;
-	return g_s_diff - 2;
+	float g_s_diff = (imu->accel_values[axis]) * CONVERT_RAW_IMU_TO_GS;
+	return g_s_diff;
 }
 
 // REQUIRES: IMU is an IMU object

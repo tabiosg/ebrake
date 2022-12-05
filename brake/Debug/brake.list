@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  0001c351  00000000  00000000  000772b8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0002e0b4  00000000  00000000  00093609  2**0
+ 18 .debug_line   0002e0b1  00000000  00000000  00093609  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000a36fb  00000000  00000000  000c16bd  2**0
+ 19 .debug_str    000a36fb  00000000  00000000  000c16ba  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  00164db8  2**0
+ 20 .comment      00000050  00000000  00000000  00164db5  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00004f04  00000000  00000000  00164e08  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -6961,7 +6961,7 @@ void init_imu(IMU* imu) {
 		imu->addr << 1,
  80034c6:	7921      	ldrb	r1, [r4, #4]
 	imu->buffer[0] = reg;
- 80034c8:	4b29      	ldr	r3, [pc, #164]	; (8003570 <init_imu+0xbc>)
+ 80034c8:	4b28      	ldr	r3, [pc, #160]	; (800356c <init_imu+0xb8>)
  80034ca:	350c      	adds	r5, #12
 	HAL_I2C_Master_Transmit(
  80034cc:	002a      	movs	r2, r5
@@ -6990,7 +6990,7 @@ void init_imu(IMU* imu) {
 		imu->addr << 1,
  80034f0:	7921      	ldrb	r1, [r4, #4]
 	imu->buffer[0] = reg;
- 80034f2:	4b20      	ldr	r3, [pc, #128]	; (8003574 <init_imu+0xc0>)
+ 80034f2:	4b1f      	ldr	r3, [pc, #124]	; (8003570 <init_imu+0xbc>)
 	HAL_I2C_Master_Transmit(
  80034f4:	002a      	movs	r2, r5
 	imu->buffer[0] = reg;
@@ -7004,7 +7004,7 @@ void init_imu(IMU* imu) {
 		imu->addr << 1,
  8003504:	7921      	ldrb	r1, [r4, #4]
 	imu->buffer[0] = reg;
- 8003506:	4b1c      	ldr	r3, [pc, #112]	; (8003578 <init_imu+0xc4>)
+ 8003506:	4b1b      	ldr	r3, [pc, #108]	; (8003574 <init_imu+0xc0>)
 	HAL_I2C_Master_Transmit(
  8003508:	002a      	movs	r2, r5
 	imu->buffer[0] = reg;
@@ -7018,7 +7018,7 @@ void init_imu(IMU* imu) {
 		imu->addr << 1,
  8003518:	7921      	ldrb	r1, [r4, #4]
 	imu->buffer[0] = reg;
- 800351a:	4b18      	ldr	r3, [pc, #96]	; (800357c <init_imu+0xc8>)
+ 800351a:	4b17      	ldr	r3, [pc, #92]	; (8003578 <init_imu+0xc4>)
 	HAL_I2C_Master_Transmit(
  800351c:	002a      	movs	r2, r5
 	imu->buffer[0] = reg;
@@ -7032,7 +7032,7 @@ void init_imu(IMU* imu) {
 		imu->addr << 1,
  800352c:	7921      	ldrb	r1, [r4, #4]
 	imu->buffer[0] = reg;
- 800352e:	4b14      	ldr	r3, [pc, #80]	; (8003580 <init_imu+0xcc>)
+ 800352e:	4b13      	ldr	r3, [pc, #76]	; (800357c <init_imu+0xc8>)
 	HAL_I2C_Master_Transmit(
  8003530:	002a      	movs	r2, r5
 	imu->buffer[0] = reg;
@@ -7043,44 +7043,42 @@ void init_imu(IMU* imu) {
  8003538:	0049      	lsls	r1, r1, #1
  800353a:	9600      	str	r6, [sp, #0]
  800353c:	f001 fe86 	bl	800524c <HAL_I2C_Master_Transmit>
-	imu->buffer[0] = reg;
- 8003540:	23ce      	movs	r3, #206	; 0xce
 		imu->addr << 1,
- 8003542:	7921      	ldrb	r1, [r4, #4]
+ 8003540:	7921      	ldrb	r1, [r4, #4]
 	imu->buffer[0] = reg;
- 8003544:	425b      	negs	r3, r3
+ 8003542:	4b0f      	ldr	r3, [pc, #60]	; (8003580 <init_imu+0xcc>)
 	HAL_I2C_Master_Transmit(
- 8003546:	002a      	movs	r2, r5
+ 8003544:	002a      	movs	r2, r5
 	imu->buffer[0] = reg;
- 8003548:	81a3      	strh	r3, [r4, #12]
+ 8003546:	81a3      	strh	r3, [r4, #12]
 	HAL_I2C_Master_Transmit(
- 800354a:	6820      	ldr	r0, [r4, #0]
+ 8003548:	6820      	ldr	r0, [r4, #0]
+ 800354a:	2302      	movs	r3, #2
  800354c:	0049      	lsls	r1, r1, #1
  800354e:	9600      	str	r6, [sp, #0]
- 8003550:	33d0      	adds	r3, #208	; 0xd0
- 8003552:	f001 fe7b 	bl	800524c <HAL_I2C_Master_Transmit>
+ 8003550:	f001 fe7c 	bl	800524c <HAL_I2C_Master_Transmit>
 	imu->buffer[0] = reg;
- 8003556:	2333      	movs	r3, #51	; 0x33
+ 8003554:	2333      	movs	r3, #51	; 0x33
 		imu->addr << 1,
- 8003558:	7921      	ldrb	r1, [r4, #4]
+ 8003556:	7921      	ldrb	r1, [r4, #4]
 	imu->buffer[0] = reg;
- 800355a:	81a3      	strh	r3, [r4, #12]
+ 8003558:	81a3      	strh	r3, [r4, #12]
 	HAL_I2C_Master_Transmit(
- 800355c:	002a      	movs	r2, r5
- 800355e:	6820      	ldr	r0, [r4, #0]
- 8003560:	0049      	lsls	r1, r1, #1
- 8003562:	9600      	str	r6, [sp, #0]
- 8003564:	3b31      	subs	r3, #49	; 0x31
- 8003566:	f001 fe71 	bl	800524c <HAL_I2C_Master_Transmit>
+ 800355a:	002a      	movs	r2, r5
+ 800355c:	6820      	ldr	r0, [r4, #0]
+ 800355e:	0049      	lsls	r1, r1, #1
+ 8003560:	9600      	str	r6, [sp, #0]
+ 8003562:	3b31      	subs	r3, #49	; 0x31
+ 8003564:	f001 fe72 	bl	800524c <HAL_I2C_Master_Transmit>
 }
- 800356a:	b002      	add	sp, #8
- 800356c:	bd70      	pop	{r4, r5, r6, pc}
- 800356e:	46c0      	nop			; (mov r8, r8)
- 8003570:	00004720 	.word	0x00004720
- 8003574:	00004422 	.word	0x00004422
- 8003578:	00004823 	.word	0x00004823
- 800357c:	ffff8024 	.word	0xffff8024
- 8003580:	00002030 	.word	0x00002030
+ 8003568:	b002      	add	sp, #8
+ 800356a:	bd70      	pop	{r4, r5, r6, pc}
+ 800356c:	00004720 	.word	0x00004720
+ 8003570:	00004422 	.word	0x00004422
+ 8003574:	00004823 	.word	0x00004823
+ 8003578:	ffff8024 	.word	0xffff8024
+ 800357c:	00002030 	.word	0x00002030
+ 8003580:	ffff8f32 	.word	0xffff8f32
 
 08003584 <is_imu_z_accel_equal_to_gravity>:
 bool is_imu_z_accel_equal_to_gravity(IMU *imu) {

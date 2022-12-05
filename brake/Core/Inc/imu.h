@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stm32g0xx_hal.h"
+#include "stm32f4xx_hal.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
