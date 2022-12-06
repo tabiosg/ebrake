@@ -26,6 +26,8 @@
 
 #define MAX_REST_STEPS 0
 
+#define IS_MOTOR_CORRECT_DIRECTION false
+
 // A Joint composes of a motor, a device to measure angle,
 // an angle, and a desired angle.
 typedef struct {

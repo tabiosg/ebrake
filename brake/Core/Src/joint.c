@@ -32,7 +32,8 @@ bool is_joint_close_enough_to_target(Joint *joint) {
 void move_joint_to_target(Joint *joint) {
 	if (!is_joint_close_enough_to_target(joint)) {
 		bool is_difference_steps_positive = joint->desired_angle_steps > joint->current_angle_steps;
-		step_motor_direction(joint->motor, is_difference_steps_positive);
+		bool direction = !((is_difference_steps_positive) ^ IS_MOTOR_CORRECT_DIRECTION);
+		step_motor_direction(joint->motor, direction);
 		int8_t steps = is_difference_steps_positive ? 1 : -1;
 		joint->current_angle_steps += steps;
 	}

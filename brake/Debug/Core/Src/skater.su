@@ -1,5 +1,5 @@
 ../Core/Src/skater.c:8:9:new_skater	16	static
-../Core/Src/skater.c:20:6:has_skater_recently_left_board	0	static
-../Core/Src/skater.c:27:6:is_skater_gone	0	static
-../Core/Src/skater.c:35:6:refresh_skater_status	8	static
-../Core/Src/skater.c:64:6:calibrate_skater_threshold	8	static
+../Core/Src/skater.c:21:6:has_skater_recently_left_board	0	static
+../Core/Src/skater.c:28:6:is_skater_gone	0	static
+../Core/Src/skater.c:36:6:refresh_skater_status	8	static
+../Core/Src/skater.c:67:6:calibrate_skater_threshold	8	static
