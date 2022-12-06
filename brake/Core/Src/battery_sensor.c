@@ -22,10 +22,12 @@ uint8_t get_battery_sensor_data(BatterySensor *battery_sensor) {
     	return 5;
     }
     else if (voltage > BATTERY_SENSOR_THREE_BATTERY) {
-    	return 3;
+//    	return 3;
+    	return 2; // This is done temporarily to make noise for the controller. (It only makes noise at 2 or less).
     }
-    else if (voltage > BATTERY_SENSOR_ONE_BATTERY) {
-    	return 1;
+    else if (voltage > BATTERY_SENSOR_TWO_BATTERY) {
+//    	return 2;
+    	return 1; // This is done temporarily to make noise for the controller. (It only makes noise at 2 or less).
     }
     return 0;
 }
