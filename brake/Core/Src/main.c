@@ -170,7 +170,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 
 		if (has_skater_recently_left_board(skater)) {
-			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
+			bool board_is_on_the_floor = true;
+//			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
 			if (board_is_on_the_floor) {
 				set_joint_target(joint, MAX_BRAKING_STEPS);
 			}
