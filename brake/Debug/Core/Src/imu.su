@@ -1,6 +1,6 @@
 ../Core/Src/imu.c:8:6:new_imu	24	static
 ../Core/Src/imu.c:26:6:init_imu	24	static
-../Core/Src/imu.c:69:6:refresh_imu_accel_in_axis	40	static
+../Core/Src/imu.c:69:6:refresh_imu_accel_in_axis	32	static
 ../Core/Src/imu.c:91:7:get_imu_accel_in_axis	8	static
 ../Core/Src/imu.c:99:6:is_imu_z_accel_equal_to_gravity	8	static
 ../Core/Src/imu.c:108:6:write_imu_register	16	static

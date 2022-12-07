@@ -127,7 +127,7 @@ uint8_t read_imu_register(IMU* imu, uint8_t reg) {
 		imu->addr << 1,
 		imu->buffer,
 		1,
-		50);
+		5);
 	HAL_I2C_Master_Receive(
 		imu->i2c,
 		(imu->addr << 1) | 1,

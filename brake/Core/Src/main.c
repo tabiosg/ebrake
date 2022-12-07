@@ -50,7 +50,7 @@
 #define USE_FORCE_SENSOR true
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
-#define USE_IMU false
+#define USE_IMU true
 
 /* USER CODE END PD */
 
@@ -121,7 +121,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	receive_wireless(wireless, skater, joint);
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 {
     if(GPIO_Pin == PA5_FRONT_IMU_INT_Pin)
     {
@@ -280,8 +280,8 @@ int main(void)
 	  // It is worth testing to see if this is actually the case.
 	  HAL_Delay(1000);
 	  if (is_joint_close_enough_to_target(joint)) {
-		  refresh_imu_accel_in_axis(front_imu, Z_Axis);
-		  refresh_imu_accel_in_axis(back_imu, Z_Axis);
+//		  refresh_imu_accel_in_axis(front_imu, Z_Axis);
+//		  refresh_imu_accel_in_axis(back_imu, Z_Axis);
 		  // TODO - fix once we actually get speed
 //		  uint8_t current_speed = 0;
 		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
@@ -722,6 +722,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(PB0_BACK_IMU_INT_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 }
 
