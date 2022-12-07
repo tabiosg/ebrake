@@ -264,6 +264,7 @@ int main(void)
   receive_wireless(wireless, skater, joint);
 
 //  bool debug_change = true;
+  int send_message_state = 0;
 
   /* USER CODE END 2 */
 
@@ -283,15 +284,18 @@ int main(void)
 //		  refresh_imu_accel_in_axis(front_imu, Z_Axis);
 //		  refresh_imu_accel_in_axis(back_imu, Z_Axis);
 		  // TODO - fix once we actually get speed
-//		  uint8_t current_speed = 0;
-		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
+		  uint8_t current_speed = 0;
 //		  debug_change = !debug_change;
-//		  if (debug_change) {
-//			  current_speed = get_force_sensor_data(force_sensor);
-//		  }
-//		  else {
-//			  current_speed = get_thermistor_data(thermistor);
-//		  }
+		  send_message_state = (send_message_state + 1) % 3;
+		  if (send_message_state == 0) {
+			  current_speed = get_force_sensor_data(force_sensor);
+		  }
+		  else if (send_message_state == 1) {
+			  current_speed = get_thermistor_data(thermistor);
+		  }
+		  else {
+			  current_speed = get_speed_sensor_data(speed_sensor);
+		  }
 //		  uint8_t current_speed = joint->current_angle_steps / 1000;  // DUMMY VAL
 		  send_wireless_speed(wireless, current_speed);
 
