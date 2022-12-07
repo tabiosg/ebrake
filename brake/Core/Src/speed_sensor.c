@@ -36,9 +36,12 @@ void trigger_speed_sensor_interrupt(SpeedSensor* speed_sensor, bool is_front) {
 	else {
 		float meters_per_second = LENGTH_OF_BOARD_M * 1000.0f / speed_sensor->ms_since_front_imu_spiked;
 		float mph = meters_per_second * MPH_TO_MPS_RATIO;
-		if (mph > 99.0f) {
-			mph = 99.0f;
+		if (mph > 15.0f) {
+			return;
 		}
+//		if (mph > 99.0f) {
+//			mph = 99.0f;
+//		}
 		speed_sensor->speed = mph;
 	}
 }
