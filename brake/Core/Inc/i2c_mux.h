@@ -8,6 +8,7 @@
 #define I2C_MUX_ADDRESS 0x70
 #define I2C_MUX_SELECT_CMD 0xCC
 
+// tca9548a
 typedef struct {
 	I2C_HandleTypeDef *i2c;
 	int channels_register_data[8];

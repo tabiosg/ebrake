@@ -9,7 +9,7 @@ I2CMux *new_i2c_mux(I2C_HandleTypeDef *hi2c) {
 	I2CMux *i2c_mux = (I2CMux*) malloc(sizeof(I2CMux));
 	i2c_mux->i2c = hi2c;
 	for (size_t i = 0; i < 8; ++i) {
-		i2c_mux->channels_register_data[i] = 0b1 < i;
+		i2c_mux->channels_register_data[i] = 0b1 << i;
 	}
 	for (size_t i = 0; i < 10; ++i) {
 		i2c_mux->buffer[i] = 0;

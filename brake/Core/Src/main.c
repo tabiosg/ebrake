@@ -50,7 +50,7 @@
 #define USE_FORCE_SENSOR true
 #define USE_WIRELESS_COMMS_WATCHDOG true
 #define USE_LIMIT_SWITCH true
-#define USE_IMU false
+#define USE_IMU true
 
 /* USER CODE END PD */
 
@@ -178,11 +178,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {
 			set_joint_target(joint, RIGHT_BEFORE_BRAKING_STEPS);
 		}
-		if (USE_IMU) {
-			refresh_imu_accel_in_axis(front_imu, Z_Axis);
+//		if (USE_IMU) {
+//			refresh_imu_accel_in_axis(front_imu, Z_Axis);
 //			refresh_imu_accel_in_axis(back_imu, Z_Axis);
-			refresh_speed_sensor_logic(speed_sensor);
-		}
+		refresh_speed_sensor_logic(speed_sensor);
+//		}
 
 		refresh_wireless_status(wireless);
 	}
@@ -279,6 +279,8 @@ int main(void)
 	  // It is worth testing to see if this is actually the case.
 	  HAL_Delay(1000);
 	  if (is_joint_close_enough_to_target(joint)) {
+		  refresh_imu_accel_in_axis(front_imu, Z_Axis);
+		  refresh_imu_accel_in_axis(back_imu, Z_Axis);
 		  // TODO - fix once we actually get speed
 		  uint8_t current_speed = 0;
 //		  current_speed = get_speed_sensor_data(speed_sensor);
@@ -701,11 +703,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LIMIT_SWITCH_2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA4 PA5_FRONT_IMU_INT_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_4|PA5_FRONT_IMU_INT_Pin;
+  /*Configure GPIO pin : PA5_FRONT_IMU_INT_Pin */
+  GPIO_InitStruct.Pin = PA5_FRONT_IMU_INT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(PA5_FRONT_IMU_INT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DRV8825_STP_Pin DRV8825_DIR_Pin */
   GPIO_InitStruct.Pin = DRV8825_STP_Pin|DRV8825_DIR_Pin;
