@@ -2,6 +2,9 @@
 
 For EECS 473, our group's project is a wireless, electric-powered, friction-braking system for longboards. We call this product the E-Brake. Developed by Austin, Iman, Wendy, Nathan, and Guthrie. Original idea was created by Nathan.
 
+
+<img src="https://user-images.githubusercontent.com/71603173/207442646-54b3ac62-dc44-4758-bba6-f2065956eb31.jpg" height=400> <img src="https://user-images.githubusercontent.com/71603173/207442217-9204c7b7-5db6-45a2-9c42-62ef7f43d7bd.jpg" height=400>
+
 ---
 
 ## Description
@@ -59,6 +62,14 @@ The motor driver is DRV8825.
 The force sensor is SEN-10245.
 The IMU is GY-511.
 The I2C Mux is TCA9548A.
+
+---
+
+## PCBs
+
+Here are the images of the PCBs
+
+<img src="https://user-images.githubusercontent.com/71603173/207443429-519d50be-1805-4ec5-8f76-28f360d139ac.jpg" height=400> <img src="https://user-images.githubusercontent.com/71603173/207443319-33cc7007-e130-4bd6-8e62-696fbaec6c54.jpg" height=400>
 
 ---
 
