@@ -18,5 +18,3 @@ ForceSensor *new_force_sensor(ADCSensor *_adc_sensor, uint8_t _rank) {
 uint16_t get_force_sensor_data(ForceSensor *force_sensor) {
     return get_adc_sensor_value(force_sensor->adc_sensor, force_sensor->rank);
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

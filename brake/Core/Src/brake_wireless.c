@@ -130,7 +130,7 @@ void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint) {
 	}
 }
 
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
+/** PRIVATE FUNCTIONS **/
 
 // REQUIRES: wireless is a Wireless object
 // and string is an array of 10 characters.

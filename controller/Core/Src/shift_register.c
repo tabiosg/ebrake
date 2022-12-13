@@ -41,5 +41,3 @@ void reset_shift_register(ShiftRegister *shift_register) {
 	set_pin_value(shift_register->rclk_pin, 1);
 	set_pin_value(shift_register->rclk_pin, 0);
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

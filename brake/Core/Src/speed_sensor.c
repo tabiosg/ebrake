@@ -39,9 +39,6 @@ void trigger_speed_sensor_interrupt(SpeedSensor* speed_sensor, bool is_front) {
 		if (mph > 15.0f) {
 			return;
 		}
-//		if (mph > 99.0f) {
-//			mph = 99.0f;
-//		}
 		speed_sensor->speed = mph;
 	}
 }
@@ -52,5 +49,3 @@ void trigger_speed_sensor_interrupt(SpeedSensor* speed_sensor, bool is_front) {
 uint8_t get_speed_sensor_data(SpeedSensor *speed_sensor) {
 	return speed_sensor->speed;
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

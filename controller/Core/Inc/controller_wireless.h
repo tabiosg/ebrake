@@ -34,7 +34,6 @@ Wireless *new_wireless(UART_HandleTypeDef *huart, Display* _display, BatteryBuzz
 
 // REQUIRES: wireless is a Wireless object
 // and trigger_input is an int from 0 to 64
-// of the arm in degrees
 // MODIFIES: Nothing
 // EFFECTS: Sends trigger input command over wireless
 void send_wireless_trigger_input(Wireless *wireless, int trigger_input);

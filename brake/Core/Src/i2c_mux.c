@@ -30,5 +30,3 @@ void activate_i2c_mux_channel(I2CMux *i2c_mux, uint8_t channel) {
 		2,
 		5);
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

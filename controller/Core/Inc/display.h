@@ -5,8 +5,6 @@
 #include <stdint.h>
 
 // Display should be connected to the shift register as follows:
-// Display g f e d c b a should be connected to
-// shift register QG, QF, QE, QD, QC, QB, QA.
 // Assumes that display is in common anode configuration (0 is on).
 typedef struct {
 	ShiftRegister *shift_register;

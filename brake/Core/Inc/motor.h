@@ -31,5 +31,3 @@ Motor *new_motor(
 // MODIFIES: nothing
 // EFFECTS: Moves the motor a certain by a certain amount of steps
 void step_motor_direction(Motor *motor, bool dir);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

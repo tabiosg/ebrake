@@ -19,5 +19,3 @@ Potentiometer *new_potentiometer(ADCSensor *_adc_sensor, uint8_t _rank) {
 uint16_t get_potentiometer_input(Potentiometer *potentiometer) {
     return get_adc_sensor_value(potentiometer->adc_sensor, potentiometer->rank);
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

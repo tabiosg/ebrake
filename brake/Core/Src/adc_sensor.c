@@ -31,5 +31,3 @@ void update_adc_sensor_values(ADCSensor *adc_sensor) {
 		HAL_ADC_Start_DMA(adc_sensor->adc, adc_sensor->values, adc_sensor->total_ranks);
 	}
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

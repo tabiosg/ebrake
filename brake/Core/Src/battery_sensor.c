@@ -31,5 +31,3 @@ uint8_t get_battery_sensor_data(BatterySensor *battery_sensor) {
     }
     return 0;
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

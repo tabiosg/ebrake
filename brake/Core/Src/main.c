@@ -134,11 +134,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == fast_interrupt_timer->timer) {
-
-//		set_pin_value(debug_pin_1, 1);
-		// 50 us
 		move_joint_to_target(joint);
-//		set_pin_value(debug_pin_1, 0);
 
 	}
 	else if (htim == slow_interrupt_timer->timer) {
@@ -150,14 +146,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 
 		if (USE_LIMIT_SWITCH) {
-	//		bool motor_thinks_is_at_rest = abs(joint->current_angle_steps - AUTOMATIC_RELAX_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
 			bool motor_thinks_is_at_rest_max = joint->current_angle_steps == MAX_REST_STEPS;
 			if (motor_thinks_is_at_rest_max && !joint->is_rest_limit_switch_activated) {
 				// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
 				joint->current_angle_steps += ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS;
 			}
 			else {
-		//		bool motor_thinks_is_at_brake = abs(joint->current_angle_steps - AUTOMATIC_BRAKING_ANGLE_STEPS) < DESIRED_ANGLE_LAX_STEPS;
 				bool motor_thinks_is_at_brake_max = joint->current_angle_steps == MAX_BRAKING_STEPS;
 				if (motor_thinks_is_at_brake_max && !joint->is_brake_limit_switch_activated) {
 					// Increase its current angle by an arbitrary number in order to make it head in the direction of the desired.
@@ -171,7 +165,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 		if (has_skater_recently_left_board(skater)) {
 			bool board_is_on_the_floor = true;
-//			bool board_is_on_the_floor = is_imu_z_accel_equal_to_gravity(front_imu);
 			if (board_is_on_the_floor) {
 				set_joint_target(joint, MAX_BRAKING_STEPS);
 			}
@@ -179,9 +172,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		else if (USE_WIRELESS_COMMS_WATCHDOG && is_wireless_comms_lost(wireless)) {
 			set_joint_target(joint, RIGHT_BEFORE_BRAKING_STEPS);
 		}
-//		if (USE_IMU) {
-//			refresh_imu_accel_in_axis(front_imu, Z_Axis);
-//			refresh_imu_accel_in_axis(back_imu, Z_Axis);
 		refresh_speed_sensor_logic(speed_sensor);
 //		}
 
@@ -208,8 +198,6 @@ int main(void)
 	rest_limit_switch_pin = new_pin_data(LIMIT_SWITCH_2_GPIO_Port, LIMIT_SWITCH_2_Pin, PIN_IS_INPUT);
 	brake_limit_switch_pin = new_pin_data(LIMIT_SWITCH_1_GPIO_Port, LIMIT_SWITCH_1_Pin, PIN_IS_INPUT);
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, PIN_IS_OUTPUT);
-//	debug_pin_0 = new_pin_data(DEBUG_PIN_0_GPIO_Port, DEBUG_PIN_0_Pin, PIN_IS_OUTPUT);
-//	debug_pin_1 = new_pin_data(DEBUG_PIN_1_GPIO_Port, DEBUG_PIN_1_Pin, PIN_IS_OUTPUT);
 	motor = new_motor(motor_direction_pin, motor_step_pin);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
 	fast_interrupt_timer = new_interrupt_timer(&htim16);
@@ -257,14 +245,8 @@ int main(void)
 
   start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
-//  if (USE_IMU) {
-//	  start_interrupt_timer(imu_interrupt_timer);
-//  }
 
   receive_wireless(wireless, skater, joint);
-
-//  bool debug_change = true;
-//  int send_message_state = 0;
 
   /* USER CODE END 2 */
 
@@ -276,28 +258,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  // TODO - this statement is in an if statement since we are afraid that it takes too much time
-	  // and will decrease responsiveness. However, this may not actually be true
-	  // It is worth testing to see if this is actually the case.
 	  HAL_Delay(250);
 	  if (is_joint_close_enough_to_target(joint)) {
-//		  refresh_imu_accel_in_axis(front_imu, Z_Axis);
-//		  refresh_imu_accel_in_axis(back_imu, Z_Axis);
-		  // TODO - fix once we actually get speed
-//		  uint8_t current_speed = 0;
-//		  debug_change = !debug_change;
-//		  send_message_state = (send_message_state + 1) % 3;
-//		  if (send_message_state == 0) {
-//			  current_speed = get_force_sensor_data(force_sensor);
-//		  }
-//		  else if (send_message_state == 1) {
-//			  current_speed = get_thermistor_data(thermistor);
-//		  }
-//		  else {
-//			  current_speed = get_speed_sensor_data(speed_sensor);
-//		  }
 		  uint8_t current_speed = get_speed_sensor_data(speed_sensor);
-//		  uint8_t current_speed = joint->current_angle_steps / 1000;  // DUMMY VAL
 		  send_wireless_speed(wireless, current_speed);
 
 		  uint8_t battery_data = get_battery_sensor_data(battery_sensor);
@@ -305,35 +268,7 @@ int main(void)
 
 		  uint8_t is_skater_detected = !is_skater_gone(skater);
 		  send_wireless_detect_skater_status(wireless, is_skater_detected);
-
 	  }
-//	  set_pin_value(debug_pin_0, 1);
-//	  set_pin_value(debug_pin_0, 0);
-
-
-//	  for (int i = 0; i < 90; i = i + 5) {
-//		  HAL_Delay(2000);
-//		  set_joint_target(joint, i);
-////		  move_joint_to_target(joint);
-//	  }
-//
-//	  for (int i = 90; i >= 0; i = i - 5) {
-//		  HAL_Delay(2000);
-//		  set_joint_target(joint, i);
-////		  move_joint_to_target(joint);
-//	  }
-
-//	set_pin_value(motor_direction_pin, 1);
-//	set_pin_value(motor_direction_pin, 0);
-//	set_pin_value(motor_step_pin, 1);
-//	set_pin_value(motor_step_pin, 0);
-
-//	set_pin_value(debug_led, 1);
-//	set_pin_value(debug_led, 0);
-//  	set_pin_value(debug_pin_0, 1);
-//  	set_pin_value(debug_pin_0, 0);
-//  	set_pin_value(debug_pin_1, 1);
-//	set_pin_value(debug_pin_1, 0);
   }
   /* USER CODE END 3 */
 }

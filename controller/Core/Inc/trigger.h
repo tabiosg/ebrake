@@ -22,5 +22,3 @@ Trigger *new_trigger(Potentiometer *_potentiometer);
 // EFFECTS: Returns the currently desired steps being commanded
 // by user based on trigger
 int16_t get_trigger_input(Trigger *trigger);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

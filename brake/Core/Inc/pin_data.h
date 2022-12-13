@@ -33,5 +33,3 @@ void set_pin_value(PinData *pin_data, uint8_t value);
 // MODIFIES: nothing
 // EFFECTS: Returns value of pin
 bool get_pin_value(PinData *pin_data);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

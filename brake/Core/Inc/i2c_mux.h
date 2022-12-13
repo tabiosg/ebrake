@@ -8,7 +8,7 @@
 #define I2C_MUX_ADDRESS 0x70
 #define I2C_MUX_SELECT_CMD 0xCC
 
-// tca9548a
+// TCA9548A
 typedef struct {
 	I2C_HandleTypeDef *i2c;
 	int channels_register_data[8];
@@ -26,5 +26,3 @@ I2CMux *new_i2c_mux(I2C_HandleTypeDef *hi2c);
 // MODIFIES: nothing
 // EFFECTS: Activates an i2c mux channel
 void activate_i2c_mux_channel(I2CMux *i2c_mux, uint8_t channel);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

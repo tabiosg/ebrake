@@ -67,7 +67,7 @@ bool parse_wireless_message(Wireless *wireless, char start_char);
 // EFFECTS: Receives the wireless angle and changes the joint angle if skater is on the board
 void receive_wireless(Wireless *wireless, Skater* skater, Joint* joint);
 
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
+/** PRIVATE FUNCTIONS **/
 
 // REQUIRES: wireless is a Wireless object
 // and string is an array of 10 characters.

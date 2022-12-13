@@ -1,8 +1,8 @@
 ../Core/Src/controller_wireless.c:8:11:new_wireless	32	static
-../Core/Src/controller_wireless.c:22:6:send_wireless_trigger_input	40	static
-../Core/Src/controller_wireless.c:31:6:send_wireless_calib	40	static
-../Core/Src/controller_wireless.c:40:6:parse_wireless_message	56	static
-../Core/Src/controller_wireless.c:75:6:receive_wireless	32	static
-../Core/Src/controller_wireless.c:108:6:send_wireless_string_10	16	static
-../Core/Src/controller_wireless.c:118:6:refresh_wireless_status	16	static
-../Core/Src/controller_wireless.c:125:6:is_wireless_comms_lost	16	static
+../Core/Src/controller_wireless.c:21:6:send_wireless_trigger_input	40	static
+../Core/Src/controller_wireless.c:30:6:send_wireless_calib	40	static
+../Core/Src/controller_wireless.c:39:6:parse_wireless_message	56	static
+../Core/Src/controller_wireless.c:74:6:receive_wireless	32	static
+../Core/Src/controller_wireless.c:106:6:send_wireless_string_10	16	static
+../Core/Src/controller_wireless.c:116:6:refresh_wireless_status	16	static
+../Core/Src/controller_wireless.c:123:6:is_wireless_comms_lost	16	static

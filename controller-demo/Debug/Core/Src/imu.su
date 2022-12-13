@@ -1,3 +1,0 @@
-../Core/Src/imu.c:8:6:new_imu_sensor	24	static
-../Core/Src/imu.c:17:7:get_imu_accel_in_axis	16	static
-../Core/Src/imu.c:24:7:get_imu_rotation_in_axis	16	static

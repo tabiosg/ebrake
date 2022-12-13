@@ -27,5 +27,3 @@ uint16_t get_adc_sensor_value(ADCSensor *adc_sensor, uint8_t rank);
 // MODIFIES: values
 // EFFECTS: Updates the stored value of value.
 void update_adc_sensor_values(ADCSensor *adc_sensor);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

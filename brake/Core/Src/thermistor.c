@@ -19,5 +19,3 @@ uint8_t get_thermistor_data(Thermistor *thermistor) {
     uint32_t raw_value = get_adc_sensor_value(thermistor->adc_sensor, thermistor->rank);
     return raw_value;
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

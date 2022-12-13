@@ -29,6 +29,7 @@ bool is_joint_close_enough_to_target(Joint *joint) {
 // REQUIRES: joint is a Joint object
 // MODIFIES: Nothing
 // EFFECTS: Moves the motor based on current steps and desired steps
+// This function is expected to be called every 50 us
 void move_joint_to_target(Joint *joint) {
 	if (!is_joint_close_enough_to_target(joint)) {
 		bool is_difference_steps_positive = joint->desired_angle_steps > joint->current_angle_steps;
@@ -79,6 +80,3 @@ void set_joint_target(Joint *joint, int32_t target) {
 void zero_joint(Joint *joint) {
 	joint->current_angle_steps = 0;
 }
-
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

@@ -72,6 +72,3 @@ void write_imu_register(IMU* imu, uint8_t reg, uint8_t data);
 // MODIFIES: nothing
 // EFFECTS: Reads IMU from a register
 uint8_t read_imu_register(IMU* imu, uint8_t reg);
-
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

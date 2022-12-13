@@ -36,5 +36,3 @@ WarningLed *new_warning_led(PinData *_warning_led_pin, uint8_t* _battery_data);
 // It will stay on if the battery is low on battery.
 // This function is expected to be called every 2 ms.
 void update_warning_led_logic(WarningLed *warning_led, bool is_comms_lost);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

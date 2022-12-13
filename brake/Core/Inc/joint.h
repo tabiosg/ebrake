@@ -6,27 +6,14 @@
 #include <stdlib.h>
 #include <math.h>
 
-// should be multiple of 256
-// I measured 25140 being range of limit switch, round up if needed
 #define MAX_BRAKING_STEPS 26000
-
 #define FLOOR_BRAKING_STEPS_HARD 25000
-
 #define FLOOR_BRAKING_STEPS_LIGHT 23800
-
-//#define RIGHT_BEFORE_BRAKING_STEPS 20000
-//#define RIGHT_BEFORE_BRAKING_STEPS 16000
 #define RIGHT_BEFORE_BRAKING_STEPS 10000
-//#define RIGHT_BEFORE_BRAKING_STEPS 10000
-
 #define MID_WAY_TO_BRAKING_STEPS 10000
-
 #define ARBITRARY_ADD_ANGLE_FOR_LIMIT_SWITCH_STEPS 1500
-
 #define CALIBRATION_POINT_REST_STEPS 0
-
 #define MAX_REST_STEPS 0
-
 #define IS_MOTOR_CORRECT_DIRECTION false
 
 // A Joint composes of a motor, a device to measure angle,
@@ -58,6 +45,7 @@ bool is_joint_close_enough_to_target(Joint *joint);
 // REQUIRES: joint is a Joint object
 // MODIFIES: Nothing
 // EFFECTS: Moves the motor based on current angle and desired angle
+// This function is expected to be called every 50 us
 void move_joint_to_target(Joint *joint);
 
 // REQUIRES: joint is a Joint object
@@ -76,6 +64,3 @@ void set_joint_target(Joint *joint, int32_t target);
 // EFFECTS: Updates the potentiometer_error so that
 // current potentiometer readings are mapped to zero
 void zero_joint(Joint *joint);
-
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

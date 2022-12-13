@@ -6,17 +6,11 @@
 #include <stdbool.h>
 
 
-// So it is ground -> 130k resistor -> ref -> thermistor that goes to 180k when cold and 100k when hot -> 3.3v
-// 130 / (130 + 100) * 63 = 35.6
 #define ROOM_TEMP_SKATER_PRESENCE_VALUE 43
 #define ROOM_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 30
-
-// 130 / (130 + 180) * 63 = 26.4
 #define COLD_TEMP_SKATER_PRESENCE_VALUE 41
 #define COLD_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 20
-
 #define COLDEST_TEMP_RAW_THERM_VALUE_INDICATING_SKATER 0
-
 #define TIME_INDICATING_SKATER_ABSENCE_MS 250
 #define TIME_TO_RELEASE_BRAKE_AFTER_SKATER_NOT_DETECTED 4000
 
@@ -56,5 +50,3 @@ void refresh_skater_status(Skater *skater);
 // MODIFIES: raw_value_indicating_skater_presence
 // EFFECTS: Calibrates skater threshold value, assuming current value means no skater
 void calibrate_skater_threshold(Skater *skater);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

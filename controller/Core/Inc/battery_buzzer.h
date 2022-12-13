@@ -56,5 +56,3 @@ void change_battery_buzzer_noise_val(BatteryBuzzer *battery_buzzer, bool val);
 // MODIFIES: nothing
 // EFFECTS: Turns the battery led on or off.
 void change_battery_led(BatteryBuzzer *battery_buzzer, bool val);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

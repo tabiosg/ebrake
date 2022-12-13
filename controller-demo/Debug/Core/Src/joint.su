@@ -1,5 +1,0 @@
-../Core/Src/joint.c:9:8:new_joint	24	static
-../Core/Src/joint.c:24:6:move_joint_to_target	24	static
-../Core/Src/joint.c:35:6:refresh_joint_angle	24	static
-../Core/Src/joint.c:45:6:set_joint_target	16	static
-../Core/Src/joint.c:53:6:zero_joint	16	static

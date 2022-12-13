@@ -19,6 +19,4 @@ InterruptTimer *new_interrupt_timer(TIM_HandleTypeDef *_timer);
 // REQUIRES: interrupt_timer is an InterruptTimer object
 // MODIFIES: nothing
 // EFFECTS: Enables interrupts for the interrupt timer
-void start_interrupt_timer(InterruptTimer *interrupt_timer);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
+void start_interrupt_timer(InterruptTimer *interrupt_timer);\

@@ -55,7 +55,6 @@ ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
 TIM_HandleTypeDef htim14;
-TIM_HandleTypeDef htim16;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
@@ -79,7 +78,6 @@ PinData* debug_led = NULL;
 PinData* warning_led_pin = NULL;
 PinData* calib_button = NULL;
 InterruptTimer* slow_interrupt_timer = NULL;
-InterruptTimer* fast_interrupt_timer = NULL;
 WarningLed* warning_led = NULL;
 uint8_t battery_data;
 
@@ -93,7 +91,6 @@ static void MX_DMA_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM14_Init(void);
-static void MX_TIM16_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -106,9 +103,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim == fast_interrupt_timer->timer) {
-		// called every 1 ms
-	}
 	if (htim == slow_interrupt_timer->timer) {
 		// called every 2 ms
 		update_battery_buzzer_logic(battery_buzzer);
@@ -137,7 +131,6 @@ int main(void)
 	debug_led = new_pin_data(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, PIN_IS_OUTPUT);
 	calib_button = new_pin_data(CALIB_BUTTON_GPIO_Port, CALIB_BUTTON_Pin, PIN_IS_INPUT);
 	slow_interrupt_timer = new_interrupt_timer(&htim14);
-	fast_interrupt_timer = new_interrupt_timer(&htim16);
 	adc_sensor = new_adc_sensor(&hadc1, 1);
 	potentiometer = new_potentiometer(adc_sensor, 0);
 	shift_register = new_shift_register(
@@ -177,10 +170,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_ADC1_Init();
   MX_TIM14_Init();
-  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
-  start_interrupt_timer(fast_interrupt_timer);
   start_interrupt_timer(slow_interrupt_timer);
   update_display_number(display, 0);
   receive_wireless(wireless);
@@ -196,37 +187,12 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  // Our while loop is so fast so we need to put in some delay
 	  HAL_Delay(50);
-
 	  update_adc_sensor_values(adc_sensor);
 	  int raw_trigger_counts = (int)get_trigger_input(trigger);
 	  send_wireless_trigger_input(wireless, raw_trigger_counts);
-
 	  if (get_pin_value(calib_button)) {
 		  send_wireless_calib(wireless);
 	  }
-
-	  // ONLY FOR DEBUG
-
-//	  HAL_Delay(2000);
-
-//	  update_display_number(display, desired_angle);
-
-//	  for (int i = 0; i < 100; ++i) {
-//		  HAL_Delay(300);
-//		  update_display_number(display, i);
-//	  }
-//	  update_display_number(display, 10);
-//	  update_display_number(display, 25);
-//	  set_pin_value(debug_led, 1);
-//	  set_pin_value(debug_led, 0);
-
-//	  for (int i = 0; i < 8; ++i) {
-//		  shift_shift_register(shift_register, 0);
-//	  }
-
-//	  for (int i = 0; i < 20; ++i) {
-//		  shift_shift_register(shift_register, 1);
-//	  }
   }
   /* USER CODE END 3 */
 }
@@ -358,38 +324,6 @@ static void MX_TIM14_Init(void)
   /* USER CODE BEGIN TIM14_Init 2 */
 
   /* USER CODE END TIM14_Init 2 */
-
-}
-
-/**
-  * @brief TIM16 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM16_Init(void)
-{
-
-  /* USER CODE BEGIN TIM16_Init 0 */
-
-  /* USER CODE END TIM16_Init 0 */
-
-  /* USER CODE BEGIN TIM16_Init 1 */
-
-  /* USER CODE END TIM16_Init 1 */
-  htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 15;
-  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = FAST_PERIOD;
-  htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim16.Init.RepetitionCounter = 0;
-  htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM16_Init 2 */
-
-  /* USER CODE END TIM16_Init 2 */
 
 }
 

@@ -71,5 +71,3 @@ void calibrate_skater_threshold(Skater *skater) {
 		skater->raw_value_indicating_skater_presence = skater->raw_value_indicating_skater_presence - 2;
 	}
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

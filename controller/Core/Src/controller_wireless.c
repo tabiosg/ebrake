@@ -16,7 +16,6 @@ Wireless *new_wireless(UART_HandleTypeDef *huart, Display* _display, BatteryBuzz
 
 // REQUIRES: wireless is a Wireless object
 // and trigger_input is an int from 0 to 64
-// of the arm in degrees
 // MODIFIES: Nothing
 // EFFECTS: Sends trigger input command over wireless
 void send_wireless_trigger_input(Wireless *wireless, int trigger_input) {
@@ -78,14 +77,13 @@ void receive_wireless(Wireless *wireless) {
 	bool speed_success = parse_wireless_message(wireless, 'S');
 	if (speed_success) {
 		wireless->ms_since_comms = 0;
-		update_display_number(wireless->display, wireless->message_contents);  // TODO - UNCOMMENT EVENTUALLY
+		update_display_number(wireless->display, wireless->message_contents);
 		return;
 	}
 
 	bool battery_data_success = parse_wireless_message(wireless, 'B');
 	if (battery_data_success) {
 		wireless->ms_since_comms = 0;
-//		update_display_number(wireless->display, wireless->message_contents);  // TODO - REMOVE EVENTUALLY
 		change_battery_buzzer_data(wireless->battery_buzzer, wireless->message_contents);
 		return;
 	}

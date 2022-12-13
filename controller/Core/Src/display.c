@@ -50,6 +50,3 @@ void update_display_number(Display *display, uint16_t number) {
 		shift_shift_register(display->shift_register, shift_val);
 	}
 }
-
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

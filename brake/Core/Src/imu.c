@@ -134,8 +134,5 @@ uint8_t read_imu_register(IMU* imu, uint8_t reg) {
 		imu->buffer,
 		1,
 		5);
-//	HAL_Delay(10);
 	return imu->buffer[0];
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

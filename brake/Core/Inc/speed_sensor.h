@@ -37,5 +37,3 @@ void trigger_speed_sensor_interrupt(SpeedSensor* speed_sensor, bool is_front);
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored speed value of the speed sensor
 uint8_t get_speed_sensor_data(SpeedSensor *speed_sensor);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

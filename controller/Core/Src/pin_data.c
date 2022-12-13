@@ -35,4 +35,3 @@ bool get_pin_value(PinData *pin_data) {
 	bool value = HAL_GPIO_ReadPin(pin_data->port, pin_data->pin);
 	return value;
 }
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

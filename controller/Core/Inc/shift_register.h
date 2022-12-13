@@ -33,5 +33,3 @@ void shift_shift_register(ShiftRegister *shift_register, uint8_t value);
 // MODIFIES: outputs of ports and pins
 // EFFECTS: clears the shift register
 void reset_shift_register(ShiftRegister *shift_register);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

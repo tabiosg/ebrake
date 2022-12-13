@@ -17,5 +17,3 @@ InterruptTimer *new_interrupt_timer(TIM_HandleTypeDef *_timer) {
 void start_interrupt_timer(InterruptTimer *interrupt_timer) {
 	HAL_TIM_Base_Start_IT(interrupt_timer->timer);
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

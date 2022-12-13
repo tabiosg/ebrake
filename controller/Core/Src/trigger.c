@@ -19,5 +19,3 @@ int16_t get_trigger_input(Trigger *trigger) {
 	uint32_t raw_counts = get_potentiometer_input(trigger->potentiometer);
 	return raw_counts;
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

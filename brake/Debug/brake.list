@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  0001c359  00000000  00000000  00076c68  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0002e090  00000000  00000000  00092fc1  2**0
+ 18 .debug_line   0002e087  00000000  00000000  00092fc1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000a37e7  00000000  00000000  000c1051  2**0
+ 19 .debug_str    000a37e7  00000000  00000000  000c1048  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  00164838  2**0
+ 20 .comment      00000050  00000000  00000000  0016482f  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00004f64  00000000  00000000  00164888  2**2
+ 21 .debug_frame  00004f64  00000000  00000000  00164880  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -7041,6 +7041,7 @@ bool is_joint_close_enough_to_target(Joint *joint) {
 // REQUIRES: joint is a Joint object
 // MODIFIES: Nothing
 // EFFECTS: Moves the motor based on current steps and desired steps
+// This function is expected to be called every 50 us
 void move_joint_to_target(Joint *joint) {
  80034bc:	b570      	push	{r4, r5, r6, lr}
 	return joint->desired_angle_steps == joint->current_angle_steps;
@@ -7205,9 +7206,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
  800357a:	681b      	ldr	r3, [r3, #0]
  800357c:	4283      	cmp	r3, r0
  800357e:	d005      	beq.n	800358c <HAL_TIM_PeriodElapsedCallback+0x18>
-		// 50 us
 		move_joint_to_target(joint);
-//		set_pin_value(debug_pin_1, 0);
 
 	}
 	else if (htim == slow_interrupt_timer->timer) {
@@ -8298,7 +8297,6 @@ void step_motor_direction(Motor *motor, bool dir) {
  8003c26:	6860      	ldr	r0, [r4, #4]
  8003c28:	2101      	movs	r1, #1
  8003c2a:	f000 f811 	bl	8003c50 <set_pin_value>
-//	for (uint8_t i = 0; i < 10; ++i);
 	set_pin_value(motor->stp_pin, GPIO_PIN_RESET);
  8003c2e:	2100      	movs	r1, #0
  8003c30:	6860      	ldr	r0, [r4, #4]
@@ -8619,9 +8617,9 @@ void trigger_speed_sensor_interrupt(SpeedSensor* speed_sensor, bool is_front) {
 		speed_sensor->ms_since_front_imu_spiked = 0;
  8003d60:	2300      	movs	r3, #0
  8003d62:	60c3      	str	r3, [r0, #12]
-//		if (mph > 99.0f) {
-//			mph = 99.0f;
-//		}
+		if (mph > 15.0f) {
+			return;
+		}
 		speed_sensor->speed = mph;
 	}
 }

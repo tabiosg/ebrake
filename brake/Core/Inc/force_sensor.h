@@ -20,5 +20,3 @@ ForceSensor *new_force_sensor(ADCSensor *_adc_sensor, uint8_t _rank);
 // MODIFIES: nothing
 // EFFECTS: Returns the currently stored value force sensor voltage output.
 uint16_t get_force_sensor_data(ForceSensor *force_sensor);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

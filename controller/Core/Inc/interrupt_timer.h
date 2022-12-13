@@ -20,5 +20,3 @@ InterruptTimer *new_interrupt_timer(TIM_HandleTypeDef *_timer);
 // MODIFIES: nothing
 // EFFECTS: Enables interrupts for the interrupt timer
 void start_interrupt_timer(InterruptTimer *interrupt_timer);
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

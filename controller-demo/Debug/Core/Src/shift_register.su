@@ -1,3 +1,0 @@
-../Core/Src/shift_register.c:8:16:new_shift_register	32	static
-../Core/Src/shift_register.c:26:6:shift_shift_register	16	static
-../Core/Src/shift_register.c:40:6:reset_shift_register	16	static
