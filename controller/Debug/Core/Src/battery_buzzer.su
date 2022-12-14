@@ -1,4 +1,0 @@
-../Core/Src/battery_buzzer.c:6:16:new_battery_buzzer	24	static
-../Core/Src/battery_buzzer.c:21:6:update_battery_buzzer_logic	16	static
-../Core/Src/battery_buzzer.c:67:6:change_battery_buzzer_data	16	static
-../Core/Src/battery_buzzer.c:74:6:change_battery_buzzer_noise_val	16	static

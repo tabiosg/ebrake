@@ -1,2 +1,0 @@
-../Core/Src/battery_sensor.c:8:16:new_battery_sensor	16	static
-../Core/Src/battery_sensor.c:18:9:get_battery_sensor_data	8	static

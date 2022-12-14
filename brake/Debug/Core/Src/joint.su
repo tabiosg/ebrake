@@ -1,6 +1,0 @@
-../Core/Src/joint.c:9:8:new_joint	16	static
-../Core/Src/joint.c:25:6:is_joint_close_enough_to_target	0	static
-../Core/Src/joint.c:33:6:move_joint_to_target	16	static
-../Core/Src/joint.c:46:6:refresh_joint_limit_switch	8	static
-../Core/Src/joint.c:68:6:set_joint_target	0	static
-../Core/Src/joint.c:80:6:zero_joint	0	static

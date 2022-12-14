@@ -1,2 +1,0 @@
-../Core/Src/thermistor.c:8:13:new_thermistor	16	static
-../Core/Src/thermistor.c:18:9:get_thermistor_data	8	static
